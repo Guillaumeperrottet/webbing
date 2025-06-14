@@ -1,14 +1,4 @@
 // app/page.tsx
-"use client";
-
-import { FloatingGeometry } from "@/components/ui/floating-geometry";
-import {
-  FadeInWhenVisible,
-  StaggerContainer,
-} from "@/components/ui/motion-components";
-import { StatsSection } from "@/components/ui/stats-section";
-import { InteractiveBackground } from "@/components/ui/interactive-background";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,6 +16,10 @@ import {
   Shield,
   Zap,
 } from "lucide-react";
+import { FloatingGeometry } from "@/components/ui/floating-geometry";
+import { FadeInWhenVisible, StaggerContainer } from "@/components/ui/motion-components";
+import { StatsSection } from "@/components/ui/stats-section";
+// import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -45,7 +39,7 @@ export default function HomePage() {
         <div className="container relative z-10 mx-auto max-w-6xl">
           <div className="text-center max-w-3xl mx-auto">
             {/* Badge avec effet glassmorphism */}
-            <motion.div
+            <motion.div 
               className="mb-6"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -60,19 +54,19 @@ export default function HomePage() {
             </motion.div>
 
             {/* Titre principal avec effet glassmorphism */}
-            <motion.div
+            <motion.div 
               className="backdrop-blur-sm bg-white/5 rounded-2xl p-8 mb-8 border border-white/10 shadow-2xl"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <motion.h1
+              <motion.h1 
                 className="text-4xl md:text-6xl font-bold tracking-tight mb-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1, delay: 0.6 }}
               >
-                <motion.span
+                <motion.span 
                   className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -81,7 +75,7 @@ export default function HomePage() {
                   Des applications qui
                 </motion.span>
                 <br />
-                <motion.span
+                <motion.span 
                   className="text-gradient-swiss"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -90,7 +84,7 @@ export default function HomePage() {
                   transforment
                 </motion.span>
                 <br />
-                <motion.span
+                <motion.span 
                   className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -100,7 +94,7 @@ export default function HomePage() {
                 </motion.span>
               </motion.h1>
 
-              <motion.p
+              <motion.p 
                 className="text-xl text-blue-100/90 leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -113,7 +107,7 @@ export default function HomePage() {
               </motion.p>
             </motion.div>
 
-            <motion.div
+            <motion.div 
               className="flex flex-col sm:flex-row gap-4 justify-center"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -169,7 +163,10 @@ export default function HomePage() {
           <StaggerContainer staggerDelay={0.3}>
             <div className="grid md:grid-cols-2 gap-8 mb-16">
               {/* PlanniKeeper Card */}
-              <motion.div whileHover={{ y: -5 }} transition={{ duration: 0.3 }}>
+              <motion.div
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
                 <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-white to-slate-50 hover:shadow-2xl transition-all duration-500 h-full">
                   {/* Background pattern subtil */}
                   <div className="absolute inset-0 opacity-5">
@@ -184,7 +181,7 @@ export default function HomePage() {
                   <CardHeader className="relative z-10 pb-4">
                     <div className="flex items-center gap-4 mb-4">
                       {/* Logo avec animation */}
-                      <motion.div
+                      <motion.div 
                         className="p-4 bg-gradient-to-br from-primary to-primary/80 rounded-2xl inline-block group-hover:scale-110 transition-transform duration-300 shadow-lg"
                         whileHover={{ rotate: [0, -10, 10, 0] }}
                         transition={{ duration: 0.5 }}
@@ -205,8 +202,8 @@ export default function HomePage() {
                     </CardTitle>
                     <CardDescription className="text-muted-foreground text-base leading-relaxed">
                       La solution complète pour gérer efficacement vos projets
-                      immobiliers, vos tâches et vos documents dans une
-                      interface intuitive.
+                      immobiliers, vos tâches et vos documents dans une interface
+                      intuitive.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="relative z-10">
@@ -229,10 +226,7 @@ export default function HomePage() {
                       </div>
                     </div>
                     <div className="flex gap-3">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                         <Button
                           variant="outline"
                           size="sm"
@@ -248,10 +242,7 @@ export default function HomePage() {
                           </Link>
                         </Button>
                       </motion.div>
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                         <Button
                           size="sm"
                           className="bg-gradient-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
@@ -268,7 +259,10 @@ export default function HomePage() {
               </motion.div>
 
               {/* Chaff Card */}
-              <motion.div whileHover={{ y: -5 }} transition={{ duration: 0.3 }}>
+              <motion.div
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
                 <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-white to-slate-50 hover:shadow-2xl transition-all duration-500 h-full">
                   {/* Background pattern subtil */}
                   <div className="absolute inset-0 opacity-5">
@@ -283,7 +277,7 @@ export default function HomePage() {
                   <CardHeader className="relative z-10 pb-4">
                     <div className="flex items-center gap-4 mb-4">
                       {/* Logo avec animation */}
-                      <motion.div
+                      <motion.div 
                         className="p-4 bg-gradient-to-br from-accent to-purple-600 rounded-2xl inline-block group-hover:scale-110 transition-transform duration-300 shadow-lg"
                         whileHover={{ rotate: [0, -10, 10, 0] }}
                         transition={{ duration: 0.5 }}
@@ -303,9 +297,9 @@ export default function HomePage() {
                       Chaff
                     </CardTitle>
                     <CardDescription className="text-muted-foreground text-base leading-relaxed">
-                      Plateforme d&apos;analyse business avancée pour
-                      transformer vos données en insights stratégiques et
-                      prendre des décisions éclairées.
+                      Plateforme d&apos;analyse business avancée pour transformer
+                      vos données en insights stratégiques et prendre des décisions
+                      éclairées.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="relative z-10">
@@ -328,10 +322,7 @@ export default function HomePage() {
                       </div>
                     </div>
                     <div className="flex gap-3">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                         <Button
                           variant="outline"
                           size="sm"
@@ -347,10 +338,7 @@ export default function HomePage() {
                           </Link>
                         </Button>
                       </motion.div>
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                         <Button
                           size="sm"
                           className="bg-gradient-accent shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
@@ -372,14 +360,13 @@ export default function HomePage() {
       <StatsSection />
 
       {/* Values Section */}
-      <section className="relative py-20 px-4 bg-slate-900 overflow-hidden">
-        <InteractiveBackground />
-        <div className="container mx-auto max-w-6xl relative z-10">
+      <section className="py-20 px-4 bg-muted/30">
+        <div className="container mx-auto max-w-6xl">
           <FadeInWhenVisible className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Pourquoi choisir Webbing ?
             </h2>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Notre engagement envers l&apos;excellence se reflète dans chaque
               aspect de nos solutions.
             </p>
@@ -387,132 +374,83 @@ export default function HomePage() {
 
           <StaggerContainer staggerDelay={0.2}>
             <div className="grid md:grid-cols-3 gap-8">
-              <motion.div
-                className="relative group"
-                whileHover={{ y: -10 }}
-                transition={{ duration: 0.4 }}
+              <motion.div 
+                className="text-center"
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-60 group-hover:opacity-80"></div>
-                <div className="relative backdrop-blur-sm bg-white/5 border border-white/10 rounded-3xl p-8 text-center group-hover:border-white/20 transition-all duration-300">
-                  <motion.div
-                    className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-2xl"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Shield className="h-10 w-10 text-white" />
-                  </motion.div>
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Sécurité Suisse
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    Vos données sont hébergées et protégées selon les standards
-                    suisses les plus stricts en matière de sécurité et de
-                    confidentialité.
-                  </p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                className="relative group"
-                whileHover={{ y: -10 }}
-                transition={{ duration: 0.4 }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-purple-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-60 group-hover:opacity-80"></div>
-                <div className="relative backdrop-blur-sm bg-white/5 border border-white/10 rounded-3xl p-8 text-center group-hover:border-white/20 transition-all duration-300">
-                  <motion.div
-                    className="mx-auto w-20 h-20 bg-gradient-to-br from-violet-400 to-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-2xl"
-                    whileHover={{ scale: 1.1, rotate: -5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Zap className="h-10 w-10 text-white" />
-                  </motion.div>
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Performance Optimale
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    Nos applications sont conçues pour offrir une expérience
-                    fluide et réactive, même avec de gros volumes de données.
-                  </p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                className="relative group"
-                whileHover={{ y: -10 }}
-                transition={{ duration: 0.4 }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-60 group-hover:opacity-80"></div>
-                <div className="relative backdrop-blur-sm bg-white/5 border border-white/10 rounded-3xl p-8 text-center group-hover:border-white/20 transition-all duration-300">
-                  <motion.div
-                    className="mx-auto w-20 h-20 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl flex items-center justify-center mb-6 shadow-2xl"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Users className="h-10 w-10 text-white" />
-                  </motion.div>
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Support Dédié
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    Une équipe d&apos;experts à votre écoute pour vous
-                    accompagner dans l&apos;utilisation et l&apos;optimisation
-                    de nos solutions.
-                  </p>
-                </div>
-              </motion.div>
+              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
+                <Shield className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-3">
+                Sécurité Suisse
+              </h3>
+              <p className="text-muted-foreground">
+                Vos données sont hébergées et protégées selon les standards
+                suisses les plus stricts en matière de sécurité et de
+                confidentialité.
+              </p>
             </div>
-          </StaggerContainer>
+
+            <div className="text-center">
+              <div className="mx-auto w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mb-6">
+                <Zap className="h-8 w-8 text-accent-foreground" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-3">
+                Performance Optimale
+              </h3>
+              <p className="text-muted-foreground">
+                Nos applications sont conçues pour offrir une expérience fluide
+                et réactive, même avec de gros volumes de données.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="mx-auto w-16 h-16 bg-secondary/50 rounded-2xl flex items-center justify-center mb-6">
+                <Users className="h-8 w-8 text-secondary-foreground" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-3">
+                Support Dédié
+              </h3>
+              <p className="text-muted-foreground">
+                Une équipe d&apos;experts à votre écoute pour vous accompagner
+                dans l&apos;utilisation et l&apos;optimisation de nos solutions.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="py-20 px-4 bg-primary">
         <div className="container mx-auto max-w-4xl text-center">
-          <FadeInWhenVisible>
-            <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-6">
-              Prêt à transformer votre activité ?
-            </h2>
-            <p className="text-xl text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
-              Découvrez comment nos solutions peuvent optimiser vos processus et
-              accélérer votre croissance.
-            </p>
-            <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true }}
+          <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-6">
+            Prêt à transformer votre activité ?
+          </h2>
+          <p className="text-xl text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
+            Découvrez comment nos solutions peuvent optimiser vos processus et
+            accélérer votre croissance.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              size="lg"
+              className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+              asChild
             >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button
-                  size="lg"
-                  className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
-                  asChild
-                >
-                  <Link href="/applications">
-                    Explorer nos solutions
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </motion.div>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
-                  asChild
-                >
-                  <Link href="/contact">Planifier une démo</Link>
-                </Button>
-              </motion.div>
-            </motion.div>
-          </FadeInWhenVisible>
+              <Link href="/applications">
+                Explorer nos solutions
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+              asChild
+            >
+              <Link href="/contact">Planifier une démo</Link>
+            </Button>
+          </div>
         </div>
       </section>
     </div>

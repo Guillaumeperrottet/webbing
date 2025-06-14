@@ -1,14 +1,6 @@
 // app/page.tsx
 "use client";
 
-import { FloatingGeometry } from "@/components/ui/floating-geometry";
-import {
-  FadeInWhenVisible,
-  StaggerContainer,
-} from "@/components/ui/motion-components";
-import { StatsSection } from "@/components/ui/stats-section";
-import { InteractiveBackground } from "@/components/ui/interactive-background";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,6 +18,12 @@ import {
   Shield,
   Zap,
 } from "lucide-react";
+import { FloatingGeometry } from "@/components/ui/floating-geometry";
+import {
+  FadeInWhenVisible,
+  StaggerContainer,
+} from "@/components/ui/motion-components";
+import { StatsSection } from "@/components/ui/stats-section";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -372,14 +370,13 @@ export default function HomePage() {
       <StatsSection />
 
       {/* Values Section */}
-      <section className="relative py-20 px-4 bg-slate-900 overflow-hidden">
-        <InteractiveBackground />
-        <div className="container mx-auto max-w-6xl relative z-10">
+      <section className="py-20 px-4 bg-muted/30">
+        <div className="container mx-auto max-w-6xl">
           <FadeInWhenVisible className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Pourquoi choisir Webbing ?
             </h2>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Notre engagement envers l&apos;excellence se reflète dans chaque
               aspect de nos solutions.
             </p>
@@ -388,77 +385,68 @@ export default function HomePage() {
           <StaggerContainer staggerDelay={0.2}>
             <div className="grid md:grid-cols-3 gap-8">
               <motion.div
-                className="relative group"
-                whileHover={{ y: -10 }}
-                transition={{ duration: 0.4 }}
+                className="text-center"
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-60 group-hover:opacity-80"></div>
-                <div className="relative backdrop-blur-sm bg-white/5 border border-white/10 rounded-3xl p-8 text-center group-hover:border-white/20 transition-all duration-300">
-                  <motion.div
-                    className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-2xl"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Shield className="h-10 w-10 text-white" />
-                  </motion.div>
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Sécurité Suisse
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    Vos données sont hébergées et protégées selon les standards
-                    suisses les plus stricts en matière de sécurité et de
-                    confidentialité.
-                  </p>
-                </div>
+                <motion.div
+                  className="mx-auto w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Shield className="h-8 w-8 text-primary" />
+                </motion.div>
+                <h3 className="text-xl font-semibold text-foreground mb-3">
+                  Sécurité Suisse
+                </h3>
+                <p className="text-muted-foreground">
+                  Vos données sont hébergées et protégées selon les standards
+                  suisses les plus stricts en matière de sécurité et de
+                  confidentialité.
+                </p>
               </motion.div>
 
               <motion.div
-                className="relative group"
-                whileHover={{ y: -10 }}
-                transition={{ duration: 0.4 }}
+                className="text-center"
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-purple-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-60 group-hover:opacity-80"></div>
-                <div className="relative backdrop-blur-sm bg-white/5 border border-white/10 rounded-3xl p-8 text-center group-hover:border-white/20 transition-all duration-300">
-                  <motion.div
-                    className="mx-auto w-20 h-20 bg-gradient-to-br from-violet-400 to-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-2xl"
-                    whileHover={{ scale: 1.1, rotate: -5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Zap className="h-10 w-10 text-white" />
-                  </motion.div>
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Performance Optimale
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    Nos applications sont conçues pour offrir une expérience
-                    fluide et réactive, même avec de gros volumes de données.
-                  </p>
-                </div>
+                <motion.div
+                  className="mx-auto w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mb-6"
+                  whileHover={{ scale: 1.1, rotate: -5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Zap className="h-8 w-8 text-accent-foreground" />
+                </motion.div>
+                <h3 className="text-xl font-semibold text-foreground mb-3">
+                  Performance Optimale
+                </h3>
+                <p className="text-muted-foreground">
+                  Nos applications sont conçues pour offrir une expérience
+                  fluide et réactive, même avec de gros volumes de données.
+                </p>
               </motion.div>
 
               <motion.div
-                className="relative group"
-                whileHover={{ y: -10 }}
-                transition={{ duration: 0.4 }}
+                className="text-center"
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-60 group-hover:opacity-80"></div>
-                <div className="relative backdrop-blur-sm bg-white/5 border border-white/10 rounded-3xl p-8 text-center group-hover:border-white/20 transition-all duration-300">
-                  <motion.div
-                    className="mx-auto w-20 h-20 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl flex items-center justify-center mb-6 shadow-2xl"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Users className="h-10 w-10 text-white" />
-                  </motion.div>
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Support Dédié
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    Une équipe d&apos;experts à votre écoute pour vous
-                    accompagner dans l&apos;utilisation et l&apos;optimisation
-                    de nos solutions.
-                  </p>
-                </div>
+                <motion.div
+                  className="mx-auto w-16 h-16 bg-secondary/50 rounded-2xl flex items-center justify-center mb-6"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Users className="h-8 w-8 text-secondary-foreground" />
+                </motion.div>
+                <h3 className="text-xl font-semibold text-foreground mb-3">
+                  Support Dédié
+                </h3>
+                <p className="text-muted-foreground">
+                  Une équipe d&apos;experts à votre écoute pour vous accompagner
+                  dans l&apos;utilisation et l&apos;optimisation de nos
+                  solutions.
+                </p>
               </motion.div>
             </div>
           </StaggerContainer>

@@ -45,71 +45,112 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.98 0.008 15);
-  --foreground: oklch(0.15 0.025 15);
-  --card: oklch(0.99 0.005 15);
-  --card-foreground: oklch(0.15 0.025 15);
-  --popover: oklch(0.99 0.005 15);
-  --popover-foreground: oklch(0.15 0.025 15);
-  --primary: oklch(0.35 0.08 15);
-  --primary-foreground: oklch(0.98 0.008 15);
-  --secondary: oklch(0.94 0.015 15);
-  --secondary-foreground: oklch(0.25 0.06 15);
-  --muted: oklch(0.95 0.012 15);
-  --muted-foreground: oklch(0.55 0.04 15);
-  --accent: oklch(0.42 0.09 15);
-  --accent-foreground: oklch(0.98 0.008 15);
+
+  /* Palette signature Webbing - Couleurs distinctives */
+  --primary: oklch(0.45 0.12 220); /* Bleu suisse vibrant */
+  --primary-foreground: oklch(0.98 0.008 220);
+  --accent: oklch(0.55 0.15 280); /* Violet tech */
+  --accent-foreground: oklch(0.98 0.008 280);
+  --success: oklch(0.65 0.18 140); /* Vert suisse premium */
+
+  /* Couleurs de base harmonisées */
+  --background: oklch(0.98 0.008 220);
+  --foreground: oklch(0.15 0.025 220);
+  --card: oklch(0.99 0.005 220);
+  --card-foreground: oklch(0.15 0.025 220);
+  --popover: oklch(0.99 0.005 220);
+  --popover-foreground: oklch(0.15 0.025 220);
+
+  /* Couleurs secondaires avec la nouvelle palette */
+  --secondary: oklch(0.94 0.015 220);
+  --secondary-foreground: oklch(0.25 0.06 220);
+  --muted: oklch(0.95 0.012 220);
+  --muted-foreground: oklch(0.55 0.04 220);
+
+  /* Couleurs système */
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.88 0.02 15);
-  --input: oklch(0.92 0.015 15);
-  --ring: oklch(0.35 0.08 15);
-  --chart-1: oklch(0.35 0.08 15);
-  --chart-2: oklch(0.45 0.1 25);
-  --chart-3: oklch(0.55 0.06 5);
-  --chart-4: oklch(0.4 0.09 35);
-  --chart-5: oklch(0.5 0.07 345);
-  --sidebar: oklch(0.96 0.01 15);
-  --sidebar-foreground: oklch(0.2 0.04 15);
-  --sidebar-primary: oklch(0.35 0.08 15);
-  --sidebar-primary-foreground: oklch(0.98 0.008 15);
-  --sidebar-accent: oklch(0.42 0.09 15);
-  --sidebar-accent-foreground: oklch(0.98 0.008 15);
-  --sidebar-border: oklch(0.88 0.02 15);
-  --sidebar-ring: oklch(0.35 0.08 15);
+  --border: oklch(0.88 0.02 220);
+  --input: oklch(0.92 0.015 220);
+  --ring: oklch(0.45 0.12 220);
+
+  /* Charts avec nouvelle palette */
+  --chart-1: oklch(0.45 0.12 220); /* Primary blue */
+  --chart-2: oklch(0.55 0.15 280); /* Accent violet */
+  --chart-3: oklch(0.65 0.18 140); /* Success green */
+  --chart-4: oklch(0.5 0.1 200); /* Light blue */
+  --chart-5: oklch(0.6 0.12 260); /* Light purple */
+
+  /* Sidebar avec nouvelle palette */
+  --sidebar: oklch(0.96 0.01 220);
+  --sidebar-foreground: oklch(0.2 0.04 220);
+  --sidebar-primary: oklch(0.45 0.12 220);
+  --sidebar-primary-foreground: oklch(0.98 0.008 220);
+  --sidebar-accent: oklch(0.55 0.15 280);
+  --sidebar-accent-foreground: oklch(0.98 0.008 280);
+  --sidebar-border: oklch(0.88 0.02 220);
+  --sidebar-ring: oklch(0.45 0.12 220);
+
+  /* Gradients signature */
+  --gradient-swiss: linear-gradient(
+    135deg,
+    oklch(0.45 0.12 220) 0%,
+    oklch(0.55 0.15 280) 100%
+  );
+  --gradient-primary: linear-gradient(
+    135deg,
+    oklch(0.45 0.12 220) 0%,
+    oklch(0.5 0.1 200) 100%
+  );
+  --gradient-accent: linear-gradient(
+    135deg,
+    oklch(0.55 0.15 280) 0%,
+    oklch(0.6 0.12 260) 100%
+  );
 }
 
 .dark {
-  --background: oklch(0.08 0.01 15);
-  --foreground: oklch(0.95 0.01 20);
-  --card: oklch(0.12 0.02 15);
-  --card-foreground: oklch(0.95 0.01 20);
-  --popover: oklch(0.12 0.02 15);
-  --popover-foreground: oklch(0.95 0.01 20);
-  --primary: oklch(0.65 0.1 15);
-  --primary-foreground: oklch(0.08 0.01 15);
-  --secondary: oklch(0.18 0.03 15);
-  --secondary-foreground: oklch(0.9 0.015 20);
-  --muted: oklch(0.16 0.025 15);
-  --muted-foreground: oklch(0.7 0.05 20);
-  --accent: oklch(0.55 0.12 15);
-  --accent-foreground: oklch(0.95 0.01 20);
+  /* Mode sombre avec palette harmonisée */
+  --background: oklch(0.08 0.01 220);
+  --foreground: oklch(0.95 0.01 220);
+  --card: oklch(0.12 0.02 220);
+  --card-foreground: oklch(0.95 0.01 220);
+  --popover: oklch(0.12 0.02 220);
+  --popover-foreground: oklch(0.95 0.01 220);
+
+  /* Couleurs principales adaptées au mode sombre */
+  --primary: oklch(0.65 0.15 220); /* Bleu plus clair pour le contraste */
+  --primary-foreground: oklch(0.08 0.01 220);
+  --accent: oklch(0.7 0.18 280); /* Violet plus clair */
+  --accent-foreground: oklch(0.08 0.01 280);
+
+  /* Couleurs secondaires mode sombre */
+  --secondary: oklch(0.18 0.03 220);
+  --secondary-foreground: oklch(0.9 0.015 220);
+  --muted: oklch(0.16 0.025 220);
+  --muted-foreground: oklch(0.7 0.05 220);
+
+  /* Couleurs système mode sombre */
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.2 0.03 15);
-  --input: oklch(0.22 0.035 15);
-  --ring: oklch(0.65 0.1 15);
-  --chart-1: oklch(0.65 0.1 15);
-  --chart-2: oklch(0.7 0.12 25);
-  --chart-3: oklch(0.75 0.08 5);
-  --chart-4: oklch(0.6 0.11 35);
-  --chart-5: oklch(0.72 0.09 345);
-  --sidebar: oklch(0.1 0.015 15);
-  --sidebar-foreground: oklch(0.9 0.015 20);
-  --sidebar-primary: oklch(0.65 0.1 15);
-  --sidebar-primary-foreground: oklch(0.08 0.01 15);
-  --sidebar-accent: oklch(0.55 0.12 15);
-  --sidebar-accent-foreground: oklch(0.95 0.01 20);
-  --sidebar-border: oklch(0.2 0.03 15);
-  --sidebar-ring: oklch(0.65 0.1 15);
+  --border: oklch(0.2 0.03 220);
+  --input: oklch(0.22 0.035 220);
+  --ring: oklch(0.65 0.15 220);
+
+  /* Charts mode sombre */
+  --chart-1: oklch(0.65 0.15 220);
+  --chart-2: oklch(0.7 0.18 280);
+  --chart-3: oklch(0.75 0.2 140);
+  --chart-4: oklch(0.6 0.12 200);
+  --chart-5: oklch(0.72 0.15 260);
+
+  /* Sidebar mode sombre */
+  --sidebar: oklch(0.1 0.015 220);
+  --sidebar-foreground: oklch(0.9 0.015 220);
+  --sidebar-primary: oklch(0.65 0.15 220);
+  --sidebar-primary-foreground: oklch(0.08 0.01 220);
+  --sidebar-accent: oklch(0.7 0.18 280);
+  --sidebar-accent-foreground: oklch(0.08 0.01 280);
+  --sidebar-border: oklch(0.2 0.03 220);
+  --sidebar-ring: oklch(0.65 0.15 220);
 }
 
 @layer base {
@@ -118,5 +159,69 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Classes utilitaires pour les gradients signature */
+  .bg-gradient-swiss {
+    background: var(--gradient-swiss);
+  }
+
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .bg-gradient-accent {
+    background: var(--gradient-accent);
+  }
+
+  /* Classes pour les textes avec gradient */
+  .text-gradient-swiss {
+    background: var(--gradient-swiss);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-accent {
+    background: var(--gradient-accent);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Animations pour les éléments avec la nouvelle palette */
+  .animate-glow-primary {
+    animation: glow-primary 2s ease-in-out infinite alternate;
+  }
+
+  .animate-glow-accent {
+    animation: glow-accent 2s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes glow-primary {
+  from {
+    box-shadow: 0 0 20px oklch(0.45 0.12 220 / 0.3);
+  }
+  to {
+    box-shadow: 0 0 30px oklch(0.45 0.12 220 / 0.6);
+  }
+}
+
+@keyframes glow-accent {
+  from {
+    box-shadow: 0 0 20px oklch(0.55 0.15 280 / 0.3);
+  }
+  to {
+    box-shadow: 0 0 30px oklch(0.55 0.15 280 / 0.6);
   }
 }

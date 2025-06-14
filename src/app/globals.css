@@ -206,6 +206,12 @@
   .animate-glow-accent {
     animation: glow-accent 2s ease-in-out infinite alternate;
   }
+
+  /* Animation de gradient pour le titre */
+  .animate-gradient-x {
+    background-size: 200% 200%;
+    animation: gradient-x 3s ease infinite;
+  }
 }
 
 @keyframes glow-primary {
@@ -223,5 +229,17 @@
   }
   to {
     box-shadow: 0 0 30px oklch(0.55 0.15 280 / 0.6);
+  }
+}
+
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

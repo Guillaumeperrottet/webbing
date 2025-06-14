@@ -67,31 +67,29 @@ export default function HomePage() {
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               <motion.h1
-                className="text-4xl md:text-6xl font-bold tracking-tight mb-6"
+                className="text-5xl md:text-7xl font-black tracking-tight mb-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1, delay: 0.6 }}
               >
                 <motion.span
-                  className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent"
+                  className="block bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.8 }}
                 >
                   Des applications qui
                 </motion.span>
-                <br />
                 <motion.span
-                  className="text-gradient-swiss"
+                  className="block bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-gradient-x"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: 1.0 }}
                 >
                   transforment
                 </motion.span>
-                <br />
                 <motion.span
-                  className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent"
+                  className="block bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 1.2 }}
@@ -101,15 +99,14 @@ export default function HomePage() {
               </motion.h1>
 
               <motion.p
-                className="text-xl text-blue-100/90 leading-relaxed"
+                className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 1.4 }}
               >
-                Nous développons des solutions SaaS innovantes pour simplifier
-                la gestion immobilière et optimiser vos analyses business.
-                Découvrez nos applications conçues en Suisse avec une attention
-                particulière à la qualité et à l&apos;efficacité.
+                Solutions SaaS{" "}
+                <em className="font-semibold text-primary">innovantes</em>
+                conçues en Suisse
               </motion.p>
             </motion.div>
 

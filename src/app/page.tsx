@@ -14,10 +14,10 @@ import {
   ArrowRight,
   Building2,
   BarChart3,
-  Users,
   Shield,
-  Zap,
+  RefreshCw,
   CheckCircle,
+  Globe,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -53,16 +53,16 @@ const values = [
       "Vos données sont hébergées et protégées selon les standards suisses les plus stricts en matière de sécurité et de confidentialité.",
   },
   {
-    icon: Zap,
-    title: "Performance Optimale",
+    icon: RefreshCw,
+    title: "Évolution Continue",
     description:
-      "Nos applications sont conçues pour offrir une expérience fluide et réactive, même avec de gros volumes de données.",
+      "Nous sommes à l'écoute de vos retours pour améliorer constamment nos applications. Les mises à jour se déploient automatiquement sans interruption.",
   },
   {
-    icon: Users,
-    title: "Support Dédié",
+    icon: Globe,
+    title: "Installation Simplifiée",
     description:
-      "Une équipe d'experts à votre écoute pour vous accompagner dans l'utilisation et l'optimisation de nos solutions.",
+      "Applications web accessibles depuis n'importe quel navigateur, sans installation ni maintenance technique de votre côté.",
   },
 ];
 
@@ -165,45 +165,62 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {/* PlanniKeeper Card - Version sobre */}
+            {/* PlanniKeeper Card - Style PlanniKeeper */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <Card className="h-full border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
-                <CardHeader className="pb-4">
+              <Card className="h-full border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+                <div className="bg-gradient-to-br from-orange-50 to-amber-50 p-6 border-b border-orange-100">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="p-3 bg-primary/10 rounded-xl">
-                      <Building2 className="h-8 w-8 text-primary" />
+                    <div
+                      className="p-3 rounded-xl shadow-sm"
+                      style={{ backgroundColor: "#c6780a" }}
+                    >
+                      <Building2 className="h-8 w-8 text-white" />
                     </div>
                     <Badge
                       variant="secondary"
-                      className="bg-slate-100 text-slate-700"
+                      className="bg-orange-100 border-orange-200"
+                      style={{ color: "#c6780a" }}
                     >
                       Gestion Immobilière
                     </Badge>
                   </div>
-                  <CardTitle className="text-2xl text-slate-900">
-                    PlanniKeeper
-                  </CardTitle>
+                  <div className="mb-4">
+                    <CardTitle className="text-2xl text-slate-900 mb-2">
+                      PlanniKeeper
+                    </CardTitle>
+                    <div
+                      className="font-semibold text-sm tracking-wide"
+                      style={{ color: "#c6780a" }}
+                    >
+                      Organisez • Planifiez • Maîtrisez
+                    </div>
+                  </div>
+                </div>
+                <CardHeader className="pb-4">
                   <CardDescription className="text-base text-slate-600 leading-relaxed">
-                    La solution complète pour gérer efficacement vos projets
-                    immobiliers, vos tâches et vos documents dans une interface
-                    intuitive.
+                    Finis les fichiers Excel et les notes éparpillées ! La
+                    solution complète pour gérer efficacement vos biens
+                    immobiliers dans une interface intuitive et élégante.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3 mb-8">
                     {[
-                      "Interface interactive pour naviguer entre vos biens",
-                      "Système intégré de planification et suivi des tâches",
-                      "Collaboration d'équipe en temps réel",
-                      "Gestion centralisée des documents",
+                      "Visualisation interactive de vos biens",
+                      "Système intégré de planification des tâches",
+                      "Mode collaboratif en temps réel",
+                      "Centralisation documentaire complète",
                     ].map((feature, index) => (
                       <div key={index} className="flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
+                        <CheckCircle
+                          className="h-4 w-4 flex-shrink-0"
+                          style={{ color: "#c6780a" }}
+                        />
                         <span className="text-sm text-slate-700">
                           {feature}
                         </span>
@@ -211,7 +228,13 @@ export default function HomePage() {
                     ))}
                   </div>
                   <div className="flex gap-3">
-                    <Button variant="outline" size="sm" asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-orange-200 hover:bg-orange-50"
+                      style={{ color: "#c6780a" }}
+                      asChild
+                    >
                       <Link
                         href="https://www.plannikeeper.ch/"
                         target="_blank"
@@ -220,55 +243,67 @@ export default function HomePage() {
                         Visiter le site
                       </Link>
                     </Button>
-                    <Button size="sm" asChild>
-                      <Link href="/applications/plannikeeper">
-                        En savoir plus
-                      </Link>
-                    </Button>
                   </div>
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* Chaff Card - Version sobre */}
+            {/* Chaff Card - Style Chaff */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <Card className="h-full border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
-                <CardHeader className="pb-4">
+              <Card className="h-full border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 border-b border-blue-100">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="p-3 bg-blue-50 rounded-xl">
-                      <BarChart3 className="h-8 w-8 text-blue-600" />
+                    <div
+                      className="p-3 rounded-xl shadow-sm"
+                      style={{ backgroundColor: "#3c71ed" }}
+                    >
+                      <BarChart3 className="h-8 w-8 text-white" />
                     </div>
                     <Badge
                       variant="secondary"
-                      className="bg-slate-100 text-slate-700"
+                      className="bg-blue-100 border-blue-200"
+                      style={{ color: "#3c71ed" }}
                     >
                       Analytics Business
                     </Badge>
                   </div>
-                  <CardTitle className="text-2xl text-slate-900">
-                    Chaff
-                  </CardTitle>
+                  <div className="mb-4">
+                    <CardTitle className="text-2xl text-slate-900 mb-2">
+                      Chaff
+                    </CardTitle>
+                    <div
+                      className="font-semibold text-sm tracking-wide"
+                      style={{ color: "#3c71ed" }}
+                    >
+                      Analysez • Modélisez • Décidez
+                    </div>
+                  </div>
+                </div>
+                <CardHeader className="pb-4">
                   <CardDescription className="text-base text-slate-600 leading-relaxed">
                     Plateforme d&apos;analyse business avancée pour transformer
                     vos données en insights stratégiques et prendre des
-                    décisions éclairées.
+                    décisions éclairées dans une interface moderne et intuitive.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3 mb-8">
                     {[
-                      "Tableaux de bord interactifs personnalisables",
+                      "Tableaux de bord interactifs",
                       "Analyse prédictive et modélisation avancée",
                       "Intégration multi-sources de données",
-                      "Rapports automatisés et alertes intelligentes",
+                      "Rapports automatisés",
                     ].map((feature, index) => (
                       <div key={index} className="flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                        <CheckCircle
+                          className="h-4 w-4 flex-shrink-0"
+                          style={{ color: "#3c71ed" }}
+                        />
                         <span className="text-sm text-slate-700">
                           {feature}
                         </span>
@@ -276,7 +311,13 @@ export default function HomePage() {
                     ))}
                   </div>
                   <div className="flex gap-3">
-                    <Button variant="outline" size="sm" asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-blue-200 hover:bg-blue-50"
+                      style={{ color: "#3c71ed" }}
+                      asChild
+                    >
                       <Link
                         href="https://www.chaff.ch/"
                         target="_blank"
@@ -284,9 +325,6 @@ export default function HomePage() {
                       >
                         Visiter le site
                       </Link>
-                    </Button>
-                    <Button size="sm" asChild>
-                      <Link href="/applications/chaff">En savoir plus</Link>
                     </Button>
                   </div>
                 </CardContent>

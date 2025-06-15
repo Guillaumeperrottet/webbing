@@ -2,18 +2,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Building2,
   BarChart3,
   Users,
   Target,
-  Award,
   Globe,
   ArrowRight,
   Shield,
-  CheckCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -33,22 +30,23 @@ export default function AboutPage() {
               variant="outline"
               className="mb-6 px-4 py-2 text-sm bg-slate-50 border-slate-200 text-slate-700"
             >
-              Notre histoire
+              L&apos;histoire derrière le projet
             </Badge>
             <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
-              Nous créons des solutions qui{" "}
-              <span className="text-primary">transforment</span> les entreprises
+              Comment une passion pour la{" "}
+              <span className="text-primary">technologie</span> a donné
+              naissance à Webbing
             </h1>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Basée en Suisse, Webbing développe des applications SaaS
-              innovantes qui simplifient les processus complexes et optimisent
-              la performance des entreprises modernes.
+              L&apos;histoire de deux applications SaaS nées d&apos;un besoin
+              concret et d&apos;une volonté de simplifier les processus
+              complexes des entreprises suisses.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Mission & Vision - Version sobre */}
+      {/* Pourquoi Webbing - Section story */}
       <section className="py-24 px-4 bg-slate-50">
         <div className="container mx-auto max-w-6xl">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -58,316 +56,356 @@ export default function AboutPage() {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <Badge
-                variant="outline"
-                className="mb-6 px-4 py-2 text-sm bg-white border-slate-200 text-slate-700"
-              >
-                Notre mission
-              </Badge>
               <h2 className="text-4xl font-bold text-slate-900 mb-6">
-                Simplifier le complexe, optimiser l&apos;essentiel
+                Pourquoi Webbing ?
               </h2>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                Nous croyons que la technologie doit servir l&apos;humain, pas
-                l&apos;inverse. C&apos;est pourquoi nous développons des
-                solutions intuitives qui s&apos;adaptent à vos besoins, et non
-                l&apos;inverse.
+                Webbing est né d&apos;un constat simple : les entrepreneurs et
+                professionnels suisses méritent des outils aussi efficaces que
+                leur ambition. Après avoir développé PlanniKeeper pour répondre
+                aux défis concrets de la gestion immobilière, puis Chaff pour
+                transformer les données en intelligence business, nous avons
+                réalisé que notre approche pouvait aider bien d&apos;autres
+                secteurs.
               </p>
               <p className="text-slate-600 mb-8">
-                Notre approche combine l&apos;excellence technique suisse avec
-                une compréhension profonde des défis business modernes. Chaque
-                ligne de code que nous écrivons a pour objectif d&apos;améliorer
-                concrètement votre quotidien professionnel.
+                Notre philosophie est simple : la technologie doit
+                s&apos;adapter à vos besoins, pas l&apos;inverse. C&apos;est
+                pourquoi nous développons des solutions intuitives, robustes et
+                pensées pour le marché suisse, avec une attention particulière à
+                la sécurité et à la performance.
               </p>
               <Button size="lg" className="text-base px-8" asChild>
-                <Link href="/contact">
+                <Link href="/applications">
                   Découvrir nos solutions
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </motion.div>
             <motion.div
-              className="grid grid-cols-2 gap-6"
+              className="bg-gradient-to-br from-slate-100 to-slate-50 rounded-xl p-8"
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <Card className="text-center border-slate-200 shadow-sm">
-                <CardHeader className="pb-4">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-slate-100 rounded-xl mb-4 mx-auto">
-                    <Target className="h-6 w-6 text-slate-700" />
-                  </div>
-                  <CardTitle className="text-xl text-slate-900">150+</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-slate-600">Clients satisfaits</p>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-slate-200 shadow-sm">
-                <CardHeader className="pb-4">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-slate-100 rounded-xl mb-4 mx-auto">
-                    <Award className="h-6 w-6 text-slate-700" />
-                  </div>
-                  <CardTitle className="text-xl text-slate-900">
-                    5 ans
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-slate-600">D&apos;expertise</p>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-slate-200 shadow-sm">
-                <CardHeader className="pb-4">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-slate-100 rounded-xl mb-4 mx-auto">
-                    <Globe className="h-6 w-6 text-slate-700" />
-                  </div>
-                  <CardTitle className="text-xl text-slate-900">99%</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-slate-600">Uptime garanti</p>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-slate-200 shadow-sm">
-                <CardHeader className="pb-4">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-slate-100 rounded-xl mb-4 mx-auto">
-                    <Shield className="h-6 w-6 text-slate-700" />
-                  </div>
-                  <CardTitle className="text-xl text-slate-900">100%</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-slate-600">Sécurité suisse</p>
-                </CardContent>
-              </Card>
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-white border border-slate-200 rounded-full mb-6 shadow-sm">
+                  <Building2 className="h-10 w-10 text-slate-700" />
+                </div>
+                <h4 className="font-semibold text-slate-900 mb-3">
+                  Un projet développé avec passion
+                </h4>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  &quot;Chaque ligne de code que nous écrivons a pour objectif
+                  d&apos;améliorer concrètement le quotidien de nos
+                  utilisateurs. C&apos;est notre moteur principal.&quot;
+                </p>
+              </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Nos solutions en détail */}
+      {/* Derrière Webbing - Section équipe */}
       <section className="py-24 px-4 bg-white">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-slate-900 mb-4">
-              Nos solutions en détail
+              Derrière Webbing
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Deux applications complémentaires nées de notre expertise et de
-              notre compréhension des besoins du marché suisse.
+              Un projet développé avec passion
             </p>
           </div>
 
-          <div className="space-y-20">
-            {/* PlanniKeeper Section */}
-            <motion.div
-              className="grid lg:grid-cols-2 gap-12 items-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 bg-primary/10 rounded-xl">
-                    <Building2 className="h-8 w-8 text-primary" />
-                  </div>
-                  <Badge
-                    variant="secondary"
-                    className="bg-slate-100 text-slate-700"
-                  >
-                    Gestion Immobilière
-                  </Badge>
-                </div>
-                <h3 className="text-3xl font-bold text-slate-900 mb-4">
-                  PlanniKeeper
-                </h3>
-                <p className="text-slate-600 mb-6 leading-relaxed">
-                  Née de la frustration face à la complexité des outils de
-                  gestion immobilière existants, PlanniKeeper révolutionne la
-                  façon dont les professionnels gèrent leurs biens. Interface
-                  intuitive, collaboration fluide et organisation parfaite des
-                  documents.
-                </p>
-                <div className="space-y-3 mb-8">
-                  {[
-                    "Interface cartographique interactive pour visualiser le portefeuille",
-                    "Système de tâches intégré avec notifications intelligentes",
-                    "Collaboration d'équipe en temps réel avec gestion des permissions",
-                    "Centralisation et organisation automatique des documents",
-                  ].map((feature, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
-                      <span className="text-sm text-slate-700">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-3">
-                  <Button variant="outline" size="sm" asChild>
-                    <Link
-                      href="https://www.plannikeeper.ch/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Visiter le site
-                    </Link>
-                  </Button>
-                  <Button size="sm" asChild>
-                    <Link href="/applications/plannikeeper">
-                      En savoir plus
-                    </Link>
-                  </Button>
-                </div>
+          <motion.div
+            className="grid lg:grid-cols-3 gap-12 items-start"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            {/* Photo et infos de Guillaume */}
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full mb-6 shadow-sm">
+                <Users className="h-16 w-16 text-slate-600" />
               </div>
-              <div className="bg-gradient-to-br from-slate-50 to-primary/5 rounded-xl p-8 text-center">
-                <div className="inline-flex items-center justify-center w-24 h-24 bg-white border border-slate-200 rounded-2xl mb-6 shadow-sm">
-                  <Building2 className="h-12 w-12 text-slate-700" />
-                </div>
-                <h4 className="font-semibold text-slate-900 mb-2">
-                  Impact client
-                </h4>
-                <p className="text-slate-600 text-sm">
-                  &quot;PlanniKeeper a transformé notre gestion quotidienne.
-                  Nous avons gagné 40% de temps sur nos tâches
-                  administratives.&quot;
-                </p>
-              </div>
-            </motion.div>
+              <h3 className="text-2xl font-bold text-slate-900 mb-2">
+                Guillaume Perrottet
+              </h3>
+              <Badge
+                variant="secondary"
+                className="mb-4 bg-slate-100 text-slate-700"
+              >
+                Fondateur & Développeur
+              </Badge>
+            </div>
 
-            {/* Chaff Section */}
-            <motion.div
-              className="grid lg:grid-cols-2 gap-12 items-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-8 text-center lg:order-first">
-                <div className="inline-flex items-center justify-center w-24 h-24 bg-white border border-slate-200 rounded-2xl mb-6 shadow-sm">
-                  <BarChart3 className="h-12 w-12 text-blue-600" />
-                </div>
-                <h4 className="font-semibold text-slate-900 mb-2">
-                  Performance
-                </h4>
-                <p className="text-slate-600 text-sm">
-                  &quot;Chaff nous donne une vision claire de notre performance.
-                  Les insights prédictifs nous aident à anticiper les
-                  tendances.&quot;
+            {/* Description */}
+            <div className="lg:col-span-2">
+              <p className="text-lg text-slate-600 mb-6 leading-relaxed">
+                J&apos;ai créé Webbing pour répondre aux défis spécifiques que
+                j&apos;ai rencontrés en développant des solutions SaaS pour
+                différents secteurs. Combinant une expertise technique solide
+                avec une compréhension pratique des besoins business, je
+                développe et améliore continuellement ces solutions pour les
+                rendre toujours plus intuitives et efficaces.
+              </p>
+
+              <div className="bg-slate-50 rounded-xl p-6 border-l-4 border-primary">
+                <p className="text-slate-700 italic leading-relaxed">
+                  &quot;Je crois fermement que la technologie doit servir
+                  l&apos;humain, pas l&apos;inverse. C&apos;est pourquoi nos
+                  applications sont conçues pour être intuitives, adaptées à la
+                  réalité du terrain, et en constante évolution selon les
+                  retours des utilisateurs.&quot;
                 </p>
               </div>
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 bg-blue-50 rounded-xl">
-                    <BarChart3 className="h-8 w-8 text-blue-600" />
+
+              <div className="mt-8 grid md:grid-cols-2 gap-6">
+                <div className="text-center p-6 bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl border border-orange-100">
+                  <Building2 className="h-8 w-8 text-orange-600 mx-auto mb-3" />
+                  <h4 className="font-semibold text-slate-900 mb-2">
+                    PlanniKeeper
+                  </h4>
+                  <p className="text-sm text-slate-600">
+                    Gestion immobilière simplifiée et collaborative
+                  </p>
+                </div>
+                <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+                  <BarChart3 className="h-8 w-8 text-blue-600 mx-auto mb-3" />
+                  <h4 className="font-semibold text-slate-900 mb-2">Chaff</h4>
+                  <p className="text-sm text-slate-600">
+                    Analytics business et intelligence prédictive
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Notre parcours - Timeline */}
+      <section className="py-24 px-4 bg-slate-50">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">
+              Notre parcours
+            </h2>
+            <p className="text-xl text-slate-600">
+              Webbing est un projet en constante évolution, à la pointe de la
+              technologie actuelle et en amélioration continue.
+            </p>
+          </div>
+
+          <div className="space-y-12">
+            {[
+              {
+                year: "2022",
+                title: "Naissance de l'idée",
+                description:
+                  "Face aux défis concrets de gestion dans différents secteurs, l'idée de créer des solutions SaaS spécialisées émerge.",
+                icon: Target,
+              },
+              {
+                year: "2023",
+                title: "Développement de PlanniKeeper",
+                description:
+                  "Création de la première application dédiée à la gestion immobilière avec une approche collaborative et intuitive.",
+                icon: Building2,
+              },
+              {
+                year: "2024",
+                title: "Lancement de Chaff",
+                description:
+                  "Extension vers l'analytics business avec une plateforme d'intelligence prédictive pour transformer les données en insights.",
+                icon: BarChart3,
+              },
+              {
+                year: "2025",
+                title: "Expansion et innovation",
+                description:
+                  "Consolidation de l'offre Webbing avec de nouvelles fonctionnalités et une vision élargie des solutions SaaS.",
+                icon: Globe,
+              },
+            ].map((milestone, index) => (
+              <motion.div
+                key={index}
+                className="grid md:grid-cols-4 gap-8 items-center"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <div className="text-center md:text-right">
+                  <div className="text-3xl font-bold text-primary mb-2">
+                    {milestone.year}
                   </div>
-                  <Badge
-                    variant="secondary"
-                    className="bg-slate-100 text-slate-700"
-                  >
-                    Analytics Business
-                  </Badge>
                 </div>
-                <h3 className="text-3xl font-bold text-slate-900 mb-4">
-                  Chaff
-                </h3>
-                <p className="text-slate-600 mb-6 leading-relaxed">
-                  Dans un monde où les données sont partout mais les insights
-                  rares, Chaff transforme vos données brutes en intelligence
-                  stratégique. Tableaux de bord dynamiques, analyses prédictives
-                  et alertes proactives.
-                </p>
-                <div className="space-y-3 mb-8">
-                  {[
-                    "Tableaux de bord personnalisables avec mise à jour en temps réel",
-                    "Analyses prédictives basées sur l'intelligence artificielle",
-                    "Intégration native avec vos sources de données existantes",
-                    "Alertes automatisées et notifications intelligentes",
-                  ].map((feature, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                      <span className="text-sm text-slate-700">{feature}</span>
-                    </div>
-                  ))}
+                <div className="flex justify-center">
+                  <div className="w-16 h-16 bg-white border-4 border-primary rounded-full flex items-center justify-center shadow-lg">
+                    <milestone.icon className="h-6 w-6 text-primary" />
+                  </div>
                 </div>
-                <div className="flex gap-3">
-                  <Button variant="outline" size="sm" asChild>
-                    <Link
-                      href="https://www.chaff.ch/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Visiter le site
-                    </Link>
-                  </Button>
-                  <Button size="sm" asChild>
-                    <Link href="/applications/chaff">En savoir plus</Link>
-                  </Button>
+                <div className="md:col-span-2">
+                  <h3 className="text-xl font-semibold text-slate-900 mb-2">
+                    {milestone.title}
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    {milestone.description}
+                  </p>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Nos engagements */}
-      <section className="py-24 px-4 bg-slate-50">
+      {/* Notre stack technique */}
+      <section className="py-24 px-4 bg-white">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-slate-900 mb-4">
-              Nos engagements
+              Notre stack technique
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Au-delà de la technologie, nous nous engageons sur des valeurs qui
-              guident chacune de nos décisions.
+              Nos applications sont bâties sur des technologies modernes et
+              robustes, garantissant performance, sécurité et évolutivité.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: Globe,
-                title: "Transparence",
-                description:
-                  "Tarification claire, roadmap ouverte, et communication honnête sur les capacités et limitations de nos solutions.",
-              },
-              {
-                icon: Shield,
-                title: "Sécurité",
-                description:
-                  "Conformité RGPD, chiffrement end-to-end, et hébergement en Suisse pour protéger vos données les plus sensibles.",
-              },
-              {
-                icon: Users,
-                title: "Accompagnement",
-                description:
-                  "Formation complète, support réactif, et conseils stratégiques pour maximiser la valeur de nos solutions.",
-              },
-              {
-                icon: Target,
-                title: "Innovation",
-                description:
-                  "Veille technologique constante et amélioration continue pour rester à la pointe de l'innovation.",
-              },
-            ].map((engagement, index) => (
-              <motion.div
-                key={index}
-                className="text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-white border border-slate-200 rounded-2xl mb-6 shadow-sm">
-                  <engagement.icon className="h-8 w-8 text-slate-700" />
+          <div className="grid lg:grid-cols-3 gap-12">
+            {/* Stack Technique */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-2xl mb-4">
+                  <BarChart3 className="h-8 w-8 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900 mb-4">
-                  {engagement.title}
+                <h3 className="text-2xl font-bold text-slate-900 mb-4">
+                  Stack Technique
                 </h3>
-                <p className="text-slate-600 leading-relaxed">
-                  {engagement.description}
-                </p>
-              </motion.div>
-            ))}
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-slate-900 mb-2">
+                    Frontend
+                  </h4>
+                  <p className="text-sm text-slate-600">
+                    Next.js 15 (React 19), TypeScript, TailwindCSS, Framer
+                    Motion
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-slate-900 mb-2">Backend</h4>
+                  <p className="text-sm text-slate-600">
+                    API Routes Next.js, PostgreSQL, Prisma ORM, Better-Auth
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-slate-900 mb-2">
+                    Intégrations
+                  </h4>
+                  <p className="text-sm text-slate-600">
+                    Stripe, Cloudinary, Vercel, Resend
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Sécurité & Performance */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-green-50 rounded-2xl mb-4">
+                  <Shield className="h-8 w-8 text-green-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 mb-4">
+                  Sécurité & Performance
+                </h3>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-slate-900 mb-2">
+                    Protection des données
+                  </h4>
+                  <p className="text-sm text-slate-600">
+                    Chiffrement, HTTPS, authentification sécurisée, permissions
+                    granulaires
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-slate-900 mb-2">
+                    Optimisations
+                  </h4>
+                  <p className="text-sm text-slate-600">
+                    Architecture moderne, mise en cache intelligente, PWA,
+                    optimisation des assets
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Évolutivité */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-50 rounded-2xl mb-4">
+                  <Globe className="h-8 w-8 text-purple-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 mb-4">
+                  Évolutivité
+                </h3>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-slate-900 mb-2">
+                    Infrastructure
+                  </h4>
+                  <p className="text-sm text-slate-600">
+                    Serverless auto-adaptatif, base de données optimisée
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-slate-900 mb-2">
+                    Architecture
+                  </h4>
+                  <p className="text-sm text-slate-600">
+                    Modulaire et conçue pour faciliter l&apos;ajout de nouvelles
+                    fonctionnalités
+                  </p>
+                </div>
+              </div>
+            </motion.div>
           </div>
+
+          <motion.div
+            className="mt-16 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <div className="bg-slate-50 rounded-xl p-8 border-l-4 border-primary max-w-2xl mx-auto">
+              <p className="text-lg text-slate-700 italic">
+                &quot;La technologie est au service de l&apos;expérience
+                utilisateur, pas l&apos;inverse.&quot;
+              </p>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -381,11 +419,11 @@ export default function AboutPage() {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl font-bold text-white mb-6">
-              Prêt à découvrir nos solutions ?
+              Prêt à transformer votre activité ?
             </h2>
             <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-              Parlons de votre projet et voyons comment nos solutions peuvent
-              transformer votre activité.
+              Découvrez comment PlanniKeeper et Chaff peuvent simplifier vos
+              processus et optimiser votre performance.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button

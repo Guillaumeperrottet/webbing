@@ -50,6 +50,7 @@ const applications = [
       "La solution complète pour gérer efficacement vos tâches liées à vos biens immobiliers dans une interface intuitive et élégante.",
     icon: Building2,
     url: "https://www.plannikeeper.ch/",
+    color: "orange", // Couleur orange comme sur le site PlanniKeeper
     features: [
       "Visualisation interactive",
       "Système intégré de planification des tâches",
@@ -65,10 +66,12 @@ const applications = [
       "Plateforme d'analyse business pour transformer vos données en insights stratégiques et prendre des décisions éclairées.",
     icon: BarChart3,
     url: "https://www.chaff.ch/",
+    color: "blue", // Couleur bleue pour l'analytics
     features: [
       "Tableaux de bord interactifs",
       "Analyse prédictive et modélisation avancée",
-      "Rapports automatisés",
+      "Masse salariale",
+      "Possibilité d'import heures de timbreuse de gastrotime",
     ],
   },
   {
@@ -79,6 +82,7 @@ const applications = [
       "Solution suisse de check-in automatique 24h/24 : vos clients s'enregistrent, paient et accèdent à leur hébergement sans intervention.",
     icon: Shield,
     url: "https://www.selfkey.ch/",
+    color: "gray", // Couleur gris clair pour SelfKey
     features: [
       "Check-in 24h/24 par QR code",
       "Paiement sécurisé avec Stripe (cartes, TWINT, Apple Pay)",
@@ -100,7 +104,7 @@ export default function HomePage() {
             <span className="text-primary">transforment</span> votre activité
           </>
         }
-        description="Nous développons des solutions SaaS innovantes pour simplifier la gestion d'une entreprise. Conçues en Suisse avec une attention particulière à la qualité et à l'efficacité."
+        description="Nous développons des solutions SaaS innovantes pour simplifier la gestion d'une entreprise. Conçues en Suisse avec une attention particulière à la qualité et à la simplicité."
         primaryAction={{
           label: "Découvrir nos applications",
           href: "/applications",
@@ -283,7 +287,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-8 lg:grid-rows-1">
             {applications.map((app, index) => (
               <motion.div
                 key={index}
@@ -291,6 +295,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
+                className="h-full"
               >
                 <FeatureCard
                   title={app.name}
@@ -300,6 +305,7 @@ export default function HomePage() {
                   href={app.url}
                   external={true}
                   features={app.features}
+                  color={app.color}
                 />
               </motion.div>
             ))}

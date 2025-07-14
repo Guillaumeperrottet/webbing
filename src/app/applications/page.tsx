@@ -74,7 +74,7 @@ const applications = [
     category: "Check-in automatique",
     tagline: "Enregistrez • Payez • Accédez",
     description:
-      "Solution suisse de check-in automatique 24h/24 : vos clients s'enregistrent, paient et accèdent à leur hébergement sans intervention.",
+      "Solution de check-in automatique 24h/24 : vos clients s'enregistrent, paient et accèdent à leur hébergement sans intervention.",
     icon: CheckCircle,
     url: "https://www.selfkey.ch/",
     color: "success",
@@ -130,7 +130,7 @@ export default function ApplicationsPage() {
             pour votre entreprise
           </>
         }
-        description="Trois applications spécialisées conçues pour optimiser vos processus métier et accélérer votre croissance. Développées en Suisse avec la précision et la qualité qui nous caractérisent."
+        description="Trois applications spécialisées conçues pour optimiser vos processus métier et accélérer votre croissance. Développées et déployées en Suisse."
         primaryAction={{
           label: "Commencer maintenant",
           href: "#applications",
@@ -221,7 +221,7 @@ export default function ApplicationsPage() {
       </Section>
 
       {/* Section Valeurs */}
-      <Section variant="muted">
+      <Section>
         <Container>
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-foreground mb-4">

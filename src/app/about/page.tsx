@@ -406,7 +406,7 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-4 bg-primary">
+      <section className="py-24 px-4 bg-stone-800">
         <div className="container mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -414,18 +414,17 @@ export default function AboutPage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl font-bold text-primary-foreground mb-6">
+            <h2 className="text-4xl font-bold text-white mb-6">
               Prêt à transformer votre activité ?
             </h2>
-            <p className="text-xl text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-stone-200 mb-8 max-w-2xl mx-auto">
               Découvrez comment PlanniKeeper et Chaff peuvent simplifier vos
               processus et optimiser votre performance.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
-                variant="secondary"
-                className="text-base px-8"
+                className="bg-white text-stone-800 hover:bg-stone-50 text-base px-8"
                 asChild
               >
                 <Link href="/applications">

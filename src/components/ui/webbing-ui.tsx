@@ -86,6 +86,7 @@ interface FeatureCardProps {
   href?: string;
   external?: boolean;
   features?: string[];
+  color?: string;
   className?: string;
 }
 
@@ -97,21 +98,76 @@ export function FeatureCard({
   href,
   external = false,
   features,
+  color = "primary",
   className,
 }: FeatureCardProps) {
+  // Mapping des couleurs
+  const colorVariants = {
+    primary: {
+      icon: "group-hover:bg-primary/10 group-hover:text-primary",
+      border: "hover:border-primary/20",
+      dot: "bg-primary",
+      button:
+        "group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary",
+    },
+    orange: {
+      icon: "group-hover:bg-orange-50 group-hover:text-orange-600",
+      border: "hover:border-orange-200",
+      dot: "bg-orange-500",
+      button:
+        "group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600",
+    },
+    emerald: {
+      icon: "group-hover:bg-emerald-50 group-hover:text-emerald-600",
+      border: "hover:border-emerald-200",
+      dot: "bg-emerald-500",
+      button:
+        "group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600",
+    },
+    blue: {
+      icon: "group-hover:bg-blue-50 group-hover:text-blue-600",
+      border: "hover:border-blue-200",
+      dot: "bg-blue-500",
+      button:
+        "group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600",
+    },
+    purple: {
+      icon: "group-hover:bg-purple-50 group-hover:text-purple-600",
+      border: "hover:border-purple-200",
+      dot: "bg-purple-500",
+      button:
+        "group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600",
+    },
+    gray: {
+      icon: "group-hover:bg-gray-50 group-hover:text-gray-600",
+      border: "hover:border-gray-200",
+      dot: "bg-gray-500",
+      button:
+        "group-hover:bg-gray-600 group-hover:text-white group-hover:border-gray-600",
+    },
+  };
+
+  const selectedColor =
+    colorVariants[color as keyof typeof colorVariants] || colorVariants.primary;
+
   return (
     <Card
       className={cn(
-        "group relative transition-all duration-300 hover:shadow-lg border-border",
-        href && "cursor-pointer hover:border-primary/20",
+        "group relative transition-all duration-300 hover:shadow-lg border-border h-full flex flex-col",
+        href && `cursor-pointer ${selectedColor.border}`,
         className
       )}
     >
       <CardHeader className="pb-4">
         <div className="flex items-center gap-3 mb-4">
           {Icon && (
-            <div className="p-2 bg-muted rounded-lg group-hover:bg-primary/10 transition-colors duration-300">
-              <Icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
+            <div
+              className={cn(
+                "p-2 bg-muted rounded-lg transition-colors duration-300",
+                selectedColor.icon
+              )}
+            >
+              <Icon className="h-5 w-5 text-muted-foreground transition-colors duration-300" />
             </div>
           )}
           {badge && (
@@ -136,7 +192,12 @@ export function FeatureCard({
                 key={index}
                 className="flex items-start gap-2 text-sm text-muted-foreground"
               >
-                <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                <div
+                  className={cn(
+                    "w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0",
+                    selectedColor.dot
+                  )}
+                ></div>
                 {feature}
               </li>
             ))}
@@ -145,7 +206,10 @@ export function FeatureCard({
           {href && (
             <Button
               variant="outline"
-              className="w-full group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300"
+              className={cn(
+                "w-full transition-all duration-300",
+                selectedColor.button
+              )}
               asChild
             >
               <Link

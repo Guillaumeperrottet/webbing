@@ -19,8 +19,8 @@ export function Footer() {
               </span>
             </div>
             <p className="text-muted-foreground text-base mb-6 max-w-md leading-relaxed">
-              Solutions SaaS innovantes conçues en Suisse pour optimiser votre
-              gestion immobilière et vos analyses business.
+              Solutions SaaS (Software as a service) innovantes conçues en
+              Suisse pour optimiser votre gestion d&entreprise.
             </p>
             <div className="flex items-center text-muted-foreground">
               <div className="p-2 bg-muted rounded-lg mr-3">

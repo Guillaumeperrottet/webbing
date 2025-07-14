@@ -50,7 +50,7 @@ const values = [
     icon: Shield,
     title: "Sécurité Suisse",
     description:
-      "Vos données sont hébergées et protégées selon les standards suisses les plus stricts en matière de sécurité et de confidentialité.",
+      "Vos données sont hébergées et protégées selon les standards europééens les plus stricts en matière de sécurité et de confidentialité.",
   },
   {
     icon: RefreshCw,

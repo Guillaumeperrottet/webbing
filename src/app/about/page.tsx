@@ -162,25 +162,6 @@ export default function AboutPage() {
                   retours des utilisateurs.&quot;
                 </p>
               </div>
-
-              <div className="mt-8 grid md:grid-cols-2 gap-6">
-                <div className="text-center p-6 bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl border border-orange-100">
-                  <Building2 className="h-8 w-8 text-orange-600 mx-auto mb-3" />
-                  <h4 className="font-semibold text-slate-900 mb-2">
-                    PlanniKeeper
-                  </h4>
-                  <p className="text-sm text-slate-600">
-                    Gestion immobilière simplifiée et collaborative
-                  </p>
-                </div>
-                <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
-                  <BarChart3 className="h-8 w-8 text-blue-600 mx-auto mb-3" />
-                  <h4 className="font-semibold text-slate-900 mb-2">Chaff</h4>
-                  <p className="text-sm text-slate-600">
-                    Analytics business et intelligence prédictive
-                  </p>
-                </div>
-              </div>
             </div>
           </motion.div>
         </div>
@@ -435,14 +416,6 @@ export default function AboutPage() {
                   Découvrir nos applications
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-slate-600 text-white hover:bg-slate-800 text-base px-8"
-                asChild
-              >
-                <Link href="/contact">Nous contacter</Link>
               </Button>
             </div>
           </motion.div>

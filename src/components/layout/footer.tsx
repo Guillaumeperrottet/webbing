@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Building2, BarChart3, Mail, MapPin } from "lucide-react";
+import { Building2, BarChart3, Mail, MapPin, CheckCircle } from "lucide-react";
 
 export function Footer() {
   return (
@@ -20,7 +20,7 @@ export function Footer() {
             </p>
             <div className="flex items-center text-slate-300 text-sm">
               <MapPin className="h-4 w-4 mr-2" />
-              Genève, Suisse
+              Fribourg, Suisse
             </div>
           </div>
 
@@ -30,7 +30,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-slate-300">
               <li>
                 <Link
-                  href="/applications/plannikeeper"
+                  href="https://www.plannikeeper.ch/"
                   className="hover:text-white transition-colors flex items-center"
                 >
                   <Building2 className="h-4 w-4 mr-2" />
@@ -39,12 +39,23 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/applications/chaff"
+                  href="https://www.chaff.ch/"
                   className="hover:text-white transition-colors flex items-center"
                 >
                   <BarChart3 className="h-4 w-4 mr-2" />
                   Chaff
                 </Link>
+              </li>
+              <li>
+                <a
+                  href="https://www.selfkey.ch/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors flex items-center"
+                >
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Selfkey
+                </a>
               </li>
               <li>
                 <Link

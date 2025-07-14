@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
+import { Send, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 
@@ -91,8 +91,8 @@ export default function ContactPage() {
                   Message envoyé !
                 </CardTitle>
                 <CardDescription className="text-slate-600">
-                  Merci pour votre message. Notre équipe vous répondra dans les
-                  plus brefs délais.
+                  Merci pour votre message. Notre vous répondrons dans les plus
+                  brefs délais.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -128,92 +128,10 @@ export default function ContactPage() {
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
               Vous avez des questions sur nos solutions ? Vous souhaitez une
-              démonstration personnalisée ? Notre équipe est là pour vous
+              démonstration personnalisée ? Nous sommes là pour vous
               accompagner.
             </p>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Contact Info Cards */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              <Card className="text-center border-slate-200 shadow-sm h-full">
-                <CardHeader>
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-slate-100 rounded-xl mb-4 mx-auto">
-                    <Mail className="h-6 w-6 text-slate-700" />
-                  </div>
-                  <CardTitle className="text-lg text-slate-900">
-                    Email
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-slate-600 mb-2">
-                    <a
-                      href="mailto:contact@webbing.ch"
-                      className="hover:text-slate-900 transition-colors"
-                    >
-                      contact@webbing.ch
-                    </a>
-                  </p>
-                  <p className="text-sm text-slate-500">Réponse sous 24h</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <Card className="text-center border-slate-200 shadow-sm h-full">
-                <CardHeader>
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-slate-100 rounded-xl mb-4 mx-auto">
-                    <MapPin className="h-6 w-6 text-slate-700" />
-                  </div>
-                  <CardTitle className="text-lg text-slate-900">
-                    Localisation
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-slate-600 mb-2">Genève, Suisse</p>
-                  <p className="text-sm text-slate-500">
-                    Solutions hébergées localement
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <Card className="text-center border-slate-200 shadow-sm h-full">
-                <CardHeader>
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-slate-100 rounded-xl mb-4 mx-auto">
-                    <Clock className="h-6 w-6 text-slate-700" />
-                  </div>
-                  <CardTitle className="text-lg text-slate-900">
-                    Support
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-slate-600 mb-2">Lun - Ven : 9h - 18h</p>
-                  <p className="text-sm text-slate-500">Horaires CET</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
         </div>
       </section>
 
@@ -325,7 +243,10 @@ export default function ContactPage() {
                           PlanniKeeper
                         </SelectItem>
                         <SelectItem value="chaff">Chaff</SelectItem>
-                        <SelectItem value="both">Les deux solutions</SelectItem>
+                        <SelectItem value="selfkey">Selfkey</SelectItem>
+                        <SelectItem value="both">
+                          Les trois solutions
+                        </SelectItem>
                         <SelectItem value="other">Autre / Conseil</SelectItem>
                       </SelectContent>
                     </Select>
@@ -385,65 +306,6 @@ export default function ContactPage() {
               </CardContent>
             </Card>
           </motion.div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-24 px-4 bg-white">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">
-              Questions fréquentes
-            </h2>
-            <p className="text-xl text-slate-600">
-              Trouvez rapidement les réponses à vos questions
-            </p>
-          </div>
-
-          <div className="space-y-8">
-            {[
-              {
-                question:
-                  "Combien de temps faut-il pour déployer une solution ?",
-                answer:
-                  "Le déploiement varie selon la complexité de vos besoins. En général, PlanniKeeper peut être opérationnel en 2-3 semaines, tandis que Chaff nécessite 3-6 semaines selon les intégrations requises.",
-              },
-              {
-                question: "Vos solutions sont-elles conformes au RGPD ?",
-                answer:
-                  "Absolument. Toutes nos solutions sont développées et hébergées en Suisse, avec une conformité totale au RGPD. Vos données restent sous contrôle suisse.",
-              },
-              {
-                question: "Proposez-vous une période d'essai ?",
-                answer:
-                  "Oui, nous proposons une démonstration complète et personnalisée de nos solutions. Pour certains cas, nous pouvons également organiser un pilote limité dans le temps.",
-              },
-              {
-                question: "Quel type de support proposez-vous ?",
-                answer:
-                  "Nous offrons un support complet incluant la formation initiale, une assistance technique réactive, et un accompagnement stratégique pour optimiser l'utilisation de nos solutions.",
-              },
-            ].map((faq, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card className="border-slate-200 shadow-sm">
-                  <CardHeader>
-                    <CardTitle className="text-lg text-slate-900">
-                      {faq.question}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-slate-600">{faq.answer}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
     </div>

@@ -49,8 +49,8 @@
   /* Palette signature Webbing - Couleurs distinctives */
   --primary: oklch(0.45 0.12 220); /* Bleu suisse vibrant */
   --primary-foreground: oklch(0.98 0.008 220);
-  --accent: oklch(0.55 0.15 280); /* Violet tech */
-  --accent-foreground: oklch(0.98 0.008 280);
+  --accent: oklch(0.18 0.03 220); /* Gris foncé à la place du violet */
+  --accent-foreground: oklch(0.98 0.008 220); /* Blanc pour contraste */
   --success: oklch(0.65 0.18 140); /* Vert suisse premium */
 
   /* Couleurs de base harmonisées */
@@ -103,8 +103,8 @@
   );
   --gradient-accent: linear-gradient(
     135deg,
-    oklch(0.55 0.15 280) 0%,
-    oklch(0.6 0.12 260) 100%
+    oklch(0.18 0.03 220) 0%,
+    oklch(0.25 0.06 220) 100%
   );
 }
 
@@ -120,8 +120,8 @@
   /* Couleurs principales adaptées au mode sombre */
   --primary: oklch(0.65 0.15 220); /* Bleu plus clair pour le contraste */
   --primary-foreground: oklch(0.08 0.01 220);
-  --accent: oklch(0.7 0.18 280); /* Violet plus clair */
-  --accent-foreground: oklch(0.08 0.01 280);
+  --accent: oklch(0.18 0.03 220); /* Gris foncé pour le mode sombre */
+  --accent-foreground: oklch(0.95 0.01 220); /* Blanc pour contraste */
 
   /* Couleurs secondaires mode sombre */
   --secondary: oklch(0.18 0.03 220);

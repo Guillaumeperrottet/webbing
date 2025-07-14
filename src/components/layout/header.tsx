@@ -6,11 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 
 export function Header() {
@@ -40,59 +38,11 @@ export function Header() {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-slate-700 hover:text-slate-900 hover:bg-slate-100">
-                  Applications
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                    <li className="row-span-3">
-                      <NavigationMenuLink asChild>
-                        <Link
-                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-slate-50 to-slate-100 p-6 no-underline outline-none focus:shadow-md"
-                          href="/applications"
-                        >
-                          <div className="mb-2 mt-4 text-lg font-medium text-slate-900">
-                            Nos Solutions
-                          </div>
-                          <p className="text-sm leading-tight text-slate-600">
-                            Découvrez nos applications SaaS conçues pour
-                            optimiser votre activité.
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href="/applications/plannikeeper"
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 focus:text-slate-900"
-                        >
-                          <div className="text-sm font-medium leading-none text-slate-900">
-                            PlanniKeeper
-                          </div>
-                          <p className="line-clamp-2 text-sm leading-snug text-slate-600">
-                            Gestion immobilière complète et intuitive
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href="/applications/chaff"
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 focus:text-slate-900"
-                        >
-                          <div className="text-sm font-medium leading-none text-slate-900">
-                            Chaff
-                          </div>
-                          <p className="line-clamp-2 text-sm leading-snug text-slate-600">
-                            Analytics business et intelligence données
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
+                <Link href="/applications" legacyBehavior passHref>
+                  <NavigationMenuLink className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 focus:text-slate-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-slate-100/50 data-[state=open]:bg-slate-100/50 text-slate-700">
+                    Applications
+                  </NavigationMenuLink>
+                </Link>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
@@ -156,6 +106,14 @@ export function Header() {
               >
                 Applications
               </Link>
+              <a
+                href="https://www.selfkey.ch/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50"
+              >
+                Selfkey
+              </a>
               <Link
                 href="/about"
                 className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50"

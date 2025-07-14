@@ -72,11 +72,11 @@ const applications = [
     category: "Gestion Immobilière",
     tagline: "Organisez • Planifiez • Maîtrisez",
     description:
-      "La solution complète pour gérer efficacement vos biens immobiliers dans une interface intuitive et élégante.",
+      "La solution complète pour gérer efficacement vos tâches liées à vos biens immobiliers dans une interface intuitive et élégante.",
     icon: Building2,
     url: "https://www.plannikeeper.ch/",
     features: [
-      "Visualisation interactive de vos biens",
+      "Visualisation interactive",
       "Système intégré de planification des tâches",
       "Mode collaboratif en temps réel",
       "Centralisation documentaire complète",
@@ -87,7 +87,7 @@ const applications = [
     category: "Analytics Business",
     tagline: "Analysez • Modélisez • Décidez",
     description:
-      "Plateforme d'analyse business avancée pour transformer vos données en insights stratégiques et prendre des décisions éclairées.",
+      "Plateforme d'analyse business pour transformer vos données en insights stratégiques et prendre des décisions éclairées.",
     icon: BarChart3,
     url: "https://www.chaff.ch/",
     features: [
@@ -107,7 +107,7 @@ const applications = [
     url: "https://www.selfkey.ch/",
     features: [
       "Check-in 24h/24 par QR code",
-      "Paiement sécurisé Stripe (cartes, TWINT, Apple Pay)",
+      "Paiement sécurisé avec Stripe (cartes, TWINT, Apple Pay)",
       "Accès automatique après paiement",
       "Conformité RGPD et sécurité suisse",
     ],

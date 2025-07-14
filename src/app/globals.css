@@ -44,113 +44,115 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.5rem;
 
-  /* Palette signature Webbing - Couleurs distinctives */
-  --primary: oklch(0.45 0.12 220); /* Bleu suisse vibrant */
-  --primary-foreground: oklch(0.98 0.008 220);
-  --accent: oklch(0.18 0.03 220); /* Gris foncé à la place du violet */
-  --accent-foreground: oklch(0.98 0.008 220); /* Blanc pour contraste */
-  --success: oklch(0.65 0.18 140); /* Vert suisse premium */
+  /* Thème Stone - Design plus contrasté et plus sombre */
+  --primary: hsl(20, 14.3%, 4.1%); /* Stone-950 - Noir très sombre */
+  --primary-foreground: hsl(0, 0%, 98%); /* Blanc pour contraste */
+  --accent: hsl(12, 6.5%, 15.1%); /* Stone-900 - Accent sombre */
+  --accent-foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 - Texte sur accent */
+  --success: hsl(142, 76%, 36%); /* Vert sobre pour les succès */
 
-  /* Couleurs de base harmonisées */
-  --background: oklch(0.98 0.008 220);
-  --foreground: oklch(0.15 0.025 220);
-  --card: oklch(0.99 0.005 220);
-  --card-foreground: oklch(0.15 0.025 220);
-  --popover: oklch(0.99 0.005 220);
-  --popover-foreground: oklch(0.15 0.025 220);
+  /* Couleurs de base Stone plus contrastées */
+  --background: hsl(0, 0%, 100%); /* Blanc pur */
+  --foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 - Texte très sombre */
+  --card: hsl(0, 0%, 100%); /* Blanc pur */
+  --card-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 */
+  --popover: hsl(0, 0%, 100%); /* Blanc pur */
+  --popover-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 */
 
-  /* Couleurs secondaires avec la nouvelle palette */
-  --secondary: oklch(0.94 0.015 220);
-  --secondary-foreground: oklch(0.25 0.06 220);
-  --muted: oklch(0.95 0.012 220);
-  --muted-foreground: oklch(0.55 0.04 220);
+  /* Couleurs secondaires Stone plus sombres */
+  --secondary: hsl(60, 4.8%, 95.9%); /* Stone-100 - Arrière-plans */
+  --secondary-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 */
+  --muted: hsl(20, 5.9%, 90%); /* Stone-200 - Plus visible */
+  --muted-foreground: hsl(28, 5.3%, 39.4%); /* Stone-700 - Plus sombre */
 
   /* Couleurs système */
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.88 0.02 220);
-  --input: oklch(0.92 0.015 220);
-  --ring: oklch(0.45 0.12 220);
+  --destructive: hsl(0, 84.2%, 60.2%); /* Rouge simple */
+  --destructive-foreground: hsl(0, 0%, 98%); /* Blanc */
+  --border: hsl(24, 5.7%, 82.9%); /* Stone-300 - Bordures plus visibles */
+  --input: hsl(20, 5.9%, 90%); /* Stone-200 */
+  --ring: hsl(20, 14.3%, 4.1%); /* Stone-950 pour focus */
 
-  /* Charts avec nouvelle palette */
-  --chart-1: oklch(0.45 0.12 220); /* Primary blue */
-  --chart-2: oklch(0.55 0.15 280); /* Accent violet */
-  --chart-3: oklch(0.65 0.18 140); /* Success green */
-  --chart-4: oklch(0.5 0.1 200); /* Light blue */
-  --chart-5: oklch(0.6 0.12 260); /* Light purple */
+  /* Charts en tons Stone plus contrastés */
+  --chart-1: hsl(20, 14.3%, 4.1%); /* Stone-950 */
+  --chart-2: hsl(28, 5.3%, 39.4%); /* Stone-700 */
+  --chart-3: hsl(25, 5.3%, 44.7%); /* Stone-600 */
+  --chart-4: hsl(24, 5.7%, 82.9%); /* Stone-300 */
+  --chart-5: hsl(60, 4.8%, 95.9%); /* Stone-100 */
 
-  /* Sidebar avec nouvelle palette */
-  --sidebar: oklch(0.96 0.01 220);
-  --sidebar-foreground: oklch(0.2 0.04 220);
-  --sidebar-primary: oklch(0.45 0.12 220);
-  --sidebar-primary-foreground: oklch(0.98 0.008 220);
-  --sidebar-accent: oklch(0.55 0.15 280);
-  --sidebar-accent-foreground: oklch(0.98 0.008 280);
-  --sidebar-border: oklch(0.88 0.02 220);
-  --sidebar-ring: oklch(0.45 0.12 220);
+  /* Sidebar Stone plus contrastée */
+  --sidebar: hsl(60, 4.8%, 95.9%); /* Stone-100 - Arrière-plan sidebar */
+  --sidebar-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 */
+  --sidebar-primary: hsl(20, 14.3%, 4.1%); /* Stone-950 */
+  --sidebar-primary-foreground: hsl(0, 0%, 98%); /* Blanc */
+  --sidebar-accent: hsl(24, 5.7%, 82.9%); /* Stone-300 */
+  --sidebar-accent-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 */
+  --sidebar-border: hsl(24, 5.7%, 82.9%); /* Stone-300 */
+  --sidebar-ring: hsl(20, 14.3%, 4.1%); /* Stone-950 */
 
-  /* Gradients signature */
+  /* Gradients Stone plus contrastés */
   --gradient-swiss: linear-gradient(
     135deg,
-    oklch(0.45 0.12 220) 0%,
-    oklch(0.55 0.15 280) 100%
+    hsl(20, 14.3%, 4.1%) 0%,
+    hsl(28, 5.3%, 39.4%) 100%
   );
   --gradient-primary: linear-gradient(
     135deg,
-    oklch(0.45 0.12 220) 0%,
-    oklch(0.5 0.1 200) 100%
+    hsl(20, 14.3%, 4.1%) 0%,
+    hsl(12, 6.5%, 15.1%) 100%
   );
   --gradient-accent: linear-gradient(
     135deg,
-    oklch(0.18 0.03 220) 0%,
-    oklch(0.25 0.06 220) 100%
+    hsl(12, 6.5%, 15.1%) 0%,
+    hsl(28, 5.3%, 39.4%) 100%
   );
 }
 
 .dark {
-  /* Mode sombre avec palette harmonisée */
-  --background: oklch(0.08 0.01 220);
-  --foreground: oklch(0.95 0.01 220);
-  --card: oklch(0.12 0.02 220);
-  --card-foreground: oklch(0.95 0.01 220);
-  --popover: oklch(0.12 0.02 220);
-  --popover-foreground: oklch(0.95 0.01 220);
+  /* Mode sombre Stone - Chaleureux et naturel */
+  --background: hsl(20, 14.3%, 4.1%); /* Stone-950 - Arrière-plan très sombre */
+  --foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 - Texte clair */
+  --card: hsl(12, 6.5%, 15.1%); /* Stone-900 - Cartes sombres */
+  --card-foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 */
+  --popover: hsl(12, 6.5%, 15.1%); /* Stone-900 */
+  --popover-foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 */
 
-  /* Couleurs principales adaptées au mode sombre */
-  --primary: oklch(0.65 0.15 220); /* Bleu plus clair pour le contraste */
-  --primary-foreground: oklch(0.08 0.01 220);
-  --accent: oklch(0.18 0.03 220); /* Gris foncé pour le mode sombre */
-  --accent-foreground: oklch(0.95 0.01 220); /* Blanc pour contraste */
+  /* Couleurs principales pour mode sombre Stone */
+  --primary: hsl(60, 4.8%, 95.9%); /* Stone-100 en primary */
+  --primary-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 en foreground */
+  --accent: hsl(24, 5.7%, 82.9%); /* Stone-300 */
+  --accent-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 */
 
-  /* Couleurs secondaires mode sombre */
-  --secondary: oklch(0.18 0.03 220);
-  --secondary-foreground: oklch(0.9 0.015 220);
-  --muted: oklch(0.16 0.025 220);
-  --muted-foreground: oklch(0.7 0.05 220);
+  /* Couleurs secondaires mode sombre Stone */
+  --secondary: hsl(12, 6.5%, 15.1%); /* Stone-900 */
+  --secondary-foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 */
+  --muted: hsl(12, 6.5%, 15.1%); /* Stone-900 */
+  --muted-foreground: hsl(24, 5.4%, 63.9%); /* Stone-400 */
 
   /* Couleurs système mode sombre */
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.2 0.03 220);
-  --input: oklch(0.22 0.035 220);
-  --ring: oklch(0.65 0.15 220);
+  --destructive: hsl(0, 62.8%, 30.6%); /* Rouge plus sombre */
+  --destructive-foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 */
+  --border: hsl(12, 6.5%, 15.1%); /* Stone-900 */
+  --input: hsl(12, 6.5%, 15.1%); /* Stone-900 */
+  --ring: hsl(24, 5.7%, 82.9%); /* Stone-300 pour focus */
 
-  /* Charts mode sombre */
-  --chart-1: oklch(0.65 0.15 220);
-  --chart-2: oklch(0.7 0.18 280);
-  --chart-3: oklch(0.75 0.2 140);
-  --chart-4: oklch(0.6 0.12 200);
-  --chart-5: oklch(0.72 0.15 260);
+  /* Charts mode sombre en tons Stone */
+  --chart-1: hsl(60, 4.8%, 95.9%); /* Stone-100 */
+  --chart-2: hsl(24, 5.4%, 63.9%); /* Stone-400 */
+  --chart-3: hsl(25, 5.3%, 44.7%); /* Stone-600 */
+  --chart-4: hsl(28, 5.3%, 39.4%); /* Stone-700 */
+  --chart-5: hsl(12, 6.5%, 15.1%); /* Stone-900 */
 
-  /* Sidebar mode sombre */
-  --sidebar: oklch(0.1 0.015 220);
-  --sidebar-foreground: oklch(0.9 0.015 220);
-  --sidebar-primary: oklch(0.65 0.15 220);
-  --sidebar-primary-foreground: oklch(0.08 0.01 220);
-  --sidebar-accent: oklch(0.7 0.18 280);
-  --sidebar-accent-foreground: oklch(0.08 0.01 280);
-  --sidebar-border: oklch(0.2 0.03 220);
-  --sidebar-ring: oklch(0.65 0.15 220);
+  /* Sidebar mode sombre Stone */
+  --sidebar: hsl(20, 14.3%, 4.1%); /* Stone-950 */
+  --sidebar-foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 */
+  --sidebar-primary: hsl(60, 4.8%, 95.9%); /* Stone-100 */
+  --sidebar-primary-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 */
+  --sidebar-accent: hsl(24, 5.7%, 82.9%); /* Stone-300 */
+  --sidebar-accent-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 */
+  --sidebar-border: hsl(12, 6.5%, 15.1%); /* Stone-900 */
+  --sidebar-ring: hsl(24, 5.7%, 82.9%); /* Stone-300 */
 }
 
 @layer base {
@@ -212,6 +214,39 @@
     background-size: 200% 200%;
     animation: gradient-x 3s ease infinite;
   }
+
+  /* Animation pour le bouton GitHub */
+  .github-button {
+    transform-origin: center center;
+  }
+
+  .github-button:hover .github-svg {
+    filter: invert(1);
+  }
+
+  /* Animation pour le bouton Email */
+  .email-button {
+    transform-origin: center center;
+  }
+
+  .email-button:hover .email-svg {
+    filter: invert(1);
+  }
+
+  /* Classe utilitaire pour rotation 360° */
+  .hover\:rotate-360:hover {
+    animation: rotate360 0.5s ease-in-out;
+  }
+
+  /* Animations améliorées */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Effet de pulsation */
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
 }
 
 @keyframes glow-primary {
@@ -242,4 +277,66 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* Animation pour le bouton GitHub */
+.github-button {
+  transform-origin: center center;
+}
+
+.github-button:hover .github-svg {
+  filter: invert(1);
+}
+
+/* Animation pour le bouton Email */
+.email-button {
+  transform-origin: center center;
+}
+
+.email-button:hover .email-svg {
+  filter: invert(1);
+}
+
+/* Classe utilitaire pour rotation 360° */
+@keyframes rotate360 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hover\:rotate-360:hover {
+  animation: rotate360 0.5s ease-in-out;
+}
+
+/* Animations améliorées */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Effet de pulsation */
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
 }

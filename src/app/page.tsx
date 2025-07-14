@@ -1,56 +1,31 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Hero,
+  Section,
+  Container,
+  FeatureCard,
+} from "@/components/ui/webbing-ui";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  ArrowRight,
   Building2,
   BarChart3,
   Shield,
   RefreshCw,
   Globe,
-  ExternalLink,
+  ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
-
-// const stats = [
-//   {
-//     value: "150+",
-//     label: "Clients satisfaits",
-//     description: "Professionnels qui nous font confiance",
-//   },
-//   {
-//     value: "99%",
-//     label: "Uptime garanti",
-//     description: "Disponibilité de nos services",
-//   },
-//   {
-//     value: "24h",
-//     label: "Support réactif",
-//     description: "Assistance technique continue",
-//   },
-//   {
-//     value: "5 ans",
-//     label: "D'expertise",
-//     description: "Dans le développement SaaS",
-//   },
-// ];
 
 const values = [
   {
     icon: Shield,
     title: "Sécurité Suisse",
     description:
-      "Vos données sont hébergées et protégées selon les standards europééens les plus stricts en matière de sécurité et de confidentialité.",
+      "Vos données sont hébergées et protégées selon les standards européens les plus stricts en matière de sécurité et de confidentialité.",
   },
   {
     icon: RefreshCw,
@@ -93,7 +68,6 @@ const applications = [
     features: [
       "Tableaux de bord interactifs",
       "Analyse prédictive et modélisation avancée",
-      "Intégration multi-sources de données",
       "Rapports automatisés",
     ],
   },
@@ -114,72 +88,37 @@ const applications = [
   },
 ];
 
-export default function ModernAppsSection() {
+export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section - Version sobre */}
-      <section className="py-24 px-4 bg-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="mb-8"
-            >
-              <Badge
-                variant="outline"
-                className="mb-6 px-4 py-2 text-sm bg-slate-50 border-slate-200 text-slate-700"
-              >
-                Solutions SaaS Suisses
-              </Badge>
+      {/* Hero Section moderne avec shadcn/ui */}
+      <Hero
+        badge="Solutions SaaS Suisses"
+        title={
+          <>
+            Des applications qui{" "}
+            <span className="text-primary">transforment</span> votre activité
+          </>
+        }
+        description="Nous développons des solutions SaaS innovantes pour simplifier la gestion d'une entreprise. Conçues en Suisse avec une attention particulière à la qualité et à l'efficacité."
+        primaryAction={{
+          label: "Découvrir nos applications",
+          href: "/applications",
+        }}
+        secondaryAction={{
+          label: "Nous contacter",
+          href: "/contact",
+        }}
+      />
 
-              <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
-                Des applications qui{" "}
-                <span className="text-primary">transforment</span> votre
-                activité
-              </h1>
-
-              <p className="text-xl text-slate-600 mb-8 leading-relaxed max-w-3xl mx-auto">
-                Nous développons des solutions SaaS innovantes pour simplifier
-                la gestion d&apos;une entreprise. Conçues en Suisse avec une
-                attention particulière à la qualité et à l&apos;efficacité.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <Button size="lg" className="text-base px-8" asChild>
-                <Link href="/applications">
-                  Découvrir nos applications
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-base px-8"
-                asChild
-              >
-                <Link href="/contact">Nous contacter</Link>
-              </Button>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Valeurs - Design minimaliste (remonte ici) */}
-      <section className="py-24 px-4 bg-slate-50">
-        <div className="container mx-auto max-w-6xl">
+      {/* Section Valeurs avec design moderne */}
+      <Section variant="muted">
+        <Container>
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">
+            <h2 className="text-4xl font-bold text-foreground mb-4">
               Pourquoi choisir Webbing ?
             </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Notre engagement envers l&apos;excellence se reflète dans chaque
               aspect de nos solutions.
             </p>
@@ -195,29 +134,150 @@ export default function ModernAppsSection() {
                 viewport={{ once: true }}
                 className="text-center"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-white border border-slate-200 rounded-2xl mb-6 shadow-sm">
-                  <value.icon className="h-8 w-8 text-slate-700" />
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-background border border-border rounded-2xl mb-6 shadow-sm">
+                  <value.icon className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900 mb-4">
+                <h3 className="text-xl font-semibold text-foreground mb-4">
                   {value.title}
                 </h3>
-                <p className="text-slate-600 leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed">
                   {value.description}
                 </p>
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
-      {/* Applications - Design épuré et moderne */}
-      <section className="py-24 px-4 bg-white">
-        <div className="container mx-auto max-w-6xl">
+      {/* Trust By Section avec carousel pleine largeur */}
+      <Section className="overflow-hidden">
+        {/* Retiré variant="muted" pour fond blanc */}
+        <Container>
+          <motion.h3
+            className="text-center text-3xl font-bold text-foreground mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            Ils nous font confiance
+          </motion.h3>
+        </Container>
+
+        {/* Carousel pleine largeur qui sort de l'écran */}
+        <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden">
+          <motion.div
+            className="flex gap-16 items-center py-12"
+            animate={{ x: [0, -50 * 8] }} // 50% de la largeur d'un logo + gap
+            transition={{
+              repeat: Infinity,
+              duration: 25,
+              ease: "linear",
+              repeatType: "loop",
+            }}
+            style={{ willChange: "transform" }}
+            whileHover={{ animationPlayState: "paused" }}
+          >
+            {/* Première série de logos */}
+            {[
+              { src: "/trust/logo-lac.png", alt: "Lac Logo" },
+              { src: "/trust/lodges.png", alt: "Lodges" },
+              { src: "/trust/alpha.png", alt: "Alpha" },
+              { src: "/trust/logo-pont.png", alt: "Pont Logo" },
+              { src: "/trust/popliving.png", alt: "PopLiving" },
+              { src: "/trust/logo-sapins.png", alt: "Sapins Logo" },
+              { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+              { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+            ].map((logo, idx) => (
+              <div
+                key={idx}
+                className="flex-shrink-0 flex items-center justify-center w-48 h-24"
+              >
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={180}
+                  height={90}
+                  className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+
+            {/* Duplication pour la continuité */}
+            {[
+              { src: "/trust/logo-lac.png", alt: "Lac Logo" },
+              { src: "/trust/lodges.png", alt: "Lodges" },
+              { src: "/trust/alpha.png", alt: "Alpha" },
+              { src: "/trust/logo-pont.png", alt: "Pont Logo" },
+              { src: "/trust/popliving.png", alt: "PopLiving" },
+              { src: "/trust/logo-sapins.png", alt: "Sapins Logo" },
+              { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+              { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+            ].map((logo, idx) => (
+              <div
+                key={`dup-${idx}`}
+                className="flex-shrink-0 flex items-center justify-center w-48 h-24"
+              >
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={180}
+                  height={90}
+                  className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+
+            {/* Troisième série pour un scroll ultra fluide */}
+            {[
+              { src: "/trust/logo-lac.png", alt: "Lac Logo" },
+              { src: "/trust/lodges.png", alt: "Lodges" },
+              { src: "/trust/alpha.png", alt: "Alpha" },
+              { src: "/trust/logo-pont.png", alt: "Pont Logo" },
+              { src: "/trust/popliving.png", alt: "PopLiving" },
+              { src: "/trust/logo-sapins.png", alt: "Sapins Logo" },
+              { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+              { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+            ].map((logo, idx) => (
+              <div
+                key={`trip-${idx}`}
+                className="flex-shrink-0 flex items-center justify-center w-48 h-24"
+              >
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={180}
+                  height={90}
+                  className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        <Container>
+          {/* Transition visuelle douce */}
+          <motion.div
+            className="w-32 h-px bg-gradient-to-r from-transparent via-border to-transparent mx-auto"
+            initial={{ opacity: 0, scaleX: 0 }}
+            whileInView={{ opacity: 1, scaleX: 1 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            viewport={{ once: true }}
+          />
+        </Container>
+      </Section>
+
+      {/* Applications avec FeatureCard moderne */}
+      <Section>
+        <Container>
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">
+            <h2 className="text-4xl font-bold text-foreground mb-4">
               Nos Solutions
             </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Trois applications spécialisées pour répondre aux défis modernes
               des professionnels.
             </p>
@@ -232,153 +292,60 @@ export default function ModernAppsSection() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="group relative bg-white border border-slate-200 hover:border-slate-900 transition-all duration-300 hover:shadow-lg h-full">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-slate-900 transition-colors duration-300">
-                        <app.icon className="h-5 w-5 text-slate-600 group-hover:text-white transition-colors duration-300" />
-                      </div>
-                      <Badge
-                        variant="secondary"
-                        className="bg-slate-100 text-slate-700 border-slate-200"
-                      >
-                        {app.category}
-                      </Badge>
-                    </div>
-
-                    <CardTitle className="text-2xl text-slate-900 mb-2">
-                      {app.name}
-                    </CardTitle>
-
-                    <div className="text-sm font-medium text-slate-500 mb-4 tracking-wide">
-                      {app.tagline}
-                    </div>
-
-                    <CardDescription className="text-base text-slate-600 leading-relaxed">
-                      {app.description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="flex flex-col flex-1">
-                    <ul className="space-y-2 mb-8 flex-1">
-                      {app.features.map((feature, featureIndex) => (
-                        <li
-                          key={featureIndex}
-                          className="flex items-start gap-2 text-sm text-slate-600"
-                        >
-                          <div className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 flex-shrink-0"></div>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <Button
-                      variant="outline"
-                      className="w-full group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all duration-300 border-slate-200 text-slate-900"
-                      asChild
-                    >
-                      <Link
-                        href={app.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Découvrir
-                        <ExternalLink className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
+                <FeatureCard
+                  title={app.name}
+                  description={app.description}
+                  icon={app.icon}
+                  badge={app.category}
+                  href={app.url}
+                  external={true}
+                  features={app.features}
+                />
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
-      {/* Carousel Trust By - Infinite Slider */}
-      <section className="py-18 px-4 bg-white">
-        <div className="container mx-auto max-w-6xl">
-          <h3 className="text-center text-3xl font-bold text-slate-900 mb-8">
-            Trust By
-          </h3>
-          <div className="overflow-hidden relative">
-            <motion.div
-              className="flex gap-12 items-center"
-              animate={{ x: [0, -400] }}
-              transition={{ repeat: Infinity, duration: 12, ease: "linear" }}
-              style={{ willChange: "transform" }}
-            >
-              {[
-                "/trust/logo-lac.png",
-                "/trust/lodges.png",
-                "/trust/alpha.png",
-                "/trust/logo-pont.png",
-                "/trust/popliving.png",
-                "/trust/logo-sapins.png",
-                "/trust/dipiaza.png",
-              ].map((src, idx) => (
-                <Image
-                  key={idx}
-                  src={src}
-                  alt={`Logo ${idx + 1}`}
-                  width={200}
-                  height={90}
-                  className="h-20 w-auto object-contain transition duration-300"
-                />
-              ))}
-              {[
-                "/trust/logo-lac.png",
-                "/trust/lodges.png",
-                "/trust/alpha.png",
-                "/trust/logo-pont.png",
-                "/trust/popliving.png",
-                "/trust/logo-sapins.png",
-                "/trust/dipiaza.png",
-              ].map((src, idx) => (
-                <Image
-                  key={"dup-" + idx}
-                  src={src}
-                  alt={`Logo ${idx + 1}`}
-                  width={200}
-                  height={90}
-                  className="h-20 w-auto object-contain transition duration-300"
-                />
-              ))}
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section - Version sobre */}
-      <section className="py-24 px-4 bg-slate-900">
-        <div className="container mx-auto max-w-4xl text-center">
+      {/* CTA Section élégante */}
+      <Section className="bg-gradient-to-r from-muted/50 to-muted/30 pt-16">
+        <Container size="lg">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
+            className="text-center"
           >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Prêt à transformer votre activité ?
-            </h2>
-            <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-              Découvrez comment nos solutions peuvent optimiser vos processus et
-              accélérer votre croissance.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="bg-white text-slate-900 hover:bg-slate-100 text-base px-8"
-                asChild
+            <div className="max-w-3xl mx-auto">
+              <Badge
+                variant="outline"
+                className="mb-6 px-4 py-2 text-sm bg-background/50 border-primary/20"
               >
-                <Link href="/applications">
-                  Explorer nos solutions
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+                Transformez votre activité
+              </Badge>
+
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                Prêt à optimiser vos processus ?
+              </h2>
+
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+                Découvrez nos solutions sur mesure pour automatiser vos tâches
+                et accélérer votre croissance digitale.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button size="lg" className="text-base px-8 shadow-lg" asChild>
+                  <Link href="/applications">
+                    Explorer nos solutions
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
             </div>
           </motion.div>
-        </div>
-      </section>
+        </Container>
+      </Section>
     </div>
   );
 }

@@ -12,6 +12,7 @@ import {
   Zap,
   Shield,
   Users,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -25,17 +26,17 @@ const applications = [
       "La solution complète pour gérer efficacement vos tâches liées à vos biens immobiliers dans une interface intuitive et élégante.",
     icon: Building2,
     url: "https://www.plannikeeper.ch/",
-    color: "primary",
+    color: "orange", // Couleur orange comme PlanniKeeper
     featured: true,
     features: [
-      "Interface cartographique interactive",
-      "Gestion centralisée des documents",
-      "Collaboration d'équipe en temps réel",
-      "Système de tâches intégré",
-      "Notifications intelligentes",
-      "Rapports automatisés",
-      "Mobile-first responsive design",
-      "Intégrations tierces",
+      "Visualisation interactive de vos biens immobiliers",
+      "Gestion des tâches simplifiée et centralisée",
+      "Mode collaboratif en temps réel avec votre équipe",
+      "Centralisation documentaire complète",
+      "Communication facilitée avec assignation de tâches",
+      "Notifications automatiques et historique",
+      "Interface mobile optimisée",
+      "Mises à jour automatiques et fonctionnalités sur demande",
     ],
     stats: [
       { label: "Propriétés gérées", value: "500+" },
@@ -51,17 +52,17 @@ const applications = [
       "Plateforme d'analyse business pour transformer vos données en insights stratégiques et prendre des décisions éclairées.",
     icon: BarChart3,
     url: "https://www.chaff.ch/",
-    color: "accent",
+    color: "blue", // Couleur bleue pour l'analytics
     featured: false,
     features: [
-      "Tableaux de bord personnalisables",
-      "Analyses prédictives avancées",
-      "Visualisations interactives",
-      "Intégration multi-sources",
-      "Exports automatisés",
-      "Sécurité enterprise",
-      "API complète",
-      "Support temps réel",
+      "Analytics en temps réel avec graphiques interactifs",
+      "Suivi quotidien du chiffre d'affaires",
+      "Gestion et analyse de la masse salariale",
+      "Calcul des ratios de rentabilité par période",
+      "Tableaux de bord intuitifs personnalisables",
+      "Chiffrement end-to-end pour la sécurité",
+      "Hébergement européen conforme RGPD",
+      "Évolution continue avec nouvelles fonctionnalités sur demande",
     ],
     stats: [
       { label: "Données analysées", value: "1M+" },
@@ -77,17 +78,17 @@ const applications = [
       "Solution de check-in automatique 24h/24 : vos clients s'enregistrent, paient et accèdent à leur hébergement sans intervention.",
     icon: CheckCircle,
     url: "https://www.selfkey.ch/",
-    color: "success",
+    color: "gray", // Couleur grise pour SelfKey
     featured: true,
     features: [
-      "Check-in 24h/24 par QR code",
-      "Paiement sécurisé Stripe, TWINT, Apple Pay",
-      "Accès automatique après paiement",
-      "Installation rapide et intuitive",
-      "Conformité RGPD et sécurité suisse",
-      "Gestion des arrivées et départs",
-      "Support client réactif",
-      "Interface mobile et tablette",
+      "Check-in 24h/24 par code QR",
+      "Paiement sécurisé Stripe (cartes, TWINT, Apple Pay, Google Pay)",
+      "Envoi automatique des codes d'accès par email après paiement",
+      "Installation rapide et configuration simple",
+      "Aucun abonnement - commission uniquement sur réservations",
+      "Basé en Suisse avec conformité RGPD garantie",
+      "Interface intuitive pour établissements et clients",
+      "Améliorations continues et personnalisations sur demande",
     ],
     stats: [
       { label: "Check-ins automatiques", value: "50k+" },
@@ -115,6 +116,12 @@ const values = [
     title: "Support",
     description:
       "Une équipe dédiée pour vous accompagner dans votre transformation digitale.",
+  },
+  {
+    icon: Sparkles,
+    title: "Simplicité",
+    description:
+      "Aucune installation logiciel requise. Accès web immédiat et possibilité de se désabonner à tout moment.",
   },
 ];
 
@@ -164,8 +171,28 @@ export default function ApplicationsPage() {
                   </div>
 
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="p-3 bg-muted rounded-xl">
-                      <app.icon className="h-8 w-8 text-primary" />
+                    <div
+                      className={`p-3 rounded-xl ${
+                        app.color === "orange"
+                          ? "bg-orange-100 dark:bg-orange-900/20"
+                          : app.color === "blue"
+                            ? "bg-blue-100 dark:bg-blue-900/20"
+                            : app.color === "gray"
+                              ? "bg-gray-100 dark:bg-gray-900/20"
+                              : "bg-muted"
+                      }`}
+                    >
+                      <app.icon
+                        className={`h-8 w-8 ${
+                          app.color === "orange"
+                            ? "text-orange-600 dark:text-orange-400"
+                            : app.color === "blue"
+                              ? "text-blue-600 dark:text-blue-400"
+                              : app.color === "gray"
+                                ? "text-gray-600 dark:text-gray-400"
+                                : "text-primary"
+                        }`}
+                      />
                     </div>
                     <h2 className="text-4xl font-bold text-foreground">
                       {app.name}
@@ -205,7 +232,17 @@ export default function ApplicationsPage() {
                           key={featureIndex}
                           className="flex items-start gap-3"
                         >
-                          <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2.5 flex-shrink-0"></div>
+                          <div
+                            className={`w-1.5 h-1.5 rounded-full mt-2.5 flex-shrink-0 ${
+                              app.color === "orange"
+                                ? "bg-orange-500"
+                                : app.color === "blue"
+                                  ? "bg-blue-500"
+                                  : app.color === "gray"
+                                    ? "bg-gray-500"
+                                    : "bg-primary"
+                            }`}
+                          ></div>
                           <span className="text-muted-foreground">
                             {feature}
                           </span>
@@ -233,7 +270,7 @@ export default function ApplicationsPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <motion.div
                 key={index}

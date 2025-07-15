@@ -104,7 +104,7 @@ export default function HomePage() {
             <span className="text-primary">transforment</span> votre activité
           </>
         }
-        description="Nous développons des solutions SaaS innovantes pour simplifier la gestion d'une entreprise. Conçues en Suisse avec une attention particulière à la qualité et à la simplicité."
+        description="Nous développons des applications web directement en ligne pour simplifier la gestion d'une entreprise. Conçues en Suisse avec une attention particulière à la qualité et à la simplicité."
         primaryAction={{
           label: "Découvrir nos applications",
           href: "/applications",

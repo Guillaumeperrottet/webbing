@@ -41,9 +41,9 @@ export default function AboutPage() {
               naissance à Webbing
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              L&apos;histoire de trois applications SaaS (Software as a Service)
-              nées d&apos;un besoin concret et d&apos;une volonté de simplifier
-              les processus complexes des entreprises suisses.
+              L&apos;histoire de quatre applications SaaS (Software as a
+              Service) nées d&apos;un besoin concret et d&apos;une volonté de
+              simplifier les processus complexes des entreprises suisses.
             </p>
           </motion.div>
         </div>
@@ -67,9 +67,11 @@ export default function AboutPage() {
                 professionnels suisses méritent des outils aussi efficaces que
                 leur ambition. Après avoir développé PlanniKeeper pour répondre
                 aux défis concrets de la gestion immobilière, puis Chaff pour
-                transformer les données en intelligence business, nous avons
-                réalisé que notre approche SaaS (logiciels accessibles
-                directement en ligne) pouvait aider bien d&apos;autres secteurs.
+                transformer les données en intelligence business, SelfKey pour
+                automatiser les check-ins, et Loopster pour révolutionner
+                l&apos;affichage dynamique, nous avons réalisé que notre
+                approche SaaS (logiciels accessibles directement en ligne)
+                pouvait aider bien d&apos;autres secteurs.
               </p>
               <p className="text-muted-foreground mb-8">
                 Notre philosophie est simple : la technologie doit
@@ -208,16 +210,16 @@ export default function AboutPage() {
               },
               {
                 year: "2024",
-                title: "Lancement de Chaff",
+                title: "Lancement de Chaff et SelfKey",
                 description:
-                  "Extension vers l'analytics business avec une plateforme d'intelligence prédictive pour transformer les données en insights.",
+                  "Extension vers l'analytics business avec Chaff et automatisation du check-in avec SelfKey, consolidant notre expertise SaaS.",
                 icon: BarChart3,
               },
               {
                 year: "2025",
-                title: "Expansion et innovation",
+                title: "Loopster et expansion",
                 description:
-                  "Consolidation de l'offre Webbing avec de nouvelles fonctionnalités et une vision élargie des solutions SaaS.",
+                  "Lancement de Loopster pour l'affichage dynamique, complétant notre écosystème de quatre solutions SaaS innovantes.",
                 icon: Globe,
               },
             ].map((milestone, index) => (
@@ -418,7 +420,7 @@ export default function AboutPage() {
               Prêt à transformer votre activité ?
             </h2>
             <p className="text-xl text-stone-200 mb-8 max-w-2xl mx-auto">
-              Découvrez comment PlanniKeeper, Chaff et Selfkey peuvent
+              Découvrez comment PlanniKeeper, Chaff, SelfKey et Loopster peuvent
               simplifier vos processus et optimiser votre gestion.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

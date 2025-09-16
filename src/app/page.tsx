@@ -15,6 +15,7 @@ import {
   RefreshCw,
   Globe,
   ArrowRight,
+  Monitor,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -88,6 +89,22 @@ const applications = [
       "Paiement sécurisé avec Stripe (cartes, TWINT, Apple Pay)",
       "Accès automatique après paiement",
       "Conformité RGPD et sécurité suisse",
+    ],
+  },
+  {
+    name: "Loopster",
+    category: "Affichage Dynamique",
+    tagline: "Créez • Diffusez • Captivez",
+    description:
+      "Transformez vos écrans en affichage dynamique avec une solution complète de gestion de contenu multi-utilisateurs et analytics en temps réel.",
+    icon: Monitor,
+    url: "https://www.loopster.ch/",
+    color: "purple", // Couleur violette inspirée du site Loopster
+    features: [
+      "Interface intuitive avec glisser-déposer",
+      "Gestion multi-utilisateurs et collaboration",
+      "Écrans illimités avec plan Pro",
+      "Analytics en temps réel et sécurité renforcée",
     ],
   },
 ];
@@ -282,12 +299,12 @@ export default function HomePage() {
               Nos Solutions
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Trois applications spécialisées pour répondre aux défis modernes
+              Quatre applications spécialisées pour répondre aux défis modernes
               des professionnels.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8 lg:grid-rows-1">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {applications.map((app, index) => (
               <motion.div
                 key={index}

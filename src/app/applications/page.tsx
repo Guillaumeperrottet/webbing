@@ -13,6 +13,7 @@ import {
   Shield,
   Users,
   Sparkles,
+  Monitor,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -96,6 +97,32 @@ const applications = [
       { label: "Hébergements connectés", value: "200+" },
     ],
   },
+  {
+    name: "Loopster",
+    category: "Affichage Dynamique",
+    tagline: "Créez • Diffusez • Captivez",
+    description:
+      "Transformez vos écrans en affichage dynamique avec une solution complète de gestion de contenu multi-utilisateurs et analytics en temps réel.",
+    icon: Monitor,
+    url: "https://www.loopster.ch/",
+    color: "purple", // Couleur violette inspirée du site Loopster
+    featured: true,
+    features: [
+      "Interface intuitive avec glisser-déposer de médias",
+      "Gestion multi-utilisateurs avec rôles définis",
+      "Écrans illimités avec le plan Pro",
+      "Analytics avancés et suivi en temps réel",
+      "Codes d'accès uniques et données chiffrées",
+      "Infrastructure sécurisée pour protéger le contenu",
+      "Plan gratuit disponible avec 1 écran",
+      "Tarifs accessibles bien plus doux que la concurrence",
+    ],
+    stats: [
+      { label: "Écrans connectés", value: "1k+" },
+      { label: "Contenus diffusés", value: "25k+" },
+      { label: "Uptime", value: "99.9%" },
+    ],
+  },
 ];
 
 const values = [
@@ -137,7 +164,7 @@ export default function ApplicationsPage() {
             pour votre entreprise
           </>
         }
-        description="Trois applications spécialisées conçues pour optimiser vos processus métier et accélérer votre croissance. Développées et déployées en Suisse."
+        description="Quatre applications spécialisées conçues pour optimiser vos processus métier et accélérer votre croissance. Développées et déployées en Suisse."
         primaryAction={{
           label: "Commencer maintenant",
           href: "#applications",

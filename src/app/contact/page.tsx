@@ -244,8 +244,9 @@ export default function ContactPage() {
                         </SelectItem>
                         <SelectItem value="chaff">Chaff</SelectItem>
                         <SelectItem value="selfkey">Selfkey</SelectItem>
-                        <SelectItem value="both">
-                          Les trois solutions
+                        <SelectItem value="loopster">Loopster</SelectItem>
+                        <SelectItem value="all">
+                          Toutes les solutions
                         </SelectItem>
                         <SelectItem value="other">Autre / Conseil</SelectItem>
                       </SelectContent>

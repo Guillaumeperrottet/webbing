@@ -15,7 +15,7 @@ import {
   RefreshCw,
   Globe,
   ArrowRight,
-  Monitor,
+  Tent,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -92,19 +92,19 @@ const applications = [
     ],
   },
   {
-    name: "Loopster",
-    category: "Affichage Dynamique",
-    tagline: "Créez • Diffusez • Captivez",
+    name: "SelfCamp",
+    category: "Solution Camping",
+    tagline: "Réservez • Campez • Profitez",
     description:
-      "Transformez vos écrans en affichage dynamique avec une solution complète de gestion de contenu multi-utilisateurs et analytics en temps réel.",
-    icon: Monitor,
-    url: "https://www.loopster.ch/",
-    color: "purple", // Couleur violette inspirée du site Loopster
+      "Automatisez vos check-ins 24h/24 pour votre camping. Vos clients scannent un QR code, paient en ligne et reçoivent instantanément leur accès. Parfait pour hôtels, campings, parkings et locations saisonnières.",
+    icon: Tent,
+    url: "https://www.selfcamp.ch/",
+    color: "green", // Couleur verte pour camping/nature
     features: [
-      "Interface intuitive avec glisser-déposer",
-      "Gestion multi-utilisateurs et collaboration",
-      "Écrans illimités avec plan Pro",
-      "Analytics en temps réel et sécurité renforcée",
+      "Check-in automatique 24h/24 sans réception",
+      "Paiement sécurisé : cartes, TWINT, Apple Pay, Google Pay",
+      "Gestion parking avec codes journaliers",
+      "Aucune application, compte ou abonnement nécessaire",
     ],
   },
 ];
@@ -114,16 +114,15 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen">
       {/* Hero Section moderne avec shadcn/ui */}
       <Hero
-        badge="Solutions SaaS Suisses"
+        badge="Développement Web Suisse"
         title={
           <>
-            Des applications qui{" "}
-            <span className="text-primary">transforment</span> votre activité
+            Applications web <span className="text-primary">sur mesure</span>
           </>
         }
-        description="Nous développons des applications web directement en ligne pour simplifier la gestion d'une entreprise. Conçues en Suisse avec une attention particulière à la qualité et à la simplicité."
+        description="Nous créons des applications web personnalisées pour votre entreprise. Développées en Suisse, simples et efficaces."
         primaryAction={{
-          label: "Découvrir nos applications",
+          label: "Voir nos applications",
           href: "/applications",
         }}
         secondaryAction={{
@@ -136,13 +135,9 @@ export default function HomePage() {
       <Section variant="muted">
         <Container>
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-4xl font-bold text-foreground mb-12">
               Pourquoi choisir Webbing ?
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Notre engagement envers l&apos;excellence se reflète dans chaque
-              aspect de nos solutions.
-            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -189,10 +184,10 @@ export default function HomePage() {
         <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden">
           <motion.div
             className="flex gap-16 items-center py-12"
-            animate={{ x: [0, -50 * 8] }} // 50% de la largeur d'un logo + gap
+            animate={{ x: [0, -50 * 6] }} // 50% de la largeur d'un logo + gap (6 logos)
             transition={{
               repeat: Infinity,
-              duration: 25,
+              duration: 20,
               ease: "linear",
               repeatType: "loop",
             }}
@@ -201,12 +196,10 @@ export default function HomePage() {
           >
             {/* Première série de logos */}
             {[
-              { src: "/trust/logo-lac.png", alt: "Lac Logo" },
+              { src: "/trust/logo-potentille.png", alt: "Potentille" },
               { src: "/trust/lodges.png", alt: "Lodges" },
               { src: "/trust/alpha.png", alt: "Alpha" },
-              { src: "/trust/logo-pont.png", alt: "Pont Logo" },
               { src: "/trust/popliving.png", alt: "PopLiving" },
-              { src: "/trust/logo-sapins.png", alt: "Sapins Logo" },
               { src: "/trust/dipiaza.png", alt: "Dipiaza" },
               { src: "/trust/logo-campus.png", alt: "Campus Logo" },
             ].map((logo, idx) => (
@@ -227,12 +220,10 @@ export default function HomePage() {
 
             {/* Duplication pour la continuité */}
             {[
-              { src: "/trust/logo-lac.png", alt: "Lac Logo" },
+              { src: "/trust/logo-potentille.png", alt: "Potentille" },
               { src: "/trust/lodges.png", alt: "Lodges" },
               { src: "/trust/alpha.png", alt: "Alpha" },
-              { src: "/trust/logo-pont.png", alt: "Pont Logo" },
               { src: "/trust/popliving.png", alt: "PopLiving" },
-              { src: "/trust/logo-sapins.png", alt: "Sapins Logo" },
               { src: "/trust/dipiaza.png", alt: "Dipiaza" },
               { src: "/trust/logo-campus.png", alt: "Campus Logo" },
             ].map((logo, idx) => (
@@ -253,12 +244,10 @@ export default function HomePage() {
 
             {/* Troisième série pour un scroll ultra fluide */}
             {[
-              { src: "/trust/logo-lac.png", alt: "Lac Logo" },
+              { src: "/trust/logo-potentille.png", alt: "Potentille" },
               { src: "/trust/lodges.png", alt: "Lodges" },
               { src: "/trust/alpha.png", alt: "Alpha" },
-              { src: "/trust/logo-pont.png", alt: "Pont Logo" },
               { src: "/trust/popliving.png", alt: "PopLiving" },
-              { src: "/trust/logo-sapins.png", alt: "Sapins Logo" },
               { src: "/trust/dipiaza.png", alt: "Dipiaza" },
               { src: "/trust/logo-campus.png", alt: "Campus Logo" },
             ].map((logo, idx) => (
@@ -299,8 +288,9 @@ export default function HomePage() {
               Nos Solutions
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Quatre applications spécialisées pour répondre aux défis modernes
-              des professionnels.
+              Des solutions spécialisées pour répondre aux défis modernes des
+              professionnels, incluant des marques complètes prêtes à
+              l&apos;emploi.
             </p>
           </div>
 

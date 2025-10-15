@@ -124,6 +124,13 @@ export function FeatureCard({
       button:
         "group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600",
     },
+    green: {
+      icon: "group-hover:bg-green-50 group-hover:text-green-600",
+      border: "hover:border-green-200",
+      dot: "bg-green-500",
+      button:
+        "group-hover:bg-green-600 group-hover:text-white group-hover:border-green-600",
+    },
     blue: {
       icon: "group-hover:bg-blue-50 group-hover:text-blue-600",
       border: "hover:border-blue-200",

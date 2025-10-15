@@ -41,9 +41,10 @@ export default function AboutPage() {
               naissance à Webbing
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              L&apos;histoire de quatre applications SaaS (Software as a
-              Service) nées d&apos;un besoin concret et d&apos;une volonté de
-              simplifier les processus complexes des entreprises suisses.
+              L&apos;histoire de quatre solutions SaaS nées d&apos;un besoin
+              concret et d&apos;une volonté de simplifier les processus
+              complexes des entreprises suisses. De l&apos;application web à la
+              création de marques complètes.
             </p>
           </motion.div>
         </div>
@@ -63,15 +64,17 @@ export default function AboutPage() {
                 Pourquoi Webbing ?
               </h2>
               <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                Webbing est né d&apos;un constat simple : les entrepreneurs et
-                professionnels suisses méritent des outils aussi efficaces que
-                leur ambition. Après avoir développé PlanniKeeper pour répondre
-                aux défis concrets de la gestion immobilière, puis Chaff pour
-                transformer les données en intelligence business, SelfKey pour
-                automatiser les check-ins, et Loopster pour révolutionner
-                l&apos;affichage dynamique, nous avons réalisé que notre
-                approche SaaS (logiciels accessibles directement en ligne)
-                pouvait aider bien d&apos;autres secteurs.
+                <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
+                  Webbing est né d&apos;un constat simple : les entrepreneurs et
+                  professionnels suisses méritent des outils aussi efficaces que
+                  leur ambition. Après avoir développé PlanniKeeper pour
+                  répondre aux défis concrets de la gestion immobilière, puis
+                  Chaff pour transformer les données en intelligence business,
+                  et SelfKey pour automatiser les check-ins, nous sommes allés
+                  plus loin avec SelfCamp : une marque complète créée de A à Z.
+                  Nous ne développons plus seulement des applications, nous
+                  créons des solutions business clé en main.
+                </p>
               </p>
               <p className="text-muted-foreground mb-8">
                 Notre philosophie est simple : la technologie doit
@@ -217,9 +220,9 @@ export default function AboutPage() {
               },
               {
                 year: "2025",
-                title: "Loopster et expansion",
+                title: "SelfCamp et création de marques",
                 description:
-                  "Lancement de Loopster pour l'affichage dynamique, complétant notre écosystème de quatre solutions SaaS innovantes.",
+                  "Lancement de SelfCamp, une marque complète pour campings basée sur notre technologie. Nous ne créons plus seulement des applications, mais des solutions clé en main.",
                 icon: Globe,
               },
             ].map((milestone, index) => (
@@ -420,7 +423,7 @@ export default function AboutPage() {
               Prêt à transformer votre activité ?
             </h2>
             <p className="text-xl text-stone-200 mb-8 max-w-2xl mx-auto">
-              Découvrez comment PlanniKeeper, Chaff, SelfKey et Loopster peuvent
+              Découvrez comment PlanniKeeper, Chaff, SelfKey et SelfCamp peuvent
               simplifier vos processus et optimiser votre gestion.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

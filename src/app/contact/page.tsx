@@ -243,8 +243,8 @@ export default function ContactPage() {
                           PlanniKeeper
                         </SelectItem>
                         <SelectItem value="chaff">Chaff</SelectItem>
-                        <SelectItem value="selfkey">Selfkey</SelectItem>
-                        <SelectItem value="loopster">Loopster</SelectItem>
+                        <SelectItem value="selfkey">SelfKey</SelectItem>
+                        <SelectItem value="selfcamp">SelfCamp</SelectItem>
                         <SelectItem value="all">
                           Toutes les solutions
                         </SelectItem>

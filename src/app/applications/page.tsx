@@ -13,7 +13,7 @@ import {
   Shield,
   Users,
   Sparkles,
-  Monitor,
+  Tent,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -98,29 +98,28 @@ const applications = [
     ],
   },
   {
-    name: "Loopster",
-    category: "Affichage Dynamique",
-    tagline: "Créez • Diffusez • Captivez",
+    name: "SelfCamp",
+    category: "Solution Camping",
+    tagline: "Réservez • Campez • Profitez",
     description:
-      "Transformez vos écrans en affichage dynamique avec une solution complète de gestion de contenu multi-utilisateurs et analytics en temps réel.",
-    icon: Monitor,
-    url: "https://www.loopster.ch/",
-    color: "purple", // Couleur violette inspirée du site Loopster
+      "Solution complète de check-in automatique pour campings, hôtels, parkings et locations saisonnières. Vos clients réservent 24h/24 en scannant un QR code, paient en ligne et accèdent instantanément à leur emplacement.",
+    icon: Tent,
+    url: "https://www.selfcamp.ch/",
+    color: "green", // Couleur verte pour camping/nature
     featured: true,
     features: [
-      "Interface intuitive avec glisser-déposer de médias",
-      "Gestion multi-utilisateurs avec rôles définis",
-      "Écrans illimités avec le plan Pro",
-      "Analytics avancés et suivi en temps réel",
-      "Codes d'accès uniques et données chiffrées",
-      "Infrastructure sécurisée pour protéger le contenu",
-      "Plan gratuit disponible avec 1 écran",
-      "Tarifs accessibles bien plus doux que la concurrence",
+      "Check-in automatique 24h/24",
+      "QR code simple : scan, paiement, accès instantané",
+      "Paiement sécurisé Stripe : cartes, TWINT, Apple Pay, Google Pay",
+      "Gestion parking intégrée",
+      "Installation rapide : prêt en 5 minutes",
+      "Aucune application, compte ou abonnement nécessaire pour l'utilisateur",
+      "Parfait pour hôtels, campings, parkings et locations",
     ],
     stats: [
-      { label: "Écrans connectés", value: "1k+" },
-      { label: "Contenus diffusés", value: "25k+" },
-      { label: "Uptime", value: "99.9%" },
+      { label: "Installation", value: "5 min" },
+      { label: "Disponibilité", value: "24/7" },
+      { label: "Satisfaction", value: "98%" },
     ],
   },
 ];
@@ -164,7 +163,7 @@ export default function ApplicationsPage() {
             pour votre entreprise
           </>
         }
-        description="Quatre applications spécialisées conçues pour optimiser vos processus métier et accélérer votre croissance. Développées et déployées en Suisse."
+        description="Des solutions spécialisées conçues pour optimiser vos processus métier et faciliter votre croissance. Développées et déployées en Suisse."
         primaryAction={{
           label: "Commencer maintenant",
           href: "#applications",

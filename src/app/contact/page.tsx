@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Send, CheckCircle } from "lucide-react";
+import { Send, CheckCircle, Mail, Phone, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 
@@ -109,8 +109,8 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Hero Section - Version sobre */}
-      <section className="py-24 px-4 bg-white">
+      {/* Hero Section */}
+      <section className="pt-24 pb-8 px-4">
         <div className="container mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -119,7 +119,7 @@ export default function ContactPage() {
           >
             <Badge
               variant="outline"
-              className="mb-6 px-4 py-2 text-sm bg-slate-50 border-slate-200 text-slate-700"
+              className="mb-6 px-4 py-2 text-sm bg-white border-slate-200 text-slate-700"
             >
               Parlons de votre projet
             </Badge>
@@ -127,17 +127,96 @@ export default function ContactPage() {
               Contactez-nous
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Vous avez des questions sur nos solutions ? Vous souhaitez une
-              démonstration personnalisée ? Nous sommes là pour vous
-              accompagner.
+              Une question ? Besoin d&apos;informations ? Nous sommes à votre
+              écoute
             </p>
           </motion.div>
         </div>
       </section>
 
+      {/* Contact Info Section */}
+      <section className="py-8 px-4">
+        <div className="container mx-auto max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-8"
+          >
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Email */}
+              <div className="flex items-center gap-3 md:justify-center">
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
+                  <Mail className="h-5 w-5 text-primary" />
+                </div>
+                <div className="text-left md:text-center">
+                  <h3 className="text-sm font-semibold text-slate-900 mb-1">
+                    Email
+                  </h3>
+                  <a
+                    href="mailto:gp@webbing.ch"
+                    className="text-sm text-slate-600 hover:text-primary transition-colors"
+                  >
+                    gp@webbing.ch
+                  </a>
+                </div>
+              </div>
+
+              {/* Téléphone */}
+              <div className="flex items-center gap-3 md:justify-center">
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
+                  <Phone className="h-5 w-5 text-primary" />
+                </div>
+                <div className="text-left md:text-center">
+                  <h3 className="text-sm font-semibold text-slate-900 mb-1">
+                    Téléphone
+                  </h3>
+                  <a
+                    href="tel:+41793414074"
+                    className="text-sm text-slate-600 hover:text-primary transition-colors"
+                  >
+                    +41 79 341 40 74
+                  </a>
+                </div>
+              </div>
+
+              {/* Localisation */}
+              <div className="flex items-center gap-3 md:justify-center">
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
+                  <MapPin className="h-5 w-5 text-primary" />
+                </div>
+                <div className="text-left md:text-center">
+                  <h3 className="text-sm font-semibold text-slate-900 mb-1">
+                    Localisation
+                  </h3>
+                  <p className="text-sm text-slate-600">
+                    Rue de Battentin 1, 1630 Bulle
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Separator text */}
+      <section className="px-4">
+        <div className="container mx-auto max-w-3xl">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+              Ou écrivez-nous
+            </h2>
+            <p className="text-slate-600">
+              Décrivez votre projet, nous vous répondrons rapidement
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Contact Form */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto max-w-4xl">
+      <section className="py-8 px-4 pb-16">
+        <div className="container mx-auto max-w-3xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -147,12 +226,8 @@ export default function ContactPage() {
             <Card className="border-slate-200 shadow-sm">
               <CardHeader className="text-center">
                 <CardTitle className="text-2xl text-slate-900">
-                  Envoyez-nous un message
+                  Formulaire de contact
                 </CardTitle>
-                <CardDescription className="text-slate-600">
-                  Remplissez le formulaire ci-dessous et nous vous répondrons
-                  rapidement
-                </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">

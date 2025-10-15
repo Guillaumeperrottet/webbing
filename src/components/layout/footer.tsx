@@ -124,7 +124,7 @@ export function Footer() {
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">Email</p>
                     <p className="text-sm font-medium text-foreground">
-                      contact@webbing.ch
+                      gp@webbing.ch
                     </p>
                   </div>
                 </div>

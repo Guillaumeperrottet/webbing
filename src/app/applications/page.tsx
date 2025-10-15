@@ -24,7 +24,7 @@ const applications = [
     category: "Gestion Immobilière",
     tagline: "Organisez • Planifiez • Maîtrisez",
     description:
-      "La solution complète pour gérer efficacement vos tâches liées à vos biens immobiliers dans une interface intuitive et élégante.",
+      "Gestion efficace de vos tâches liées à vos biens immobiliers dans une interface intuitive et élégante.",
     icon: Building2,
     url: "https://www.plannikeeper.ch/",
     color: "orange", // Couleur orange comme PlanniKeeper
@@ -86,7 +86,6 @@ const applications = [
       "Paiement sécurisé Stripe (cartes, TWINT, Apple Pay, Google Pay)",
       "Envoi automatique des codes d'accès par email après paiement",
       "Installation rapide et configuration simple",
-      "Aucun abonnement - commission uniquement sur réservations",
       "Basé en Suisse avec conformité RGPD garantie",
       "Interface intuitive pour établissements et clients",
       "Améliorations continues et personnalisations sur demande",
@@ -157,21 +156,7 @@ export default function ApplicationsPage() {
       {/* Hero Section moderne */}
       <Hero
         badge="Nos Applications"
-        title={
-          <>
-            Solutions <span className="text-primary">professionnelles</span>{" "}
-            pour votre entreprise
-          </>
-        }
-        description="Des solutions spécialisées conçues pour optimiser vos processus métier et faciliter votre croissance. Développées et déployées en Suisse."
-        primaryAction={{
-          label: "Commencer maintenant",
-          href: "#applications",
-        }}
-        secondaryAction={{
-          label: "Nous contacter",
-          href: "/contact",
-        }}
+        description="Applications web que nos clients utilisent au quotidien. Développées en Suisse."
       />
 
       {/* Section Applications principales */}
@@ -322,8 +307,8 @@ export default function ApplicationsPage() {
       </Section>
 
       {/* CTA Section */}
-      <Section className="bg-gradient-to-r from-muted/50 to-muted/30 border-t border-border">
-        <Container size="md">
+      <Section className="bg-gradient-to-r from-muted/50 to-muted/30 pt-16">
+        <Container size="lg">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -331,35 +316,20 @@ export default function ApplicationsPage() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <Badge
-              variant="outline"
-              className="mb-6 px-4 py-2 text-sm bg-background/50 border-primary/20"
-            >
-              Prêt à commencer ?
-            </Badge>
+            <div className="max-w-3xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+                Un projet en tête ?
+              </h2>
 
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-              Choisissez la solution qui vous convient
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-              Nos applications sont conçues pour s&apos;adapter à vos besoins
-              spécifiques. Explorez-les directement ou contactez-nous pour en
-              savoir plus.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+                Discutons en et créons ensemble votre application.
+              </p>
+
               <Button size="lg" className="text-base px-8 shadow-lg" asChild>
                 <Link href="/contact">
                   Nous contacter
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-base px-8"
-                asChild
-              >
-                <Link href="/">Retour à l&apos;accueil</Link>
               </Button>
             </div>
           </motion.div>

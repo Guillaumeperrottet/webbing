@@ -7,7 +7,6 @@ import {
   FeatureCard,
 } from "@/components/ui/webbing-ui";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Building2,
   BarChart3,
@@ -288,9 +287,7 @@ export default function HomePage() {
               Nos Solutions
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Des solutions spécialisées pour répondre aux défis modernes des
-              professionnels, incluant des marques complètes prêtes à
-              l&apos;emploi.
+              pour vos demandes
             </p>
           </div>
 
@@ -331,30 +328,20 @@ export default function HomePage() {
             className="text-center"
           >
             <div className="max-w-3xl mx-auto">
-              <Badge
-                variant="outline"
-                className="mb-6 px-4 py-2 text-sm bg-background/50 border-primary/20"
-              >
-                Transformez votre activité
-              </Badge>
-
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Prêt à optimiser vos processus ?
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+                Un projet en tête ?
               </h2>
 
               <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-                Découvrez nos solutions sur mesure pour automatiser vos tâches
-                et accélérer votre croissance digitale.
+                Discutons en et créons ensemble votre application.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button size="lg" className="text-base px-8 shadow-lg" asChild>
-                  <Link href="/applications">
-                    Explorer nos solutions
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
+              <Button size="lg" className="text-base px-8 shadow-lg" asChild>
+                <Link href="/contact">
+                  Nous contacter
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
             </div>
           </motion.div>
         </Container>

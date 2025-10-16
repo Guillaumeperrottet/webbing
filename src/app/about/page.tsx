@@ -23,7 +23,7 @@ export default function AboutPage() {
 
       {/* Hero Section - Remonté avec marge négative et z-index */}
       <div className="relative z-10 -mt-16 sm:-mt-20 md:-mt-24 lg:-mt-32 xl:-mt-40">
-        <section className="py-16 md:py-24 px-4">
+        <section className="py-10 md:py-24 px-4">
           <div className="container mx-auto max-w-4xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}

@@ -7,10 +7,6 @@ import { CloudBackground } from "@/components/ui/cloud-background";
 import {
   ExternalLink,
   ArrowRight,
-  Zap,
-  Shield,
-  Users,
-  Sparkles,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -70,60 +66,47 @@ const applications = [
   },
 ];
 
-const values = [
-  {
-    icon: Zap,
-    title: "Performance",
-    description:
-      "Des applications rapides et optimisées pour votre productivité quotidienne.",
-  },
-  {
-    icon: Shield,
-    title: "Sécurité",
-    description:
-      "Vos données sont protégées selon les standards suisses les plus exigeants.",
-  },
-  {
-    icon: Users,
-    title: "Support",
-    description:
-      "Une équipe locale, disponible et réactive pour vous accompagner.",
-  },
-  {
-    icon: Sparkles,
-    title: "Simplicité",
-    description:
-      "Aucune installation logiciel requise. Accès web intuitif et fluide.",
-  },
-];
-
 export default function ApplicationsPage() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerDesktopRef = useRef<HTMLDivElement>(null);
+  const scrollContainerMobileRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
 
   const scroll = (direction: "left" | "right") => {
-    const container = scrollContainerRef.current;
+    const container = scrollContainerDesktopRef.current;
     if (!container) return;
 
     const cardWidth = container.offsetWidth;
-    const scrollAmount = direction === "left" ? -cardWidth : cardWidth;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    const currentScroll = container.scrollLeft;
 
-    container.scrollBy({
-      left: scrollAmount,
-      behavior: "smooth",
-    });
-  };
-
-  const scrollToIndex = (index: number) => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const cardWidth = container.offsetWidth;
-    container.scrollTo({
-      left: cardWidth * index,
-      behavior: "smooth",
-    });
-    setCurrentIndex(index);
+    if (direction === "right") {
+      // Si on est à la fin, revenir au début
+      if (currentScroll >= maxScroll - 10) {
+        container.scrollTo({
+          left: 0,
+          behavior: "smooth",
+        });
+      } else {
+        container.scrollBy({
+          left: cardWidth,
+          behavior: "smooth",
+        });
+      }
+    } else {
+      // Si on est au début, aller à la fin
+      if (currentScroll <= 10) {
+        container.scrollTo({
+          left: maxScroll,
+          behavior: "smooth",
+        });
+      } else {
+        container.scrollBy({
+          left: -cardWidth,
+          behavior: "smooth",
+        });
+      }
+    }
   };
 
   return (
@@ -150,40 +133,35 @@ export default function ApplicationsPage() {
             <h2 className="text-2xl font-bold text-foreground">
               Découvrez nos réalisations
             </h2>
-            <p className="text-sm text-muted-foreground mt-2 md:hidden">
-              Faites glisser pour découvrir →
-            </p>
           </div>
 
-          {/* Carousel Container avec flèches sur les côtés (desktop uniquement) */}
-          <div className="relative">
-            {/* Flèche gauche - Desktop uniquement */}
+          {/* Desktop: Carousel avec flèches */}
+          <div className="hidden md:block relative">
+            {/* Flèche gauche */}
             <Button
               variant="outline"
               size="icon"
               onClick={() => scroll("left")}
-              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
             >
               <ChevronLeft className="h-5 w-5" />
             </Button>
 
-            {/* Carousel - Version mobile optimisée */}
-            <div className="relative overflow-hidden">
+            {/* Carousel Desktop */}
+            <div className="relative">
               <div
-                ref={scrollContainerRef}
-                className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth gap-4 md:gap-8 py-8 px-4 md:px-0"
+                ref={scrollContainerDesktopRef}
+                className="flex overflow-x-auto overflow-y-hidden snap-x snap-mandatory scrollbar-hide scroll-smooth gap-8 py-8"
                 onScroll={(e) => {
                   const container = e.currentTarget;
                   const cardWidth = container.offsetWidth;
                   const scrollIndex = Math.round(
                     container.scrollLeft / cardWidth
                   );
-                  // Modulo pour mapper sur les 4 applications réelles
                   const index = scrollIndex % applications.length;
                   setCurrentIndex(index);
                 }}
               >
-                {/* Mobile: Une seule série d'applications */}
                 {applications.map((app, index) => (
                   <motion.div
                     key={app.name}
@@ -191,15 +169,15 @@ export default function ApplicationsPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="snap-center flex-shrink-0 w-[85vw] md:w-full"
+                    className="snap-center flex-shrink-0 w-full"
                   >
-                    <div className="w-full max-w-4xl mx-auto bg-card rounded-2xl p-6 md:p-8 shadow-sm border">
+                    <div className="w-full max-w-4xl mx-auto bg-card rounded-2xl p-8 shadow-sm border">
                       <div className="flex items-center gap-3 mb-6">
                         <Badge variant="outline">{app.category}</Badge>
                       </div>
 
                       <div className="flex items-center gap-4 mb-4">
-                        <div className="relative w-12 h-12 md:w-16 md:h-16 flex items-center justify-center flex-shrink-0">
+                        <div className="relative w-16 h-16 flex items-center justify-center flex-shrink-0">
                           <Image
                             src={app.logo}
                             alt={app.name}
@@ -209,24 +187,24 @@ export default function ApplicationsPage() {
                           />
                         </div>
                         <div className="group cursor-pointer">
-                          <h2 className="text-2xl md:text-4xl font-bold text-foreground">
+                          <h2 className="text-4xl font-bold text-foreground">
                             {app.name}
                           </h2>
                           <div className="h-1 bg-foreground w-12 group-hover:w-[100%] transition-all duration-300 ease-out mt-1"></div>
                         </div>
                       </div>
 
-                      <p className="text-xs md:text-sm font-medium text-muted-foreground mb-4 tracking-wide">
+                      <p className="text-sm font-medium text-muted-foreground mb-4 tracking-wide">
                         {app.tagline}
                       </p>
 
-                      <p className="text-sm md:text-lg text-muted-foreground mb-6 md:mb-8 leading-relaxed">
+                      <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                         {app.description}
                       </p>
 
                       {/* Témoignage du client */}
-                      <div className="bg-muted/30 rounded-xl p-4 md:p-6 mb-6 md:mb-8 border-l-4 border-primary/20">
-                        <p className="text-xs md:text-sm text-muted-foreground italic leading-relaxed">
+                      <div className="bg-muted/30 rounded-xl p-6 mb-8 border-l-4 border-primary/20">
+                        <p className="text-sm text-muted-foreground italic leading-relaxed">
                           &ldquo;{app.testimonial}&rdquo;
                         </p>
                       </div>
@@ -264,69 +242,222 @@ export default function ApplicationsPage() {
               </div>
             </div>
 
-            {/* Flèche droite - Desktop uniquement */}
+            {/* Flèche droite */}
             <Button
               variant="outline"
               size="icon"
               onClick={() => scroll("right")}
-              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
             >
               <ChevronRight className="h-5 w-5" />
             </Button>
+
+            {/* Indicateurs de pagination pour desktop */}
+            <div className="flex justify-center gap-2 mt-6">
+              {applications.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    const container = scrollContainerDesktopRef.current;
+                    if (container) {
+                      const cardWidth = container.offsetWidth;
+                      container.scrollTo({
+                        left: cardWidth * index,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    currentIndex === index
+                      ? "bg-foreground w-6"
+                      : "bg-muted-foreground/30"
+                  }`}
+                  aria-label={`Aller à ${applications[index].name}`}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Indicateurs de navigation (pastilles) - en dessous */}
-          <div className="flex justify-center gap-2 mt-8">
-            {applications.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => scrollToIndex(index)}
-                className={`transition-all duration-300 ${
-                  currentIndex === index
-                    ? "w-8 h-2 bg-foreground rounded-full"
-                    : "w-2 h-2 bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50"
-                }`}
-                aria-label={`Aller à ${applications[index].name}`}
-              />
-            ))}
+          {/* Mobile: Carousel avec snap scrolling (même style que page d'accueil) */}
+          <div className="md:hidden relative">
+            <div
+              ref={scrollContainerMobileRef}
+              className="overflow-x-auto snap-x snap-mandatory scrollbar-hide flex gap-2 px-4 -mx-4"
+              onScroll={(e) => {
+                const container = e.currentTarget;
+                const cardWidth = container.clientWidth * 0.85 + 8;
+                const scrollIndex = Math.round(
+                  container.scrollLeft / cardWidth
+                );
+                const index = scrollIndex % applications.length;
+                setCurrentIndex(index);
+              }}
+            >
+              {/* Beaucoup de répétitions pour un scroll vraiment long */}
+              {Array.from({ length: 20 }).flatMap((_, repeatIndex) =>
+                applications.map((app, index) => (
+                  <div
+                    key={`${app.name}-${repeatIndex}-${index}`}
+                    className="snap-center flex-shrink-0 w-[85vw] max-w-[340px]"
+                  >
+                    <div className="bg-card rounded-2xl p-6 shadow-sm border h-full flex flex-col">
+                      <div className="flex items-center gap-3 mb-4">
+                        <Badge variant="outline" className="text-xs">
+                          {app.category}
+                        </Badge>
+                      </div>
+
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="relative w-10 h-10 flex items-center justify-center flex-shrink-0">
+                          <Image
+                            src={app.logo}
+                            alt={app.name}
+                            width={40}
+                            height={40}
+                            className="object-contain"
+                          />
+                        </div>
+                        <h3 className="text-xl font-bold text-foreground">
+                          {app.name}
+                        </h3>
+                      </div>
+
+                      <p className="text-xs font-medium text-muted-foreground mb-3 tracking-wide">
+                        {app.tagline}
+                      </p>
+
+                      <p className="text-sm text-muted-foreground mb-4 leading-relaxed flex-grow">
+                        {app.description}
+                      </p>
+
+                      {/* Témoignage compact */}
+                      <div className="bg-muted/30 rounded-lg p-3 mb-4 border-l-2 border-primary/20">
+                        <p
+                          className={`text-xs text-muted-foreground italic leading-relaxed ${
+                            expandedCards.has(
+                              `${app.name}-${repeatIndex}-${index}`
+                            )
+                              ? ""
+                              : "line-clamp-4"
+                          }`}
+                        >
+                          &ldquo;{app.testimonial}&rdquo;
+                        </p>
+                        {app.testimonial.length > 200 && (
+                          <button
+                            onClick={() => {
+                              const cardId = `${app.name}-${repeatIndex}-${index}`;
+                              setExpandedCards((prev) => {
+                                const newSet = new Set(prev);
+                                if (newSet.has(cardId)) {
+                                  newSet.delete(cardId);
+                                } else {
+                                  newSet.add(cardId);
+                                }
+                                return newSet;
+                              });
+                            }}
+                            className="text-xs text-primary hover:underline mt-1 font-medium"
+                          >
+                            {expandedCards.has(
+                              `${app.name}-${repeatIndex}-${index}`
+                            )
+                              ? "Lire moins"
+                              : "Lire plus"}
+                          </button>
+                        )}
+                      </div>
+
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className={`w-full ${
+                          app.color === "orange"
+                            ? "border-[#D66135]/20 text-[#D66135] hover:bg-[#D66135]/10 hover:text-[#D66135] hover:border-[#D66135]/40"
+                            : app.color === "blue"
+                              ? "border-blue-100 text-blue-600/70 hover:bg-blue-50/50 hover:text-blue-600 hover:border-blue-200"
+                              : app.color === "gray"
+                                ? "border-gray-200 text-gray-600/70 hover:bg-gray-50/50 hover:text-gray-600 hover:border-gray-300"
+                                : app.color === "green"
+                                  ? "border-[#a8b785]/20 text-[#a8b785] hover:bg-[#a8b785]/10 hover:text-[#a8b785] hover:border-[#a8b785]/40"
+                                  : "border-primary/10 text-primary/70 hover:bg-primary/5 hover:text-primary hover:border-primary/30"
+                        }`}
+                        asChild
+                      >
+                        <Link
+                          href={app.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Découvrir
+                          <ExternalLink className="ml-2 h-3 w-3" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Indicateurs pastilles (même style que page d'accueil) */}
+            <div className="flex justify-center gap-2 mt-6">
+              {applications.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    const container = scrollContainerMobileRef.current;
+                    if (container) {
+                      const cardWidth = container.clientWidth * 0.85 + 8;
+                      const currentScroll = container.scrollLeft;
+                      const currentRepeat = Math.floor(
+                        currentScroll / (cardWidth * applications.length)
+                      );
+                      container.scrollTo({
+                        left:
+                          currentRepeat * (cardWidth * applications.length) +
+                          cardWidth * index,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    currentIndex === index
+                      ? "bg-foreground w-6"
+                      : "bg-muted-foreground/30"
+                  }`}
+                  aria-label={`Aller à ${applications[index].name}`}
+                />
+              ))}
+            </div>
           </div>
         </Container>
       </Section>
 
-      {/* Section Valeurs */}
-      <Section>
+      {/* Section Citation inspirante */}
+      <Section variant="muted">
         <Container>
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
-              Pourquoi choisir nos solutions ?
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Nous mettons la technologie au service de votre réussite.
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center py-12"
+          >
+            <blockquote className="space-y-4">
+              <p className="text-3xl md:text-4xl font-bold text-foreground italic">
+                &ldquo;La meilleure façon de prédire l&apos;avenir,
+                <br />
+                c&apos;est de le créer.&rdquo;
+              </p>
+              <footer className="text-lg text-muted-foreground">
+                — Peter Drucker
+              </footer>
+            </blockquote>
+            <p className="mt-8 text-lg text-muted-foreground max-w-2xl mx-auto">
+              Votre idée mérite d&apos;exister. Nous sommes là pour la
+              transformer en réalité.
             </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center"
-              >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-background border border-border rounded-2xl mb-6 shadow-sm">
-                  <value.icon className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold text-foreground mb-4">
-                  {value.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {value.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+          </motion.div>
         </Container>
       </Section>
 

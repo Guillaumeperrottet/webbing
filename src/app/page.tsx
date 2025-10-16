@@ -15,22 +15,22 @@ import { useRef, useEffect, useState } from "react";
 
 const values = [
   {
+    icon: RefreshCw,
+    title: "Évolution continue",
+    description:
+      "Nous sommes à l'écoute de vos retours et utilisons des frameworks modernes pour évoluer aussi rapidement qu'internet.",
+  },
+  {
+    icon: Globe,
+    title: "Installation simplifiée",
+    description:
+      "Applications web accessibles depuis n'importe quel navigateur, sans installation ni maintenance technique de votre côté.",
+  },
+  {
     icon: Shield,
     title: "Sécurité Suisse",
     description:
       "Vos données sont hébergées et protégées selon les standards européens les plus stricts en matière de sécurité et de confidentialité.",
-  },
-  {
-    icon: RefreshCw,
-    title: "Évolution Continue",
-    description:
-      "Nous sommes à l'écoute de vos retours pour améliorer constamment nos applications. Les mises à jour se déploient automatiquement sans interruption.",
-  },
-  {
-    icon: Globe,
-    title: "Installation Simplifiée",
-    description:
-      "Applications web accessibles depuis n'importe quel navigateur, sans installation ni maintenance technique de votre côté.",
   },
 ];
 
@@ -68,7 +68,6 @@ const applications = [
       "Gestion et analyse de la masse salariale",
       "Calcul des ratios de rentabilité par période",
       "Tableaux de bord intuitifs personnalisables",
-      "Chiffrement end-to-end pour la sécurité",
       "Hébergement européen conforme RGPD",
     ],
   },
@@ -86,7 +85,6 @@ const applications = [
       "Paiement sécurisé Stripe (cartes, TWINT, Apple Pay, Google Pay)",
       "Envoi automatique des codes d'accès par email après paiement",
       "Installation rapide et configuration simple",
-      "Basé en Suisse avec conformité RGPD garantie",
       "Interface intuitive pour établissements et clients",
     ],
   },
@@ -138,7 +136,7 @@ export default function HomePage() {
             Applications web <span className="text-primary">sur mesure</span>
           </>
         }
-        description="Nous créons des applications web personnalisées pour votre entreprise. Développées en Suisse, simples et efficaces."
+        description="Nous créons des applications et sites web personnalisés pour votre entreprise. Développés en Suisse, simples et efficaces."
         primaryAction={{
           label: "Voir nos applications",
           href: "/applications",
@@ -149,198 +147,8 @@ export default function HomePage() {
         }}
       />
 
-      {/* Section Valeurs avec design moderne */}
-      <Section variant="muted">
-        <Container>
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-12">
-              Pourquoi choisir Webbing ?
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {values.map((value, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center"
-              >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-background border border-border rounded-2xl mb-6 shadow-sm">
-                  <value.icon className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <h3 className="text-xl font-semibold text-foreground mb-4">
-                  {value.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {value.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </Container>
-      </Section>
-
-      {/* Trust By Section avec carousel pleine largeur */}
-      <Section className="overflow-hidden">
-        {/* Retiré variant="muted" pour fond blanc */}
-        <Container>
-          <motion.h3
-            className="text-center text-3xl font-bold text-foreground mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            Ils nous font confiance
-          </motion.h3>
-
-          {/* Indicateur de scroll pour mobile */}
-          <motion.p
-            className="text-center text-sm text-muted-foreground mb-8 md:hidden"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            Faites glisser pour voir plus →
-          </motion.p>
-        </Container>
-
-        {/* Carousel pleine largeur qui sort de l'écran */}
-        <div className="relative w-screen left-1/2 -translate-x-1/2">
-          {/* Version mobile : scroll horizontal */}
-          <div className="md:hidden overflow-x-auto overflow-y-hidden scrollbar-hide px-4">
-            <div className="flex gap-8 items-center py-12 min-w-max">
-              {[
-                { src: "/trust/logo-potentille.png", alt: "Potentille" },
-                { src: "/trust/lodges.png", alt: "Lodges" },
-                { src: "/trust/alpha.png", alt: "Alpha" },
-                { src: "/trust/popliving.png", alt: "PopLiving" },
-                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-              ].map((logo, idx) => (
-                <div
-                  key={idx}
-                  className="flex-shrink-0 flex items-center justify-center w-40 h-20"
-                >
-                  <Image
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={160}
-                    height={80}
-                    className="max-h-16 w-auto object-contain opacity-70"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Version desktop : animation automatique */}
-          <div className="hidden md:block overflow-hidden">
-            <motion.div
-              className="flex gap-16 items-center py-12"
-              animate={{ x: [0, -((180 + 64) * 6)] }} // (width + gap) * nombre de logos
-              transition={{
-                repeat: Infinity,
-                duration: 20,
-                ease: "linear",
-                repeatType: "loop",
-              }}
-              style={{ willChange: "transform" }}
-            >
-              {/* Première série de logos */}
-              {[
-                { src: "/trust/logo-potentille.png", alt: "Potentille" },
-                { src: "/trust/lodges.png", alt: "Lodges" },
-                { src: "/trust/alpha.png", alt: "Alpha" },
-                { src: "/trust/popliving.png", alt: "PopLiving" },
-                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-              ].map((logo, idx) => (
-                <div
-                  key={idx}
-                  className="flex-shrink-0 flex items-center justify-center w-48 h-24"
-                >
-                  <Image
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={180}
-                    height={90}
-                    className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-
-              {/* Duplication pour la continuité */}
-              {[
-                { src: "/trust/logo-potentille.png", alt: "Potentille" },
-                { src: "/trust/lodges.png", alt: "Lodges" },
-                { src: "/trust/alpha.png", alt: "Alpha" },
-                { src: "/trust/popliving.png", alt: "PopLiving" },
-                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-              ].map((logo, idx) => (
-                <div
-                  key={`dup-${idx}`}
-                  className="flex-shrink-0 flex items-center justify-center w-48 h-24"
-                >
-                  <Image
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={180}
-                    height={90}
-                    className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-
-              {/* Troisième série pour un scroll ultra fluide */}
-              {[
-                { src: "/trust/logo-potentille.png", alt: "Potentille" },
-                { src: "/trust/lodges.png", alt: "Lodges" },
-                { src: "/trust/alpha.png", alt: "Alpha" },
-                { src: "/trust/popliving.png", alt: "PopLiving" },
-                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-              ].map((logo, idx) => (
-                <div
-                  key={`trip-${idx}`}
-                  className="flex-shrink-0 flex items-center justify-center w-48 h-24"
-                >
-                  <Image
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={180}
-                    height={90}
-                    className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </div>
-
-        <Container>
-          {/* Transition visuelle douce */}
-          <motion.div
-            className="w-32 h-px bg-gradient-to-r from-transparent via-border to-transparent mx-auto"
-            initial={{ opacity: 0, scaleX: 0 }}
-            whileInView={{ opacity: 1, scaleX: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            viewport={{ once: true }}
-          />
-        </Container>
-      </Section>
-
       {/* Applications avec FeatureCard moderne */}
-      <Section>
+      <Section className="pt-36">
         <Container>
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-foreground mb-4">
@@ -438,6 +246,233 @@ export default function HomePage() {
         </Container>
       </Section>
 
+      {/* Trust By Section avec carousel pleine largeur */}
+      <Section className="overflow-hidden">
+        {/* Retiré variant="muted" pour fond blanc */}
+        <Container>
+          <motion.h3
+            className="text-center text-3xl font-bold text-foreground mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            Ils nous font confiance
+          </motion.h3>
+        </Container>
+
+        {/* Carousel pleine largeur qui sort de l'écran */}
+        <div className="relative w-screen left-1/2 -translate-x-1/2">
+          {/* Version mobile : animation automatique */}
+          <div className="md:hidden overflow-hidden">
+            <motion.div
+              className="flex gap-8 items-center py-12"
+              animate={{ x: [0, -((160 + 32) * 6)] }} // (width + gap) * nombre de logos
+              transition={{
+                repeat: Infinity,
+                duration: 15,
+                ease: "linear",
+                repeatType: "loop",
+              }}
+              style={{ willChange: "transform" }}
+            >
+              {/* Première série de logos */}
+              {[
+                { src: "/trust/logo-potentille.png", alt: "Potentille" },
+                { src: "/trust/lodges.png", alt: "Lodges" },
+                { src: "/trust/alpha.png", alt: "Alpha" },
+                { src: "/trust/popliving.png", alt: "PopLiving" },
+                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+              ].map((logo, idx) => (
+                <div
+                  key={idx}
+                  className="flex-shrink-0 flex items-center justify-center w-40 h-20"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={160}
+                    height={80}
+                    className="max-h-16 w-auto object-contain opacity-70"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+
+              {/* Duplication pour la continuité */}
+              {[
+                { src: "/trust/logo-potentille.png", alt: "Potentille" },
+                { src: "/trust/lodges.png", alt: "Lodges" },
+                { src: "/trust/alpha.png", alt: "Alpha" },
+                { src: "/trust/popliving.png", alt: "PopLiving" },
+                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+              ].map((logo, idx) => (
+                <div
+                  key={`dup-${idx}`}
+                  className="flex-shrink-0 flex items-center justify-center w-40 h-20"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={160}
+                    height={80}
+                    className="max-h-16 w-auto object-contain opacity-70"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+
+              {/* Troisième série pour un scroll ultra fluide */}
+              {[
+                { src: "/trust/logo-potentille.png", alt: "Potentille" },
+                { src: "/trust/lodges.png", alt: "Lodges" },
+                { src: "/trust/alpha.png", alt: "Alpha" },
+                { src: "/trust/popliving.png", alt: "PopLiving" },
+                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+              ].map((logo, idx) => (
+                <div
+                  key={`trip-${idx}`}
+                  className="flex-shrink-0 flex items-center justify-center w-40 h-20"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={160}
+                    height={80}
+                    className="max-h-16 w-auto object-contain opacity-70"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Version desktop : animation automatique */}
+          <div className="hidden md:block overflow-hidden">
+            <motion.div
+              className="flex gap-16 items-center py-12"
+              animate={{ x: [0, -((180 + 64) * 6)] }} // (width + gap) * nombre de logos
+              transition={{
+                repeat: Infinity,
+                duration: 20,
+                ease: "linear",
+                repeatType: "loop",
+              }}
+              style={{ willChange: "transform" }}
+            >
+              {/* Première série de logos */}
+              {[
+                { src: "/trust/logo-potentille.png", alt: "Potentille" },
+                { src: "/trust/lodges.png", alt: "Lodges" },
+                { src: "/trust/alpha.png", alt: "Alpha" },
+                { src: "/trust/popliving.png", alt: "PopLiving" },
+                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+              ].map((logo, idx) => (
+                <div
+                  key={idx}
+                  className="flex-shrink-0 flex items-center justify-center w-48 h-24"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={180}
+                    height={90}
+                    className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+
+              {/* Duplication pour la continuité */}
+              {[
+                { src: "/trust/logo-potentille.png", alt: "Potentille" },
+                { src: "/trust/lodges.png", alt: "Lodges" },
+                { src: "/trust/alpha.png", alt: "Alpha" },
+                { src: "/trust/popliving.png", alt: "PopLiving" },
+                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+              ].map((logo, idx) => (
+                <div
+                  key={`dup-${idx}`}
+                  className="flex-shrink-0 flex items-center justify-center w-48 h-24"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={180}
+                    height={90}
+                    className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+
+              {/* Troisième série pour un scroll ultra fluide */}
+              {[
+                { src: "/trust/logo-potentille.png", alt: "Potentille" },
+                { src: "/trust/lodges.png", alt: "Lodges" },
+                { src: "/trust/alpha.png", alt: "Alpha" },
+                { src: "/trust/popliving.png", alt: "PopLiving" },
+                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+              ].map((logo, idx) => (
+                <div
+                  key={`trip-${idx}`}
+                  className="flex-shrink-0 flex items-center justify-center w-48 h-24"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={180}
+                    height={90}
+                    className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+      </Section>
+
+      {/* Section Valeurs avec design moderne */}
+      <Section variant="muted">
+        <Container>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-foreground mb-12">
+              Pourquoi choisir Webbing ?
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {values.map((value, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="text-center"
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-background border border-border rounded-2xl mb-6 shadow-sm">
+                  <value.icon className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground mb-4">
+                  {value.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {value.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
       {/* CTA */}
       <section className="py-24 px-4 bg-background">
         <div className="container mx-auto max-w-5xl">
@@ -454,7 +489,7 @@ export default function HomePage() {
               </h2>
 
               <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-                Discutons-en et créons ensemble votre application.
+                Discutons-en et créons ensemble vos idées.
               </p>
 
               <Button size="lg" className="text-base px-8" asChild>

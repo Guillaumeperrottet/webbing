@@ -110,6 +110,7 @@ export function FeatureCard({
       icon: "group-hover:bg-primary/10 group-hover:text-primary",
       border: "hover:border-primary/20",
       dot: "bg-primary",
+      badge: "border-primary/10 bg-primary/5 text-primary/70",
       button:
         "border-primary/10 text-primary/70 hover:bg-primary/5 hover:text-primary hover:border-primary/30",
     },
@@ -117,6 +118,7 @@ export function FeatureCard({
       icon: "group-hover:bg-orange-50 group-hover:text-orange-600",
       border: "hover:border-orange-200",
       dot: "bg-[#D66135]",
+      badge: "border-[#D66135]/10 bg-[#D66135]/5 text-[#D66135]/70",
       button:
         "border-[#D66135]/20 text-[#D66135] hover:bg-[#D66135]/10 hover:text-[#D66135] hover:border-[#D66135]/40",
     },
@@ -124,6 +126,7 @@ export function FeatureCard({
       icon: "group-hover:bg-emerald-50 group-hover:text-emerald-600",
       border: "hover:border-emerald-200",
       dot: "bg-emerald-500",
+      badge: "border-emerald-100 bg-emerald-50/30 text-emerald-600/70",
       button:
         "border-emerald-100 text-emerald-600/70 hover:bg-emerald-50/50 hover:text-emerald-600 hover:border-emerald-200",
     },
@@ -131,6 +134,7 @@ export function FeatureCard({
       icon: "group-hover:bg-green-50 group-hover:text-green-600",
       border: "hover:border-green-200",
       dot: "bg-[#a8b785]",
+      badge: "border-[#a8b785]/10 bg-[#a8b785]/5 text-[#a8b785]/70",
       button:
         "border-[#a8b785]/20 text-[#a8b785] hover:bg-[#a8b785]/10 hover:text-[#a8b785] hover:border-[#a8b785]/40",
     },
@@ -138,6 +142,7 @@ export function FeatureCard({
       icon: "group-hover:bg-blue-50 group-hover:text-blue-600",
       border: "hover:border-blue-200",
       dot: "bg-blue-500",
+      badge: "border-blue-100 bg-blue-50/30 text-blue-600/70",
       button:
         "border-blue-100 text-blue-600/70 hover:bg-blue-50/50 hover:text-blue-600 hover:border-blue-200",
     },
@@ -145,6 +150,7 @@ export function FeatureCard({
       icon: "group-hover:bg-purple-50 group-hover:text-purple-600",
       border: "hover:border-purple-200",
       dot: "bg-purple-500",
+      badge: "border-purple-100 bg-purple-50/30 text-purple-600/70",
       button:
         "border-purple-100 text-purple-600/70 hover:bg-purple-50/50 hover:text-purple-600 hover:border-purple-200",
     },
@@ -152,6 +158,7 @@ export function FeatureCard({
       icon: "group-hover:bg-gray-50 group-hover:text-gray-600",
       border: "hover:border-gray-200",
       dot: "bg-gray-500",
+      badge: "border-gray-200 bg-gray-50/30 text-gray-600/70",
       button:
         "border-gray-200 text-gray-600/70 hover:bg-gray-50/50 hover:text-gray-600 hover:border-gray-300",
     },
@@ -191,7 +198,10 @@ export function FeatureCard({
             </div>
           ) : null}
           {badge && (
-            <Badge variant="secondary" className="text-xs">
+            <Badge
+              variant="outline"
+              className={cn("text-xs", selectedColor.badge)}
+            >
               {badge}
             </Badge>
           )}

@@ -55,8 +55,22 @@ const config: Config = {
         "gradient-primary": "var(--gradient-primary)",
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", "ui-sans-serif", "system-ui"],
-        mono: ["var(--font-geist-mono)", "ui-monospace", "SFMono-Regular"],
+        sans: [
+          "SF Pro Display",
+          "Neue Montreal",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "system-ui",
+          "sans-serif",
+        ],
+        display: ["SF Pro Display", "Neue Montreal", "system-ui", "sans-serif"],
+        body: [
+          "Neue Montreal",
+          "SF Pro Display",
+          "-apple-system",
+          "system-ui",
+          "sans-serif",
+        ],
       },
       animation: {
         "fade-in": "fadeIn 0.5s ease-in-out",

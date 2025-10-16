@@ -1,13 +1,114 @@
+/* SF Pro Display */
+@font-face {
+  font-family: "SF Pro Display";
+  src:
+    url("/fonts/SF-Pro-Display-Regular.woff2") format("woff2"),
+    url("/fonts/SF-Pro-Display-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src:
+    url("/fonts/SF-Pro-Display-Medium.woff2") format("woff2"),
+    url("/fonts/SF-Pro-Display-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src:
+    url("/fonts/SF-Pro-Display-Bold.woff2") format("woff2"),
+    url("/fonts/SF-Pro-Display-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src:
+    url("/fonts/SF-Pro-Display-Black.woff2") format("woff2"),
+    url("/fonts/SF-Pro-Display-Black.woff") format("woff");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Neue Montreal */
+@font-face {
+  font-family: "Neue Montreal";
+  src:
+    url("/fonts/NeueMontreal-Light.woff2") format("woff2"),
+    url("/fonts/NeueMontreal-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src:
+    url("/fonts/NeueMontreal-Regular.woff2") format("woff2"),
+    url("/fonts/NeueMontreal-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src:
+    url("/fonts/NeueMontreal-Medium.woff2") format("woff2"),
+    url("/fonts/NeueMontreal-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src:
+    url("/fonts/NeueMontreal-Bold.woff2") format("woff2"),
+    url("/fonts/NeueMontreal-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
+/* Application des fonts */
+body {
+  font-family:
+    "SF Pro Display",
+    "Neue Montreal",
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    sans-serif;
+}
+
 @theme inline {
+  /* Fonts */
+  --font-family-sans:
+    "SF Pro Display", "Neue Montreal", -apple-system, BlinkMacSystemFont,
+    system-ui, sans-serif;
+  --font-family-display:
+    "SF Pro Display", "Neue Montreal", system-ui, sans-serif;
+  --font-family-body:
+    "Neue Montreal", "SF Pro Display", -apple-system, system-ui, sans-serif;
+
+  /* Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -159,8 +260,23 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    font-family: var(--font-family-sans);
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-family-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-family-display);
   }
 }
 

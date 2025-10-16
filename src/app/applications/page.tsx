@@ -121,13 +121,13 @@ export default function ApplicationsPage() {
       />
 
       {/* Hero Section moderne - Remonté avec marge négative et z-index */}
-      <div className="relative z-10 -mt-12 sm:-mt-15 md:-mt-24 lg:-mt-32 xl:-mt-40">
+      <div className="relative z-10 -mt-12 sm:-mt-15 md:-mt-30 lg:-mt-32 xl:-mt-40">
         <Hero
           badge="Nos Applications"
           title={
             <>
-              Votre vision,{" "}
-              <span className="text-primary">notre expertise</span>
+              <span className="font-display">Votre vision, </span>
+              <span className="text-primary font-display">notre expertise</span>
             </>
           }
         />
@@ -138,7 +138,7 @@ export default function ApplicationsPage() {
         <Container className="relative">
           {/* Titre centré */}
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-foreground">
+            <h2 className="text-2xl font-bold text-foreground font-display">
               Découvrez nos réalisations
             </h2>
           </div>

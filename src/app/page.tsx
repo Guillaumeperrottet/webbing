@@ -169,10 +169,10 @@ export default function HomePage() {
       <Section className="pt-36">
         <Container>
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-4xl font-bold text-foreground mb-4 font-display">
               Nos Solutions
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-body">
               à vos demandes
             </p>
           </div>
@@ -467,7 +467,7 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
+              <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 font-display">
                 Pourquoi choisir Webbing ?
               </h2>
               <div className="w-20 h-1 bg-primary mx-auto mt-6 rounded-full"></div>
@@ -491,12 +491,12 @@ export default function HomePage() {
                   </div>
 
                   {/* Titre */}
-                  <h3 className="text-lg md:text-xl font-bold text-foreground mb-3 md:mb-4 group-hover:text-primary transition-colors duration-300">
+                  <h3 className="text-lg md:text-xl font-bold text-foreground mb-3 md:mb-4 group-hover:text-primary transition-colors duration-300 font-display">
                     {value.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-muted-foreground leading-relaxed text-sm">
+                  <p className="text-muted-foreground leading-relaxed text-sm font-body">
                     {value.description}
                   </p>
 
@@ -520,11 +520,11 @@ export default function HomePage() {
             className="text-center"
           >
             <div className="max-w-3xl mx-auto bg-card rounded-3xl p-12 border shadow-sm">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 font-display">
                 Un projet en tête ?
               </h2>
 
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed font-body">
                 Discutons-en et créons ensemble vos idées.
               </p>
 

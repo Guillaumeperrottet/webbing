@@ -338,13 +338,13 @@ export function Hero({
             )}
 
             {title && (
-              <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
+              <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight font-display">
                 {title}
               </h1>
             )}
 
             {description && (
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto font-body">
                 {description}
               </p>
             )}

@@ -37,10 +37,10 @@ export default function AboutPage() {
               >
                 À propos de Webbing
               </Badge>
-              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
+              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight font-display">
                 Toujours en mouvement
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12">
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 font-body">
                 Nous créons des applications logiciels accessibles directement
                 en ligne pensées pour les entreprises. Mais pas que...
               </p>
@@ -67,10 +67,10 @@ export default function AboutPage() {
                     />
                   </div>
                   <div className="text-center sm:text-left">
-                    <h3 className="text-base font-bold text-foreground mb-2">
+                    <h3 className="text-base font-bold text-foreground mb-2 font-display">
                       Guillaume Perrottet
                     </h3>
-                    <p className="text-muted-foreground italic text-sm leading-relaxed">
+                    <p className="text-muted-foreground italic text-sm leading-relaxed font-body">
                       &quot;Né d&apos;un constat simple : internet évolue vite,
                       trop vite pour les solutions figées. Webbing développe des
                       applications et sites internet modernes qui grandissent
@@ -89,10 +89,10 @@ export default function AboutPage() {
       <section className="py-24 px-4 bg-background">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-4xl font-bold text-foreground mb-4 font-display">
               Nos valeurs
             </h2>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-muted-foreground font-body">
               Les principes qui guident chaque projet
             </p>
           </div>
@@ -155,7 +155,7 @@ export default function AboutPage() {
       <section className="py-24 px-4 bg-background">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 font-display">
               Technologies modernes
             </h2>
             <div className="w-20 h-1 bg-primary mx-auto mt-6 rounded-full"></div>
@@ -197,12 +197,12 @@ export default function AboutPage() {
                   </div>
 
                   {/* Titre */}
-                  <h3 className="text-lg md:text-xl font-bold text-foreground mb-3 md:mb-4 group-hover:text-primary transition-colors duration-300">
+                  <h3 className="text-lg md:text-xl font-bold text-foreground mb-3 md:mb-4 group-hover:text-primary transition-colors duration-300 font-display">
                     {tech.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-muted-foreground leading-relaxed text-sm">
+                  <p className="text-muted-foreground leading-relaxed text-sm font-body">
                     {tech.description}
                   </p>
 
@@ -226,11 +226,11 @@ export default function AboutPage() {
             className="text-center"
           >
             <div className="max-w-3xl mx-auto bg-card rounded-3xl p-12 border shadow-sm">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 font-display">
                 Un projet en tête ?
               </h2>
 
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed font-body">
                 Discutons-en et créons ensemble votre application.
               </p>
 

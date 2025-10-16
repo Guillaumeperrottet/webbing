@@ -51,8 +51,6 @@ const applications = [
       "Centralisation documentaire complète",
       "Communication facilitée avec assignation de tâches",
       "Notifications automatiques et historique",
-      "Interface mobile optimisée",
-      "Mises à jour automatiques et fonctionnalités sur demande",
     ],
   },
   {
@@ -120,8 +118,9 @@ export default function HomePage() {
 
     const handleScroll = () => {
       const scrollLeft = container.scrollLeft;
-      const cardWidth = container.clientWidth * 0.85 + 16;
-      const index = Math.round(scrollLeft / cardWidth) % applications.length;
+      const cardWidth = container.clientWidth * 0.85 + 8; // Ajusté pour gap-2
+      const scrollIndex = Math.round(scrollLeft / cardWidth);
+      const index = scrollIndex % applications.length;
       setCurrentIndex(index);
     };
 
@@ -203,7 +202,7 @@ export default function HomePage() {
         <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden">
           <motion.div
             className="flex gap-16 items-center py-12"
-            animate={{ x: [0, -50 * 6] }} // 50% de la largeur d'un logo + gap (6 logos)
+            animate={{ x: [0, -((180 + 64) * 6)] }} // (width + gap) * nombre de logos
             transition={{
               repeat: Infinity,
               duration: 20,
@@ -211,7 +210,6 @@ export default function HomePage() {
               repeatType: "loop",
             }}
             style={{ willChange: "transform" }}
-            whileHover={{ animationPlayState: "paused" }}
           >
             {/* Première série de logos */}
             {[
@@ -340,14 +338,14 @@ export default function HomePage() {
           <div className="md:hidden relative">
             <div
               ref={scrollContainerRef}
-              className="overflow-x-auto snap-x snap-mandatory scrollbar-hide flex gap-4 px-4 -mx-4"
+              className="overflow-x-auto snap-x snap-mandatory scrollbar-hide flex gap-2 px-4 -mx-4"
             >
               {/* Beaucoup de répétitions pour un scroll vraiment long */}
-              {Array.from({ length: 20 }).flatMap(() =>
+              {Array.from({ length: 20 }).flatMap((_, repeatIndex) =>
                 applications.map((app, index) => (
                   <div
-                    key={`${index}-${Math.random()}`}
-                    className="snap-center flex-shrink-0 w-[85vw] max-w-[340px] first:ml-[7.5vw] last:mr-[7.5vw]"
+                    key={`${app.name}-${repeatIndex}-${index}`}
+                    className="snap-center flex-shrink-0 w-[85vw] max-w-[340px]"
                   >
                     <FeatureCard
                       title={app.name}
@@ -371,9 +369,16 @@ export default function HomePage() {
                   onClick={() => {
                     const container = scrollContainerRef.current;
                     if (container) {
-                      const cardWidth = container.clientWidth * 0.85 + 16;
+                      const cardWidth = container.clientWidth * 0.85 + 8;
+                      // Scroll vers l'élément le plus proche au centre du carousel
+                      const currentScroll = container.scrollLeft;
+                      const currentRepeat = Math.floor(
+                        currentScroll / (cardWidth * applications.length)
+                      );
                       container.scrollTo({
-                        left: cardWidth * (index + 10 * applications.length),
+                        left:
+                          currentRepeat * (cardWidth * applications.length) +
+                          cardWidth * index,
                         behavior: "smooth",
                       });
                     }

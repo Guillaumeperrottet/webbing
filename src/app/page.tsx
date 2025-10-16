@@ -188,7 +188,7 @@ export default function HomePage() {
         {/* Retiré variant="muted" pour fond blanc */}
         <Container>
           <motion.h3
-            className="text-center text-3xl font-bold text-foreground mb-12"
+            className="text-center text-3xl font-bold text-foreground mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -196,93 +196,135 @@ export default function HomePage() {
           >
             Ils nous font confiance
           </motion.h3>
+
+          {/* Indicateur de scroll pour mobile */}
+          <motion.p
+            className="text-center text-sm text-muted-foreground mb-8 md:hidden"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            Faites glisser pour voir plus →
+          </motion.p>
         </Container>
 
         {/* Carousel pleine largeur qui sort de l'écran */}
-        <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden">
-          <motion.div
-            className="flex gap-16 items-center py-12"
-            animate={{ x: [0, -((180 + 64) * 6)] }} // (width + gap) * nombre de logos
-            transition={{
-              repeat: Infinity,
-              duration: 20,
-              ease: "linear",
-              repeatType: "loop",
-            }}
-            style={{ willChange: "transform" }}
-          >
-            {/* Première série de logos */}
-            {[
-              { src: "/trust/logo-potentille.png", alt: "Potentille" },
-              { src: "/trust/lodges.png", alt: "Lodges" },
-              { src: "/trust/alpha.png", alt: "Alpha" },
-              { src: "/trust/popliving.png", alt: "PopLiving" },
-              { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-              { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-            ].map((logo, idx) => (
-              <div
-                key={idx}
-                className="flex-shrink-0 flex items-center justify-center w-48 h-24"
-              >
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={180}
-                  height={90}
-                  className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
-                  loading="lazy"
-                />
-              </div>
-            ))}
+        <div className="relative w-screen left-1/2 -translate-x-1/2">
+          {/* Version mobile : scroll horizontal */}
+          <div className="md:hidden overflow-x-auto overflow-y-hidden scrollbar-hide px-4">
+            <div className="flex gap-8 items-center py-12 min-w-max">
+              {[
+                { src: "/trust/logo-potentille.png", alt: "Potentille" },
+                { src: "/trust/lodges.png", alt: "Lodges" },
+                { src: "/trust/alpha.png", alt: "Alpha" },
+                { src: "/trust/popliving.png", alt: "PopLiving" },
+                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+              ].map((logo, idx) => (
+                <div
+                  key={idx}
+                  className="flex-shrink-0 flex items-center justify-center w-40 h-20"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={160}
+                    height={80}
+                    className="max-h-16 w-auto object-contain opacity-70"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
 
-            {/* Duplication pour la continuité */}
-            {[
-              { src: "/trust/logo-potentille.png", alt: "Potentille" },
-              { src: "/trust/lodges.png", alt: "Lodges" },
-              { src: "/trust/alpha.png", alt: "Alpha" },
-              { src: "/trust/popliving.png", alt: "PopLiving" },
-              { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-              { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-            ].map((logo, idx) => (
-              <div
-                key={`dup-${idx}`}
-                className="flex-shrink-0 flex items-center justify-center w-48 h-24"
-              >
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={180}
-                  height={90}
-                  className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
-                  loading="lazy"
-                />
-              </div>
-            ))}
+          {/* Version desktop : animation automatique */}
+          <div className="hidden md:block overflow-hidden">
+            <motion.div
+              className="flex gap-16 items-center py-12"
+              animate={{ x: [0, -((180 + 64) * 6)] }} // (width + gap) * nombre de logos
+              transition={{
+                repeat: Infinity,
+                duration: 20,
+                ease: "linear",
+                repeatType: "loop",
+              }}
+              style={{ willChange: "transform" }}
+            >
+              {/* Première série de logos */}
+              {[
+                { src: "/trust/logo-potentille.png", alt: "Potentille" },
+                { src: "/trust/lodges.png", alt: "Lodges" },
+                { src: "/trust/alpha.png", alt: "Alpha" },
+                { src: "/trust/popliving.png", alt: "PopLiving" },
+                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+              ].map((logo, idx) => (
+                <div
+                  key={idx}
+                  className="flex-shrink-0 flex items-center justify-center w-48 h-24"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={180}
+                    height={90}
+                    className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
 
-            {/* Troisième série pour un scroll ultra fluide */}
-            {[
-              { src: "/trust/logo-potentille.png", alt: "Potentille" },
-              { src: "/trust/lodges.png", alt: "Lodges" },
-              { src: "/trust/alpha.png", alt: "Alpha" },
-              { src: "/trust/popliving.png", alt: "PopLiving" },
-              { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-              { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-            ].map((logo, idx) => (
-              <div
-                key={`trip-${idx}`}
-                className="flex-shrink-0 flex items-center justify-center w-48 h-24"
-              >
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={180}
-                  height={90}
-                  className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
-                  loading="lazy"
-                />
-              </div>
-            ))}
-          </motion.div>
+              {/* Duplication pour la continuité */}
+              {[
+                { src: "/trust/logo-potentille.png", alt: "Potentille" },
+                { src: "/trust/lodges.png", alt: "Lodges" },
+                { src: "/trust/alpha.png", alt: "Alpha" },
+                { src: "/trust/popliving.png", alt: "PopLiving" },
+                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+              ].map((logo, idx) => (
+                <div
+                  key={`dup-${idx}`}
+                  className="flex-shrink-0 flex items-center justify-center w-48 h-24"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={180}
+                    height={90}
+                    className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+
+              {/* Troisième série pour un scroll ultra fluide */}
+              {[
+                { src: "/trust/logo-potentille.png", alt: "Potentille" },
+                { src: "/trust/lodges.png", alt: "Lodges" },
+                { src: "/trust/alpha.png", alt: "Alpha" },
+                { src: "/trust/popliving.png", alt: "PopLiving" },
+                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+              ].map((logo, idx) => (
+                <div
+                  key={`trip-${idx}`}
+                  className="flex-shrink-0 flex items-center justify-center w-48 h-24"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={180}
+                    height={90}
+                    className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </motion.div>
+          </div>
         </div>
 
         <Container>

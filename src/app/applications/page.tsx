@@ -4,19 +4,16 @@ import { Hero, Section, Container } from "@/components/ui/webbing-ui";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Building2,
-  BarChart3,
-  CheckCircle,
   ExternalLink,
   ArrowRight,
   Zap,
   Shield,
   Users,
   Sparkles,
-  Tent,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const applications = [
   {
@@ -25,7 +22,7 @@ const applications = [
     tagline: "Organisez • Planifiez • Maîtrisez",
     description:
       "Gestion efficace de vos tâches liées à vos biens immobiliers dans une interface intuitive et élégante.",
-    icon: Building2,
+    logo: "/logo_app/logo_plannikeeper.png",
     url: "https://www.plannikeeper.ch/",
     color: "orange", // Couleur orange comme PlanniKeeper
     featured: true,
@@ -51,7 +48,7 @@ const applications = [
     tagline: "Analysez • Modélisez • Décidez",
     description:
       "Plateforme d'analyse business pour transformer vos données en insights stratégiques et prendre des décisions éclairées.",
-    icon: BarChart3,
+    logo: "/logo_app/logo_chaff.png",
     url: "https://www.chaff.ch/",
     color: "blue", // Couleur bleue pour l'analytics
     featured: false,
@@ -77,7 +74,7 @@ const applications = [
     tagline: "Enregistrez • Payez • Accédez",
     description:
       "Solution de check-in automatique 24h/24 : vos clients s'enregistrent, paient et accèdent à leur hébergement sans intervention.",
-    icon: CheckCircle,
+    logo: "/logo_app/logo_selfkey.png",
     url: "https://www.selfkey.ch/",
     color: "gray", // Couleur grise pour SelfKey
     featured: true,
@@ -102,7 +99,7 @@ const applications = [
     tagline: "Réservez • Campez • Profitez",
     description:
       "Solution complète de check-in automatique pour campings, hôtels, parkings et locations saisonnières. Vos clients réservent 24h/24 en scannant un QR code, paient en ligne et accèdent instantanément à leur emplacement.",
-    icon: Tent,
+    logo: "/logo_app/logo_selfcamp.png",
     url: "https://www.selfcamp.ch/",
     color: "green", // Couleur verte pour camping/nature
     featured: true,
@@ -156,7 +153,12 @@ export default function ApplicationsPage() {
       {/* Hero Section moderne */}
       <Hero
         badge="Nos Applications"
-        description="Applications web que nos clients utilisent au quotidien. Développées en Suisse."
+        title={
+          <>
+            Applications{" "}
+            <span className="text-primary">utilisées au quotidien</span>
+          </>
+        }
       />
 
       {/* Section Applications principales */}
@@ -182,27 +184,13 @@ export default function ApplicationsPage() {
                   </div>
 
                   <div className="flex items-center gap-4 mb-4">
-                    <div
-                      className={`p-3 rounded-xl ${
-                        app.color === "orange"
-                          ? "bg-orange-100 dark:bg-orange-900/20"
-                          : app.color === "blue"
-                            ? "bg-blue-100 dark:bg-blue-900/20"
-                            : app.color === "gray"
-                              ? "bg-gray-100 dark:bg-gray-900/20"
-                              : "bg-muted"
-                      }`}
-                    >
-                      <app.icon
-                        className={`h-8 w-8 ${
-                          app.color === "orange"
-                            ? "text-orange-600 dark:text-orange-400"
-                            : app.color === "blue"
-                              ? "text-blue-600 dark:text-blue-400"
-                              : app.color === "gray"
-                                ? "text-gray-600 dark:text-gray-400"
-                                : "text-primary"
-                        }`}
+                    <div className="relative w-16 h-16 flex items-center justify-center">
+                      <Image
+                        src={app.logo}
+                        alt={app.name}
+                        width={64}
+                        height={64}
+                        className="object-contain"
                       />
                     </div>
                     <h2 className="text-4xl font-bold text-foreground">

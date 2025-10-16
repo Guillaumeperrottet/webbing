@@ -7,15 +7,7 @@ import {
   FeatureCard,
 } from "@/components/ui/webbing-ui";
 import { Button } from "@/components/ui/button";
-import {
-  Building2,
-  BarChart3,
-  Shield,
-  RefreshCw,
-  Globe,
-  ArrowRight,
-  Tent,
-} from "lucide-react";
+import { Shield, RefreshCw, Globe, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -48,7 +40,7 @@ const applications = [
     tagline: "Organisez • Planifiez • Maîtrisez",
     description:
       "La solution complète pour gérer efficacement vos tâches liées à vos biens immobiliers dans une interface intuitive et élégante.",
-    icon: Building2,
+    logo: "/logo_app/logo_plannikeeper.png",
     url: "https://www.plannikeeper.ch/",
     color: "orange", // Couleur orange comme sur le site PlanniKeeper
     features: [
@@ -64,7 +56,7 @@ const applications = [
     tagline: "Analysez • Modélisez • Décidez",
     description:
       "Plateforme d'analyse business pour transformer vos données en insights stratégiques et prendre des décisions éclairées.",
-    icon: BarChart3,
+    logo: "/logo_app/logo_chaff.png",
     url: "https://www.chaff.ch/",
     color: "blue", // Couleur bleue pour l'analytics
     features: [
@@ -80,7 +72,7 @@ const applications = [
     tagline: "Enregistrez • Payez • Accédez",
     description:
       "Solution suisse de check-in automatique 24h/24 : vos clients s'enregistrent, paient et accèdent à leur hébergement sans intervention.",
-    icon: Shield,
+    logo: "/logo_app/logo_selfkey.png",
     url: "https://www.selfkey.ch/",
     color: "gray", // Couleur gris clair pour SelfKey
     features: [
@@ -96,7 +88,7 @@ const applications = [
     tagline: "Réservez • Campez • Profitez",
     description:
       "Automatisez vos check-ins 24h/24 pour votre camping. Vos clients scannent un QR code, paient en ligne et reçoivent instantanément leur accès. Parfait pour hôtels, campings, parkings et locations saisonnières.",
-    icon: Tent,
+    logo: "/logo_app/logo_selfcamp.png",
     url: "https://www.selfcamp.ch/",
     color: "green", // Couleur verte pour camping/nature
     features: [
@@ -304,7 +296,7 @@ export default function HomePage() {
                 <FeatureCard
                   title={app.name}
                   description={app.description}
-                  icon={app.icon}
+                  logo={app.logo}
                   badge={app.category}
                   href={app.url}
                   external={true}

@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 /**
  * Composant Section avec styles prédéfinis
@@ -82,6 +83,7 @@ interface FeatureCardProps {
   title: string;
   description: string;
   icon?: React.ComponentType<{ className?: string }>;
+  logo?: string;
   badge?: string;
   href?: string;
   external?: boolean;
@@ -94,6 +96,7 @@ export function FeatureCard({
   title,
   description,
   icon: Icon,
+  logo,
   badge,
   href,
   external = false,
@@ -167,7 +170,17 @@ export function FeatureCard({
     >
       <CardHeader className="pb-4">
         <div className="flex items-center gap-3 mb-4">
-          {Icon && (
+          {logo ? (
+            <div className="relative w-12 h-12 flex items-center justify-center">
+              <Image
+                src={logo}
+                alt={title}
+                width={48}
+                height={48}
+                className="object-contain"
+              />
+            </div>
+          ) : Icon ? (
             <div
               className={cn(
                 "p-2 bg-muted rounded-lg transition-colors duration-300",
@@ -176,7 +189,7 @@ export function FeatureCard({
             >
               <Icon className="h-5 w-5 text-muted-foreground transition-colors duration-300" />
             </div>
-          )}
+          ) : null}
           {badge && (
             <Badge variant="secondary" className="text-xs">
               {badge}
@@ -270,7 +283,7 @@ export function Stat({ value, label, description }: StatProps) {
 interface HeroProps {
   badge?: string;
   title?: React.ReactNode;
-  description: string;
+  description?: string;
   primaryAction?: {
     label: string;
     href: string;
@@ -310,9 +323,11 @@ export function Hero({
               </h1>
             )}
 
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
-              {description}
-            </p>
+            {description && (
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
+                {description}
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

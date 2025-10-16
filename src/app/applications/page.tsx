@@ -150,25 +150,28 @@ export default function ApplicationsPage() {
             <h2 className="text-2xl font-bold text-foreground">
               Découvrez nos réalisations
             </h2>
+            <p className="text-sm text-muted-foreground mt-2 md:hidden">
+              Faites glisser pour découvrir →
+            </p>
           </div>
 
-          {/* Carousel Container avec flèches sur les côtés */}
+          {/* Carousel Container avec flèches sur les côtés (desktop uniquement) */}
           <div className="relative">
-            {/* Flèche gauche */}
+            {/* Flèche gauche - Desktop uniquement */}
             <Button
               variant="outline"
               size="icon"
               onClick={() => scroll("left")}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
+              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
             >
               <ChevronLeft className="h-5 w-5" />
             </Button>
 
-            {/* Carousel */}
-            <div className="relative overflow-hidden h-[650px]">
+            {/* Carousel - Version mobile optimisée */}
+            <div className="relative overflow-hidden">
               <div
                 ref={scrollContainerRef}
-                className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth gap-8 py-8 h-full"
+                className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth gap-4 md:gap-8 py-8 px-4 md:px-0"
                 onScroll={(e) => {
                   const container = e.currentTarget;
                   const cardWidth = container.offsetWidth;
@@ -180,101 +183,100 @@ export default function ApplicationsPage() {
                   setCurrentIndex(index);
                 }}
               >
-                {Array.from({ length: 20 }).flatMap((_, repeatIndex) =>
-                  applications.map((app, index) => (
-                    <motion.div
-                      key={`${app.name}-${repeatIndex}`}
-                      initial={{ opacity: 0, y: 40 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: index * 0.1 }}
-                      viewport={{ once: true }}
-                      className="snap-center flex-shrink-0 w-full"
-                    >
-                      <div className="w-full max-w-4xl mx-auto">
-                        <div className="flex items-center gap-3 mb-6">
-                          <Badge variant="outline">{app.category}</Badge>
+                {/* Mobile: Une seule série d'applications */}
+                {applications.map((app, index) => (
+                  <motion.div
+                    key={app.name}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="snap-center flex-shrink-0 w-[85vw] md:w-full"
+                  >
+                    <div className="w-full max-w-4xl mx-auto bg-card rounded-2xl p-6 md:p-8 shadow-sm border">
+                      <div className="flex items-center gap-3 mb-6">
+                        <Badge variant="outline">{app.category}</Badge>
+                      </div>
+
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="relative w-12 h-12 md:w-16 md:h-16 flex items-center justify-center flex-shrink-0">
+                          <Image
+                            src={app.logo}
+                            alt={app.name}
+                            width={64}
+                            height={64}
+                            className="object-contain"
+                          />
                         </div>
-
-                        <div className="flex items-center gap-4 mb-4">
-                          <div className="relative w-16 h-16 flex items-center justify-center">
-                            <Image
-                              src={app.logo}
-                              alt={app.name}
-                              width={64}
-                              height={64}
-                              className="object-contain"
-                            />
-                          </div>
-                          <div className="group cursor-pointer">
-                            <h2 className="text-4xl font-bold text-foreground">
-                              {app.name}
-                            </h2>
-                            <div className="h-1 bg-foreground w-12 group-hover:w-[100%] transition-all duration-300 ease-out mt-1"></div>
-                          </div>
-                        </div>
-
-                        <p className="text-sm font-medium text-muted-foreground mb-4 tracking-wide">
-                          {app.tagline}
-                        </p>
-
-                        <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                          {app.description}
-                        </p>
-
-                        {/* Témoignage du client */}
-                        <div className="bg-muted/30 rounded-xl p-6 mb-8 border-l-4 border-primary/20">
-                          <p className="text-sm text-muted-foreground italic leading-relaxed">
-                            &ldquo;{app.testimonial}&rdquo;
-                          </p>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row gap-4">
-                          <Button
-                            size="lg"
-                            variant="outline"
-                            className={`flex-1 ${
-                              app.color === "orange"
-                                ? "border-[#D66135]/20 text-[#D66135] hover:bg-[#D66135]/10 hover:text-[#D66135] hover:border-[#D66135]/40"
-                                : app.color === "blue"
-                                  ? "border-blue-100 text-blue-600/70 hover:bg-blue-50/50 hover:text-blue-600 hover:border-blue-200"
-                                  : app.color === "gray"
-                                    ? "border-gray-200 text-gray-600/70 hover:bg-gray-50/50 hover:text-gray-600 hover:border-gray-300"
-                                    : app.color === "green"
-                                      ? "border-[#a8b785]/20 text-[#a8b785] hover:bg-[#a8b785]/10 hover:text-[#a8b785] hover:border-[#a8b785]/40"
-                                      : "border-primary/10 text-primary/70 hover:bg-primary/5 hover:text-primary hover:border-primary/30"
-                            }`}
-                            asChild
-                          >
-                            <Link
-                              href={app.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              Découvrir {app.name}
-                              <ExternalLink className="ml-2 h-4 w-4" />
-                            </Link>
-                          </Button>
+                        <div className="group cursor-pointer">
+                          <h2 className="text-2xl md:text-4xl font-bold text-foreground">
+                            {app.name}
+                          </h2>
+                          <div className="h-1 bg-foreground w-12 group-hover:w-[100%] transition-all duration-300 ease-out mt-1"></div>
                         </div>
                       </div>
-                    </motion.div>
-                  ))
-                )}
+
+                      <p className="text-xs md:text-sm font-medium text-muted-foreground mb-4 tracking-wide">
+                        {app.tagline}
+                      </p>
+
+                      <p className="text-sm md:text-lg text-muted-foreground mb-6 md:mb-8 leading-relaxed">
+                        {app.description}
+                      </p>
+
+                      {/* Témoignage du client */}
+                      <div className="bg-muted/30 rounded-xl p-4 md:p-6 mb-6 md:mb-8 border-l-4 border-primary/20">
+                        <p className="text-xs md:text-sm text-muted-foreground italic leading-relaxed">
+                          &ldquo;{app.testimonial}&rdquo;
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        <Button
+                          size="lg"
+                          variant="outline"
+                          className={`flex-1 ${
+                            app.color === "orange"
+                              ? "border-[#D66135]/20 text-[#D66135] hover:bg-[#D66135]/10 hover:text-[#D66135] hover:border-[#D66135]/40"
+                              : app.color === "blue"
+                                ? "border-blue-100 text-blue-600/70 hover:bg-blue-50/50 hover:text-blue-600 hover:border-blue-200"
+                                : app.color === "gray"
+                                  ? "border-gray-200 text-gray-600/70 hover:bg-gray-50/50 hover:text-gray-600 hover:border-gray-300"
+                                  : app.color === "green"
+                                    ? "border-[#a8b785]/20 text-[#a8b785] hover:bg-[#a8b785]/10 hover:text-[#a8b785] hover:border-[#a8b785]/40"
+                                    : "border-primary/10 text-primary/70 hover:bg-primary/5 hover:text-primary hover:border-primary/30"
+                          }`}
+                          asChild
+                        >
+                          <Link
+                            href={app.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Découvrir {app.name}
+                            <ExternalLink className="ml-2 h-4 w-4" />
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
 
-            {/* Flèche droite */}
+            {/* Flèche droite - Desktop uniquement */}
             <Button
               variant="outline"
               size="icon"
               onClick={() => scroll("right")}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
+              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
             >
               <ChevronRight className="h-5 w-5" />
             </Button>
           </div>
 
           {/* Indicateurs de navigation (pastilles) - en dessous */}
-          <div className="flex justify-center gap-2 mt-4">
+          <div className="flex justify-center gap-2 mt-8">
             {applications.map((_, index) => (
               <button
                 key={index}

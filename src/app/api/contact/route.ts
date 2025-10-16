@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     // Envoi de l'email via Resend
     const data = await resend.emails.send({
       from: "contact@webbing.ch", // Remplace par ton domaine vérifié
-      to: "perrottet.guillaume.97@gmail.com", // Remplace par l'adresse de réception
+      to: "gp@webbing.ch", // Remplace par l'adresse de réception
       subject: `Nouveau message de ${name}`,
       reply_to: email,
       text: message,

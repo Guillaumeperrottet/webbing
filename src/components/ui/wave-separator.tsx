@@ -48,7 +48,7 @@ export function WaveSeparator({
       {/* Ajustement responsive du positionnement bottom pour toutes les tailles d'écran */}
       <svg
         viewBox="0 0 1440 390"
-        className="absolute bottom-[-2px] sm:bottom-[-8px] md:bottom-[-12px] lg:bottom-[-30px] xl:bottom-[-50px] left-0 w-full"
+        className="absolute bottom-[10px] sm:bottom-[-8px] md:bottom-[-12px] lg:bottom-[-30px] xl:bottom-[-50px] left-0 w-full"
         preserveAspectRatio="none"
         style={{ height: "auto" }}
       >

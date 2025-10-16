@@ -11,6 +11,7 @@ import { Shield, RefreshCw, Globe, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useRef, useEffect, useState } from "react";
 
 const values = [
   {
@@ -44,10 +45,14 @@ const applications = [
     url: "https://www.plannikeeper.ch/",
     color: "orange", // Couleur orange comme sur le site PlanniKeeper
     features: [
-      "Visualisation interactive",
-      "Système intégré de planification des tâches",
-      "Mode collaboratif en temps réel",
+      "Visualisation interactive de vos biens immobiliers",
+      "Gestion des tâches simplifiée et centralisée",
+      "Mode collaboratif en temps réel avec votre équipe",
       "Centralisation documentaire complète",
+      "Communication facilitée avec assignation de tâches",
+      "Notifications automatiques et historique",
+      "Interface mobile optimisée",
+      "Mises à jour automatiques et fonctionnalités sur demande",
     ],
   },
   {
@@ -60,10 +65,13 @@ const applications = [
     url: "https://www.chaff.ch/",
     color: "blue", // Couleur bleue pour l'analytics
     features: [
-      "Tableaux de bord interactifs",
-      "Analyse prédictive et modélisation avancée",
-      "Masse salariale",
-      "Possibilité d'import heures de timbreuse de gastrotime",
+      "Analytics en temps réel avec graphiques interactifs",
+      "Suivi quotidien du chiffre d'affaires",
+      "Gestion et analyse de la masse salariale",
+      "Calcul des ratios de rentabilité par période",
+      "Tableaux de bord intuitifs personnalisables",
+      "Chiffrement end-to-end pour la sécurité",
+      "Hébergement européen conforme RGPD",
     ],
   },
   {
@@ -76,10 +84,12 @@ const applications = [
     url: "https://www.selfkey.ch/",
     color: "gray", // Couleur gris clair pour SelfKey
     features: [
-      "Check-in 24h/24 par QR code",
-      "Paiement sécurisé avec Stripe (cartes, TWINT, Apple Pay)",
-      "Accès automatique après paiement",
-      "Conformité RGPD et sécurité suisse",
+      "Check-in 24h/24 par code QR",
+      "Paiement sécurisé Stripe (cartes, TWINT, Apple Pay, Google Pay)",
+      "Envoi automatique des codes d'accès par email après paiement",
+      "Installation rapide et configuration simple",
+      "Basé en Suisse avec conformité RGPD garantie",
+      "Interface intuitive pour établissements et clients",
     ],
   },
   {
@@ -87,20 +97,38 @@ const applications = [
     category: "Solution Camping",
     tagline: "Réservez • Campez • Profitez",
     description:
-      "Automatisez vos check-ins 24h/24 pour votre camping. Vos clients scannent un QR code, paient en ligne et reçoivent instantanément leur accès. Parfait pour hôtels, campings, parkings et locations saisonnières.",
+      "Marque à part entière qui redéfini entièrement la gestion des campings modernes. Née d'une collaboration étroite avec notre client, cette innovation allie technologie, simplicité et design au service du tourisme durable.",
     logo: "/logo_app/logo_selfcamp.png",
     url: "https://www.selfcamp.ch/",
     color: "green", // Couleur verte pour camping/nature
     features: [
-      "Check-in automatique 24h/24 sans réception",
-      "Paiement sécurisé : cartes, TWINT, Apple Pay, Google Pay",
-      "Gestion parking avec codes journaliers",
-      "Aucune application, compte ou abonnement nécessaire",
+      "Des aires de camping modernes et automatisées",
+      "Un système d’accès et de paiement sans contact",
+      "Une gestion complète et connectée pour les exploitants",
+      "Une expérience fluide et sans application pour les voyageurs",
     ],
   },
 ];
 
 export default function HomePage() {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollLeft = container.scrollLeft;
+      const cardWidth = container.clientWidth * 0.85 + 16;
+      const index = Math.round(scrollLeft / cardWidth) % applications.length;
+      setCurrentIndex(index);
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section moderne avec shadcn/ui */}
@@ -283,7 +311,8 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Desktop Grid */}
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {applications.map((app, index) => (
               <motion.div
                 key={index}
@@ -306,12 +335,65 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
+
+          {/* Mobile Carousel with Snap Scrolling */}
+          <div className="md:hidden relative">
+            <div
+              ref={scrollContainerRef}
+              className="overflow-x-auto snap-x snap-mandatory scrollbar-hide flex gap-4 px-4 -mx-4"
+            >
+              {/* Beaucoup de répétitions pour un scroll vraiment long */}
+              {Array.from({ length: 20 }).flatMap(() =>
+                applications.map((app, index) => (
+                  <div
+                    key={`${index}-${Math.random()}`}
+                    className="snap-center flex-shrink-0 w-[85vw] max-w-[340px] first:ml-[7.5vw] last:mr-[7.5vw]"
+                  >
+                    <FeatureCard
+                      title={app.name}
+                      description={app.description}
+                      logo={app.logo}
+                      badge={app.category}
+                      href={app.url}
+                      external={true}
+                      features={app.features}
+                      color={app.color}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
+            {/* Indicateurs pastilles */}
+            <div className="flex justify-center gap-2 mt-6">
+              {applications.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    const container = scrollContainerRef.current;
+                    if (container) {
+                      const cardWidth = container.clientWidth * 0.85 + 16;
+                      container.scrollTo({
+                        left: cardWidth * (index + 10 * applications.length),
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    currentIndex === index
+                      ? "bg-foreground w-6"
+                      : "bg-muted-foreground/30"
+                  }`}
+                  aria-label={`Aller à ${applications[index].name}`}
+                />
+              ))}
+            </div>
+          </div>
         </Container>
       </Section>
 
-      {/* CTA Section élégante */}
-      <Section className="bg-gradient-to-r from-muted/50 to-muted/30 pt-16">
-        <Container size="lg">
+      {/* CTA */}
+      <section className="py-24 px-4 bg-background">
+        <div className="container mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -319,16 +401,16 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <div className="max-w-3xl mx-auto">
+            <div className="max-w-3xl mx-auto bg-card rounded-3xl p-12 border shadow-sm">
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
                 Un projet en tête ?
               </h2>
 
               <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-                Discutons en et créons ensemble votre application.
+                Discutons-en et créons ensemble votre application.
               </p>
 
-              <Button size="lg" className="text-base px-8 shadow-lg" asChild>
+              <Button size="lg" className="text-base px-8" asChild>
                 <Link href="/contact">
                   Nous contacter
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -336,8 +418,8 @@ export default function HomePage() {
               </Button>
             </div>
           </motion.div>
-        </Container>
-      </Section>
+        </div>
+      </section>
     </div>
   );
 }

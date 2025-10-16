@@ -4,7 +4,7 @@ import { Building2, BarChart3, MapPin, CheckCircle } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-background border-t border-border">
+    <footer className="bg-foreground text-background border-t border-background/10">
       <div className="container mx-auto max-w-6xl px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Company Info */}
@@ -16,17 +16,17 @@ export function Footer() {
                   alt="Webbing Logo"
                   width={160}
                   height={160}
-                  className="object-contain"
+                  className="object-contain brightness-0 invert"
                 />
               </div>
             </div>
-            <p className="text-muted-foreground text-base mb-6 max-w-md leading-relaxed">
+            <p className="text-background/70 text-base mb-6 max-w-md leading-relaxed">
               Solutions SaaS (logiciels accessibles directement en ligne)
               innovantes conçues en Suisse pour optimiser votre gestion
               d&apos;entreprise.
             </p>
-            <div className="flex items-center text-muted-foreground">
-              <div className="p-2 bg-muted rounded-lg mr-3">
+            <div className="flex items-center text-background/70">
+              <div className="p-2 bg-background/10 rounded-lg mr-3">
                 <MapPin className="h-4 w-4" />
               </div>
               <span className="text-sm font-medium">
@@ -37,14 +37,14 @@ export function Footer() {
 
           {/* Applications */}
           <div>
-            <h3 className="font-semibold mb-6 text-foreground">Applications</h3>
+            <h3 className="font-semibold mb-6 text-background">Applications</h3>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="https://www.plannikeeper.ch/"
-                  className="group flex items-center text-muted-foreground hover:text-foreground transition-colors"
+                  className="group flex items-center text-background/70 hover:text-background transition-colors"
                 >
-                  <div className="p-1.5 bg-muted group-hover:bg-primary/10 rounded-lg mr-3 transition-colors">
+                  <div className="p-1.5 bg-background/10 group-hover:bg-primary/20 rounded-lg mr-3 transition-colors">
                     <Building2 className="h-3.5 w-3.5 group-hover:text-primary transition-colors" />
                   </div>
                   <span className="text-sm font-medium">PlanniKeeper</span>
@@ -53,9 +53,9 @@ export function Footer() {
               <li>
                 <Link
                   href="https://www.chaff.ch/"
-                  className="group flex items-center text-muted-foreground hover:text-foreground transition-colors"
+                  className="group flex items-center text-background/70 hover:text-background transition-colors"
                 >
-                  <div className="p-1.5 bg-muted group-hover:bg-primary/10 rounded-lg mr-3 transition-colors">
+                  <div className="p-1.5 bg-background/10 group-hover:bg-primary/20 rounded-lg mr-3 transition-colors">
                     <BarChart3 className="h-3.5 w-3.5 group-hover:text-primary transition-colors" />
                   </div>
                   <span className="text-sm font-medium">Chaff</span>
@@ -66,9 +66,9 @@ export function Footer() {
                   href="https://www.selfkey.ch/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center text-muted-foreground hover:text-foreground transition-colors"
+                  className="group flex items-center text-background/70 hover:text-background transition-colors"
                 >
-                  <div className="p-1.5 bg-muted group-hover:bg-primary/10 rounded-lg mr-3 transition-colors">
+                  <div className="p-1.5 bg-background/10 group-hover:bg-primary/20 rounded-lg mr-3 transition-colors">
                     <CheckCircle className="h-3.5 w-3.5 group-hover:text-primary transition-colors" />
                   </div>
                   <span className="text-sm font-medium">Selfkey</span>
@@ -77,7 +77,7 @@ export function Footer() {
               <li className="pt-2">
                 <Link
                   href="/applications"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium"
+                  className="text-sm text-background/70 hover:text-primary transition-colors font-medium"
                 >
                   Toutes nos solutions →
                 </Link>
@@ -87,14 +87,14 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="font-semibold mb-6 text-foreground">Contact</h3>
+            <h3 className="font-semibold mb-6 text-background">Contact</h3>
             <div className="space-y-4">
               <div>
                 <div className="flex items-center">
                   <div className="mr-3">
                     <a
                       href="mailto:contact@webbing.ch"
-                      className="email-button flex items-center justify-center w-10 h-10 rounded-full bg-foreground border-2 border-foreground transition-all duration-500 hover:rotate-360 hover:bg-background group"
+                      className="email-button flex items-center justify-center w-10 h-10 rounded-full bg-background border-2 border-background transition-all duration-500 hover:rotate-360 hover:bg-foreground group"
                     >
                       <svg
                         width="20"
@@ -102,7 +102,7 @@ export function Footer() {
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        className="text-background group-hover:text-foreground transition-colors duration-500"
+                        className="text-foreground group-hover:text-background transition-colors duration-500"
                       >
                         <path
                           d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z"
@@ -124,8 +124,8 @@ export function Footer() {
                     </a>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground mb-1">Email</p>
-                    <p className="text-sm font-medium text-foreground">
+                    <p className="text-xs text-background/50 mb-1">Email</p>
+                    <p className="text-sm font-medium text-background">
                       gp@webbing.ch
                     </p>
                   </div>
@@ -139,7 +139,7 @@ export function Footer() {
                       href="https://github.com/Guillaumeperrottet"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="github-button flex items-center justify-center w-10 h-10 rounded-full bg-foreground border-2 border-foreground transition-all duration-500 hover:rotate-360 hover:bg-background group"
+                      className="github-button flex items-center justify-center w-10 h-10 rounded-full bg-background border-2 border-background transition-all duration-500 hover:rotate-360 hover:bg-foreground group"
                     >
                       <svg
                         width="20"
@@ -147,7 +147,7 @@ export function Footer() {
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        className="text-background group-hover:text-foreground transition-colors duration-500"
+                        className="text-foreground group-hover:text-background transition-colors duration-500"
                       >
                         <path
                           fillRule="evenodd"
@@ -159,8 +159,8 @@ export function Footer() {
                     </a>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground mb-1">GitHub</p>
-                    <p className="text-sm font-medium text-foreground">
+                    <p className="text-xs text-background/50 mb-1">GitHub</p>
+                    <p className="text-sm font-medium text-background">
                       @Guillaumeperrottet
                     </p>
                   </div>
@@ -170,21 +170,21 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-border mt-16 pt-8">
+        <div className="border-t border-background/10 mt-16 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-sm text-muted-foreground mb-4 md:mb-0">
+            <div className="text-sm text-background/70 mb-4 md:mb-0">
               © {new Date().getFullYear()} Webbing. Tous droits réservés.
             </div>
             <div className="flex space-x-6">
               <Link
                 href="/privacy"
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="text-xs text-background/70 hover:text-background transition-colors"
               >
                 Confidentialité
               </Link>
               <Link
                 href="/terms"
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="text-xs text-background/70 hover:text-background transition-colors"
               >
                 Conditions d&apos;utilisation
               </Link>

@@ -2,6 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { BarChart3, Target, Globe, ArrowRight, Shield } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,26 +12,24 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-32 px-4 bg-gradient-to-b from-background via-background to-muted/30 overflow-hidden">
-        {/* Subtle decorative elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 right-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 left-10 w-96 h-96 bg-primary/3 rounded-full blur-3xl" />
-        </div>
-
-        <div className="container mx-auto max-w-3xl text-center relative z-10">
+      <section className="py-32 px-4 bg-background">
+        <div className="container mx-auto max-w-3xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
+            <Badge
+              variant="outline"
+              className="mb-6 px-4 py-2 text-sm bg-muted/50 border-border"
+            >
+              À propos de Webbing
+            </Badge>
             <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-8 leading-tight">
               Des solutions qui{" "}
-              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                simplifient
-              </span>
+              <span className="text-primary">simplifient</span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground">
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
               Webbing crée des applications SaaS pensées pour les entreprises
               suisses.
             </p>
@@ -39,7 +38,7 @@ export default function AboutPage() {
       </section>
 
       {/* Notre approche */}
-      <section className="py-24 px-4 bg-muted/50">
+      <section className="py-24 px-4 bg-muted/30">
         <div className="container mx-auto max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -48,7 +47,7 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="text-4xl font-bold text-foreground mb-8">
+            <h2 className="text-4xl font-bold text-foreground mb-6">
               Notre approche
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed mb-12 max-w-2xl mx-auto">
@@ -58,23 +57,23 @@ export default function AboutPage() {
               toutes les étapes de leur projet.
             </p>
 
-            <div className="bg-gradient-to-br from-background to-muted/50 rounded-2xl p-8 border border-border/50 shadow-lg">
+            <div className="bg-card rounded-2xl p-8 md:p-10 border shadow-sm hover:shadow-md transition-shadow">
               <div className="flex flex-col md:flex-row items-center gap-8">
-                <div className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-primary/20 ring-offset-4 ring-offset-background shrink-0">
+                <div className="relative w-28 h-28 rounded-full overflow-hidden shrink-0 ring-2 ring-primary/10 ring-offset-4 ring-offset-card">
                   <Image
                     src="/guillaume-perrottet.jpg"
                     alt="Guillaume Perrottet"
-                    width={96}
-                    height={96}
+                    width={112}
+                    height={112}
                     className="object-cover w-full h-full"
                     priority
                   />
                 </div>
                 <div className="text-left">
-                  <h3 className="text-xl font-bold text-foreground mb-2">
+                  <h3 className="text-xl font-bold text-foreground mb-3">
                     Guillaume Perrottet
                   </h3>
-                  <p className="text-muted-foreground italic text-lg">
+                  <p className="text-muted-foreground italic text-lg leading-relaxed">
                     &quot;Nous transformons vos idées en solutions digitales
                     performantes. Chaque projet est unique et mérite une
                     approche sur mesure, adaptée à vos besoins
@@ -99,7 +98,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6">
             {[
               {
                 title: "Sur mesure",
@@ -128,15 +127,15 @@ export default function AboutPage() {
             ].map((value, index) => (
               <motion.div
                 key={index}
-                className="group relative p-8 bg-gradient-to-br from-background to-muted/30 rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                className="group p-8 bg-card rounded-2xl border hover:border-primary/50 transition-all duration-300 hover:shadow-md"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
-                    <value.icon className="h-6 w-6 text-primary" />
+                  <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                    <value.icon className="h-7 w-7 text-primary" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-foreground mb-3">
@@ -154,7 +153,7 @@ export default function AboutPage() {
       </section>
 
       {/* Technologies */}
-      <section className="py-24 px-4 bg-muted/50">
+      <section className="py-24 px-4 bg-muted/30">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-foreground mb-4">
@@ -166,42 +165,42 @@ export default function AboutPage() {
           </div>
 
           <motion.div
-            className="grid md:grid-cols-3 gap-8"
+            className="grid md:grid-cols-3 gap-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
             {/* Stack Technique */}
-            <div className="group bg-gradient-to-br from-background to-muted/30 rounded-2xl p-8 border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                <BarChart3 className="h-6 w-6 text-primary" />
+            <div className="group bg-card rounded-2xl p-8 border hover:border-primary/50 transition-all duration-300 hover:shadow-md">
+              <div className="inline-flex items-center justify-center w-14 h-14 bg-primary/10 rounded-xl mb-6 group-hover:bg-primary/20 transition-colors">
+                <BarChart3 className="h-7 w-7 text-primary" />
               </div>
-              <h3 className="font-bold text-foreground mb-4 text-lg">
+              <h3 className="font-bold text-foreground mb-5 text-lg">
                 Stack Technique
               </h3>
-              <div className="space-y-3 text-left">
+              <div className="space-y-4 text-left">
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-1">
+                  <h4 className="text-sm font-semibold text-foreground mb-1.5">
                     Frontend
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Next.js 15, React 19, TypeScript, TailwindCSS
                   </p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-1">
+                  <h4 className="text-sm font-semibold text-foreground mb-1.5">
                     Backend
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     PostgreSQL, Prisma ORM, Better-Auth
                   </p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-1">
+                  <h4 className="text-sm font-semibold text-foreground mb-1.5">
                     Intégrations
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Stripe, Cloudinary, Resend
                   </p>
                 </div>
@@ -209,35 +208,35 @@ export default function AboutPage() {
             </div>
 
             {/* Sécurité */}
-            <div className="group bg-gradient-to-br from-background to-muted/30 rounded-2xl p-8 border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Shield className="h-6 w-6 text-primary" />
+            <div className="group bg-card rounded-2xl p-8 border hover:border-primary/50 transition-all duration-300 hover:shadow-md">
+              <div className="inline-flex items-center justify-center w-14 h-14 bg-primary/10 rounded-xl mb-6 group-hover:bg-primary/20 transition-colors">
+                <Shield className="h-7 w-7 text-primary" />
               </div>
-              <h3 className="font-bold text-foreground mb-4 text-lg">
+              <h3 className="font-bold text-foreground mb-5 text-lg">
                 Sécurité
               </h3>
-              <div className="space-y-3 text-left">
+              <div className="space-y-4 text-left">
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-1">
+                  <h4 className="text-sm font-semibold text-foreground mb-1.5">
                     Protection
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Chiffrement, HTTPS, authentification sécurisée
                   </p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-1">
+                  <h4 className="text-sm font-semibold text-foreground mb-1.5">
                     Performance
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Cache intelligent, optimisation assets, PWA
                   </p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-1">
+                  <h4 className="text-sm font-semibold text-foreground mb-1.5">
                     Conformité
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     RGPD, permissions granulaires
                   </p>
                 </div>
@@ -245,35 +244,35 @@ export default function AboutPage() {
             </div>
 
             {/* Infrastructure */}
-            <div className="group bg-gradient-to-br from-background to-muted/30 rounded-2xl p-8 border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Globe className="h-6 w-6 text-primary" />
+            <div className="group bg-card rounded-2xl p-8 border hover:border-primary/50 transition-all duration-300 hover:shadow-md">
+              <div className="inline-flex items-center justify-center w-14 h-14 bg-primary/10 rounded-xl mb-6 group-hover:bg-primary/20 transition-colors">
+                <Globe className="h-7 w-7 text-primary" />
               </div>
-              <h3 className="font-bold text-foreground mb-4 text-lg">
+              <h3 className="font-bold text-foreground mb-5 text-lg">
                 Infrastructure
               </h3>
-              <div className="space-y-3 text-left">
+              <div className="space-y-4 text-left">
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-1">
+                  <h4 className="text-sm font-semibold text-foreground mb-1.5">
                     Hébergement
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Vercel, architecture serverless
                   </p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-1">
+                  <h4 className="text-sm font-semibold text-foreground mb-1.5">
                     Base de données
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     PostgreSQL optimisée, backups automatiques
                   </p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-1">
+                  <h4 className="text-sm font-semibold text-foreground mb-1.5">
                     Évolutivité
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Auto-scaling, architecture modulaire
                   </p>
                 </div>
@@ -284,7 +283,7 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-4 bg-gradient-to-r from-muted/50 to-muted/30">
+      <section className="py-24 px-4 bg-background">
         <div className="container mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -293,16 +292,16 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <div className="max-w-3xl mx-auto">
+            <div className="max-w-3xl mx-auto bg-card rounded-3xl p-12 border shadow-sm">
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
                 Un projet en tête ?
               </h2>
 
               <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-                Discutons en et créons ensemble votre application.
+                Discutons-en et créons ensemble votre application.
               </p>
 
-              <Button size="lg" className="text-base px-8 shadow-lg" asChild>
+              <Button size="lg" className="text-base px-8" asChild>
                 <Link href="/contact">
                   Nous contacter
                   <ArrowRight className="ml-2 h-4 w-4" />

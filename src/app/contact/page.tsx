@@ -75,22 +75,20 @@ export default function ContactPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-slate-50 py-24 px-4">
+      <div className="min-h-screen bg-background py-24 px-4">
         <div className="container mx-auto max-w-2xl">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <Card className="text-center border-slate-200 shadow-sm">
+            <Card className="text-center border shadow-sm">
               <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-4">
-                  <CheckCircle className="h-8 w-8 text-green-600" />
+                <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4">
+                  <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
                 </div>
-                <CardTitle className="text-2xl text-slate-900">
-                  Message envoyé !
-                </CardTitle>
-                <CardDescription className="text-slate-600">
+                <CardTitle className="text-2xl">Message envoyé !</CardTitle>
+                <CardDescription>
                   Merci pour votre message. Notre vous répondrons dans les plus
                   brefs délais.
                 </CardDescription>
@@ -108,7 +106,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="pt-24 pb-8 px-4">
         <div className="container mx-auto max-w-4xl text-center">
@@ -119,14 +117,14 @@ export default function ContactPage() {
           >
             <Badge
               variant="outline"
-              className="mb-6 px-4 py-2 text-sm bg-white border-slate-200 text-slate-700"
+              className="mb-6 px-4 py-2 text-sm bg-muted/50 border-border"
             >
               Parlons de votre projet
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
+            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
               Contactez-nous
             </h1>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Une question ? Besoin d&apos;informations ? Nous sommes à votre
               écoute
             </p>
@@ -142,7 +140,7 @@ export default function ContactPage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-8"
+            className="bg-card rounded-xl border shadow-sm p-6 mb-8"
           >
             <div className="grid md:grid-cols-3 gap-6">
               {/* Email */}
@@ -151,12 +149,12 @@ export default function ContactPage() {
                   <Mail className="h-5 w-5 text-primary" />
                 </div>
                 <div className="text-left md:text-center">
-                  <h3 className="text-sm font-semibold text-slate-900 mb-1">
+                  <h3 className="text-sm font-semibold text-foreground mb-1">
                     Email
                   </h3>
                   <a
                     href="mailto:gp@webbing.ch"
-                    className="text-sm text-slate-600 hover:text-primary transition-colors"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     gp@webbing.ch
                   </a>
@@ -169,12 +167,12 @@ export default function ContactPage() {
                   <Phone className="h-5 w-5 text-primary" />
                 </div>
                 <div className="text-left md:text-center">
-                  <h3 className="text-sm font-semibold text-slate-900 mb-1">
+                  <h3 className="text-sm font-semibold text-foreground mb-1">
                     Téléphone
                   </h3>
                   <a
                     href="tel:+41793414074"
-                    className="text-sm text-slate-600 hover:text-primary transition-colors"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     +41 79 341 40 74
                   </a>
@@ -187,10 +185,10 @@ export default function ContactPage() {
                   <MapPin className="h-5 w-5 text-primary" />
                 </div>
                 <div className="text-left md:text-center">
-                  <h3 className="text-sm font-semibold text-slate-900 mb-1">
+                  <h3 className="text-sm font-semibold text-foreground mb-1">
                     Localisation
                   </h3>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm text-muted-foreground">
                     Rue de Battentin 1, 1630 Bulle
                   </p>
                 </div>
@@ -204,10 +202,10 @@ export default function ContactPage() {
       <section className="px-4">
         <div className="container mx-auto max-w-3xl">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+            <h2 className="text-2xl font-bold text-foreground mb-2">
               Ou écrivez-nous
             </h2>
-            <p className="text-slate-600">
+            <p className="text-muted-foreground">
               Décrivez votre projet, nous vous répondrons rapidement
             </p>
           </div>
@@ -223,9 +221,9 @@ export default function ContactPage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <Card className="border-slate-200 shadow-sm">
+            <Card className="border shadow-sm">
               <CardHeader className="text-center">
-                <CardTitle className="text-2xl text-slate-900">
+                <CardTitle className="text-2xl">
                   Formulaire de contact
                 </CardTitle>
               </CardHeader>
@@ -233,9 +231,7 @@ export default function ContactPage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="firstName" className="text-slate-700">
-                        Prénom *
-                      </Label>
+                      <Label htmlFor="firstName">Prénom *</Label>
                       <Input
                         id="firstName"
                         type="text"
@@ -244,14 +240,11 @@ export default function ContactPage() {
                         onChange={(e) =>
                           handleInputChange("firstName", e.target.value)
                         }
-                        className="border-slate-200 focus:border-slate-400"
                         placeholder="Votre prénom"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="lastName" className="text-slate-700">
-                        Nom *
-                      </Label>
+                      <Label htmlFor="lastName">Nom *</Label>
                       <Input
                         id="lastName"
                         type="text"
@@ -260,7 +253,6 @@ export default function ContactPage() {
                         onChange={(e) =>
                           handleInputChange("lastName", e.target.value)
                         }
-                        className="border-slate-200 focus:border-slate-400"
                         placeholder="Votre nom"
                       />
                     </div>
@@ -268,9 +260,7 @@ export default function ContactPage() {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-slate-700">
-                        Email *
-                      </Label>
+                      <Label htmlFor="email">Email *</Label>
                       <Input
                         id="email"
                         type="email"
@@ -279,14 +269,11 @@ export default function ContactPage() {
                         onChange={(e) =>
                           handleInputChange("email", e.target.value)
                         }
-                        className="border-slate-200 focus:border-slate-400"
                         placeholder="votre@email.com"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="company" className="text-slate-700">
-                        Entreprise
-                      </Label>
+                      <Label htmlFor="company">Entreprise</Label>
                       <Input
                         id="company"
                         type="text"
@@ -294,23 +281,20 @@ export default function ContactPage() {
                         onChange={(e) =>
                           handleInputChange("company", e.target.value)
                         }
-                        className="border-slate-200 focus:border-slate-400"
                         placeholder="Nom de votre entreprise"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="service" className="text-slate-700">
-                      Solution qui vous intéresse
-                    </Label>
+                    <Label htmlFor="service">Solution qui vous intéresse</Label>
                     <Select
                       value={formData.service}
                       onValueChange={(value) =>
                         handleInputChange("service", value)
                       }
                     >
-                      <SelectTrigger className="border-slate-200 focus:border-slate-400">
+                      <SelectTrigger>
                         <SelectValue placeholder="Sélectionnez une solution" />
                       </SelectTrigger>
                       <SelectContent>
@@ -329,9 +313,7 @@ export default function ContactPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="subject" className="text-slate-700">
-                      Sujet *
-                    </Label>
+                    <Label htmlFor="subject">Sujet *</Label>
                     <Input
                       id="subject"
                       type="text"
@@ -340,15 +322,12 @@ export default function ContactPage() {
                       onChange={(e) =>
                         handleInputChange("subject", e.target.value)
                       }
-                      className="border-slate-200 focus:border-slate-400"
                       placeholder="L'objet de votre message"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="message" className="text-slate-700">
-                      Message *
-                    </Label>
+                    <Label htmlFor="message">Message *</Label>
                     <Textarea
                       id="message"
                       required
@@ -356,7 +335,7 @@ export default function ContactPage() {
                       onChange={(e) =>
                         handleInputChange("message", e.target.value)
                       }
-                      className="border-slate-200 focus:border-slate-400 min-h-[120px]"
+                      className="min-h-[120px]"
                       placeholder="Décrivez votre projet, vos besoins ou vos questions..."
                     />
                   </div>

@@ -111,49 +111,49 @@ export function FeatureCard({
       border: "hover:border-primary/20",
       dot: "bg-primary",
       button:
-        "group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary",
+        "border-primary/10 text-primary/70 hover:bg-primary/5 hover:text-primary hover:border-primary/30",
     },
     orange: {
       icon: "group-hover:bg-orange-50 group-hover:text-orange-600",
       border: "hover:border-orange-200",
-      dot: "bg-orange-500",
+      dot: "bg-[#D66135]",
       button:
-        "group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600",
+        "border-[#D66135]/20 text-[#D66135] hover:bg-[#D66135]/10 hover:text-[#D66135] hover:border-[#D66135]/40",
     },
     emerald: {
       icon: "group-hover:bg-emerald-50 group-hover:text-emerald-600",
       border: "hover:border-emerald-200",
       dot: "bg-emerald-500",
       button:
-        "group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600",
+        "border-emerald-100 text-emerald-600/70 hover:bg-emerald-50/50 hover:text-emerald-600 hover:border-emerald-200",
     },
     green: {
       icon: "group-hover:bg-green-50 group-hover:text-green-600",
       border: "hover:border-green-200",
-      dot: "bg-green-500",
+      dot: "bg-[#a8b785]",
       button:
-        "group-hover:bg-green-600 group-hover:text-white group-hover:border-green-600",
+        "border-[#a8b785]/20 text-[#a8b785] hover:bg-[#a8b785]/10 hover:text-[#a8b785] hover:border-[#a8b785]/40",
     },
     blue: {
       icon: "group-hover:bg-blue-50 group-hover:text-blue-600",
       border: "hover:border-blue-200",
       dot: "bg-blue-500",
       button:
-        "group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600",
+        "border-blue-100 text-blue-600/70 hover:bg-blue-50/50 hover:text-blue-600 hover:border-blue-200",
     },
     purple: {
       icon: "group-hover:bg-purple-50 group-hover:text-purple-600",
       border: "hover:border-purple-200",
       dot: "bg-purple-500",
       button:
-        "group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600",
+        "border-purple-100 text-purple-600/70 hover:bg-purple-50/50 hover:text-purple-600 hover:border-purple-200",
     },
     gray: {
       icon: "group-hover:bg-gray-50 group-hover:text-gray-600",
       border: "hover:border-gray-200",
       dot: "bg-gray-500",
       button:
-        "group-hover:bg-gray-600 group-hover:text-white group-hover:border-gray-600",
+        "border-gray-200 text-gray-600/70 hover:bg-gray-50/50 hover:text-gray-600 hover:border-gray-300",
     },
   };
 
@@ -163,8 +163,8 @@ export function FeatureCard({
   return (
     <Card
       className={cn(
-        "group relative transition-all duration-300 hover:shadow-lg border-border h-full flex flex-col",
-        href && `cursor-pointer ${selectedColor.border}`,
+        "group relative transition-all duration-300 border-border h-full flex flex-col",
+        href && "cursor-pointer",
         className
       )}
     >
@@ -197,7 +197,10 @@ export function FeatureCard({
           )}
         </div>
 
-        <CardTitle className="text-xl text-foreground mb-2">{title}</CardTitle>
+        <div className="mb-2">
+          <CardTitle className="text-xl text-foreground">{title}</CardTitle>
+          <div className="h-0.5 bg-foreground w-8 group-hover:w-[100%] transition-all duration-300 ease-out mt-1"></div>
+        </div>
 
         <CardDescription className="text-base leading-relaxed">
           {description}

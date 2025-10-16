@@ -140,7 +140,7 @@ export default function HomePage() {
       />
 
       {/* Hero Section moderne avec shadcn/ui - Remonté avec marge négative et z-index */}
-      <div className="relative z-10 -mt-16 sm:-mt-20 md:-mt-24 lg:-mt-32 xl:-mt-45">
+      <div className="relative z-10 -mt-12 sm:-mt-20 md:-mt-24 lg:-mt-32 xl:-mt-45">
         <Hero
           badge="Développement Web Suisse"
           title={
@@ -166,9 +166,9 @@ export default function HomePage() {
       </div>
 
       {/* Applications avec FeatureCard moderne */}
-      <Section className="pt-16">
+      <Section className="pt-10">
         <Container>
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-foreground mb-4 font-display">
               Nos Solutions
             </h2>

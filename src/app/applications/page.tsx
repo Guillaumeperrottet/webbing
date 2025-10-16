@@ -3,7 +3,7 @@
 import { Hero, Section, Container } from "@/components/ui/webbing-ui";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CloudBackground } from "@/components/ui/cloud-background";
+import { WaveSeparator } from "@/components/ui/wave-separator";
 import {
   ExternalLink,
   ArrowRight,
@@ -110,23 +110,31 @@ export default function ApplicationsPage() {
   };
 
   return (
-    <div className="min-h-screen relative">
-      {/* Nuages animés en arrière-plan */}
-      <CloudBackground />
-
-      {/* Hero Section moderne */}
-      <Hero
-        badge="Nos Applications"
-        title={
-          <>
-            Applications{" "}
-            <span className="text-primary">utilisées au quotidien</span>
-          </>
-        }
+    <div className="min-h-screen">
+      {/* Image de fond avec vague blanche */}
+      <WaveSeparator
+        imageSrc="/background_applications.png"
+        imageAlt="Applications Webbing"
+        imageHeight={600}
+        fillColor="#ffffff"
+        className="mb-0"
       />
 
+      {/* Hero Section moderne - Remonté avec marge négative et z-index */}
+      <div className="relative z-10 -mt-12 sm:-mt-15 md:-mt-24 lg:-mt-32 xl:-mt-40">
+        <Hero
+          badge="Nos Applications"
+          title={
+            <>
+              Votre vision,{" "}
+              <span className="text-primary">notre expertise</span>
+            </>
+          }
+        />
+      </div>
+
       {/* Section Applications principales - Carousel */}
-      <Section id="applications">
+      <Section id="applications" className="pt-1 md:pt-12">
         <Container className="relative">
           {/* Titre centré */}
           <div className="text-center mb-8">

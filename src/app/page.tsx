@@ -12,6 +12,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
+import { WaveSeparator } from "@/components/ui/wave-separator";
 
 const values = [
   {
@@ -128,24 +129,40 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section moderne avec shadcn/ui */}
-      <Hero
-        badge="Développement Web Suisse"
-        title={
-          <>
-            Applications web <span className="text-primary">sur mesure</span>
-          </>
-        }
-        description="Nous créons des applications et sites web personnalisés pour votre entreprise. Développés en Suisse, simples et efficaces."
-        primaryAction={{
-          label: "Voir nos applications",
-          href: "/applications",
-        }}
-        secondaryAction={{
-          label: "Nous contacter",
-          href: "/contact",
-        }}
+      {/* Image de fond avec vague blanche */}
+      <WaveSeparator
+        imageSrc="/background.jpg"
+        imageAlt="Webbing - Applications web sur mesure"
+        imageHeight={600}
+        fillColor="#ffffff"
+        className="mb-0"
       />
+
+      {/* Hero Section moderne avec shadcn/ui - Remonté avec marge négative et z-index */}
+      <div className="relative z-10 -mt-16 sm:-mt-20 md:-mt-24 lg:-mt-32 xl:-mt-50">
+        <Hero
+          badge="Développement Web Suisse"
+          title={
+            <Image
+              src="/webbing_informatique.png"
+              alt="Webbing Informatique"
+              width={300}
+              height={100}
+              className="mx-auto"
+              priority
+            />
+          }
+          description="Nous créons des applications et sites web personnalisés pour votre entreprise. Développés en Suisse, simples et efficaces."
+          // primaryAction={{
+          //   label: "Voir nos applications",
+          //   href: "/applications",
+          // }}
+          // secondaryAction={{
+          //   label: "Nous contacter",
+          //   href: "/contact",
+          // }}
+        />
+      </div>
 
       {/* Applications avec FeatureCard moderne */}
       <Section className="pt-36">

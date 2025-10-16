@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { track } from "@vercel/analytics";
 
 /**
  * Composant Section avec styles prédéfinis
@@ -251,6 +252,12 @@ export function FeatureCard({
                   target: "_blank",
                   rel: "noopener noreferrer",
                 })}
+                onClick={() =>
+                  track("Application Click", {
+                    app: title,
+                    category: badge || "unknown",
+                  })
+                }
               >
                 Découvrir
                 {external ? (

@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 import { WaveSeparator } from "@/components/ui/wave-separator";
+import { track } from "@vercel/analytics";
 
 const values = [
   {
@@ -172,7 +173,7 @@ export default function HomePage() {
               Nos Solutions
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              pour vos demandes
+              à vos demandes
             </p>
           </div>
 
@@ -527,7 +528,17 @@ export default function HomePage() {
                 Discutons-en et créons ensemble vos idées.
               </p>
 
-              <Button size="lg" className="text-base px-8" asChild>
+              <Button
+                size="lg"
+                className="text-base px-8"
+                asChild
+                onClick={() =>
+                  track("CTA Click", {
+                    section: "homepage",
+                    action: "contact_button",
+                  })
+                }
+              >
                 <Link href="/contact">
                   Nous contacter
                   <ArrowRight className="ml-2 h-4 w-4" />

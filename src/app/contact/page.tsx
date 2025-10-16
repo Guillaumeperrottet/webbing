@@ -23,6 +23,7 @@ import {
 import { Send, CheckCircle, Mail, Phone, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
+import { track } from "@vercel/analytics";
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,6 +56,12 @@ export default function ContactPage() {
       });
 
       if (response.ok) {
+        // Track successful form submission
+        track("Contact Form Submit", {
+          service: formData.service || "not_specified",
+          hasCompany: !!formData.company,
+        });
+
         setIsSubmitted(true);
         setFormData({
           firstName: "",

@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { track } from "@vercel/analytics/server";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, message } = body;
+    const { name, email, message, service, company } = body;
 
     // Envoi de l'email via Resend
     const data = await resend.emails.send({
@@ -20,6 +21,12 @@ export async function POST(request: NextRequest) {
     if (data.error) {
       throw new Error(data.error.message);
     }
+
+    // Track server-side event
+    await track("Contact Email Sent", {
+      service: service || "not_specified",
+      hasCompany: !!company,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

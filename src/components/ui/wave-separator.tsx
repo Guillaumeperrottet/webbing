@@ -38,7 +38,7 @@ export function WaveSeparator({
         alt={imageAlt}
         width={1440}
         height={imageHeight}
-        className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] object-cover"
+        className="w-full h-[350px] sm:h-[420px] md:h-[520px] lg:h-[600px] object-cover object-bottom"
         priority
       />
 
@@ -48,7 +48,7 @@ export function WaveSeparator({
       {/* Ajustement responsive du positionnement bottom pour toutes les tailles d'écran */}
       <svg
         viewBox="0 0 1440 390"
-        className="absolute bottom-[-2px] sm:bottom-[-5px] md:bottom-[-10px] lg:bottom-[-30px] xl:bottom-[-50px] left-0 w-full"
+        className="absolute bottom-[-2px] sm:bottom-[-8px] md:bottom-[-12px] lg:bottom-[-30px] xl:bottom-[-50px] left-0 w-full"
         preserveAspectRatio="none"
         style={{ height: "auto" }}
       >

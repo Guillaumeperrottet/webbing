@@ -139,7 +139,7 @@ export default function HomePage() {
       />
 
       {/* Hero Section moderne avec shadcn/ui - Remonté avec marge négative et z-index */}
-      <div className="relative z-10 -mt-16 sm:-mt-20 md:-mt-24 lg:-mt-32 xl:-mt-50">
+      <div className="relative z-10 -mt-16 sm:-mt-20 md:-mt-24 lg:-mt-32 xl:-mt-45">
         <Hero
           badge="Développement Web Suisse"
           title={
@@ -456,34 +456,52 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* Section Valeurs avec design moderne */}
-      <Section variant="muted">
+      {/* Section Valeurs avec design moderne et sobre */}
+      <Section>
         <Container>
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-12">
-              Pourquoi choisir Webbing ?
-            </h2>
+          <div className="text-center mb-12 md:mb-20">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
+                Pourquoi choisir Webbing ?
+              </h2>
+              <div className="w-20 h-1 bg-primary mx-auto mt-6 rounded-full"></div>
+            </motion.div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
             {values.map((value, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
                 viewport={{ once: true }}
-                className="text-center"
+                className="group"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-background border border-border rounded-2xl mb-6 shadow-sm">
-                  <value.icon className="h-8 w-8 text-muted-foreground" />
+                <div className="relative rounded-2xl p-6 md:p-8 h-full border border-border/50 hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 md:hover:-translate-y-2">
+                  {/* Icône avec effet hover */}
+                  <div className="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-primary/10 rounded-xl mb-4 md:mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+                    <value.icon className="h-6 w-6 md:h-7 md:w-7 text-primary" />
+                  </div>
+
+                  {/* Titre */}
+                  <h3 className="text-lg md:text-xl font-bold text-foreground mb-3 md:mb-4 group-hover:text-primary transition-colors duration-300">
+                    {value.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-muted-foreground leading-relaxed text-sm">
+                    {value.description}
+                  </p>
+
+                  {/* Bordure décorative au hover */}
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary/0 via-primary to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-2xl"></div>
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mb-4">
-                  {value.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {value.description}
-                </p>
               </motion.div>
             ))}
           </div>

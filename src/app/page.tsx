@@ -38,7 +38,7 @@ const values = [
 
 const applications = [
   {
-    name: "PlanniKeeper",
+    name: "Plannikeeper",
     category: "Gestion Immobilière",
     tagline: "Organisez • Planifiez • Maîtrisez",
     description:
@@ -74,7 +74,7 @@ const applications = [
     ],
   },
   {
-    name: "SelfKey",
+    name: "Selfkey",
     category: "Check-in automatique",
     tagline: "Enregistrez • Payez • Accédez",
     description:
@@ -91,7 +91,7 @@ const applications = [
     ],
   },
   {
-    name: "SelfCamp",
+    name: "Selfcamp",
     category: "Solution Camping",
     tagline: "Réservez • Campez • Profitez",
     description:
@@ -166,7 +166,7 @@ export default function HomePage() {
       </div>
 
       {/* Applications avec FeatureCard moderne */}
-      <Section className="pt-36">
+      <Section className="pt-16">
         <Container>
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-foreground mb-4 font-display">

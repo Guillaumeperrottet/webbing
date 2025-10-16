@@ -131,7 +131,7 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen">
       {/* Image de fond avec vague blanche */}
       <WaveSeparator
-        imageSrc="/background.jpg"
+        imageSrc="/background_accueil.jpg"
         imageAlt="Webbing - Applications web sur mesure"
         imageHeight={600}
         fillColor="#ffffff"

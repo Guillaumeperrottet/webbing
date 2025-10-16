@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Building2, BarChart3, MapPin, CheckCircle } from "lucide-react";
 
 export function Footer() {
@@ -9,14 +10,15 @@ export function Footer() {
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">
-                  W
-                </span>
+              <div className="relative w-25 h-25">
+                <Image
+                  src="/logo.png"
+                  alt="Webbing Logo"
+                  width={160}
+                  height={160}
+                  className="object-contain"
+                />
               </div>
-              <span className="font-bold text-2xl text-foreground">
-                Webbing
-              </span>
             </div>
             <p className="text-muted-foreground text-base mb-6 max-w-md leading-relaxed">
               Solutions SaaS (logiciels accessibles directement en ligne)

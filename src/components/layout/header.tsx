@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import {
@@ -19,13 +20,17 @@ export function Header() {
       <div className="container mx-auto max-w-6xl px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">
-                W
-              </span>
+          <Link href="/" className="flex items-center justify-center pt-4">
+            <div className="relative w-28 h-14">
+              <Image
+                src="/logo_simple.png"
+                alt="Webbing Logo"
+                width={112}
+                height={56}
+                className="object-contain"
+                priority
+              />
             </div>
-            <span className="font-bold text-xl text-foreground">Webbing</span>
           </Link>
 
           {/* Navigation Desktop */}

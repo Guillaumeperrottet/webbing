@@ -312,6 +312,7 @@ interface HeroProps {
     label: string;
     href: string;
   };
+  showSeparator?: boolean;
   className?: string;
 }
 
@@ -321,6 +322,7 @@ export function Hero({
   description,
   primaryAction,
   secondaryAction,
+  showSeparator = false,
   className,
 }: HeroProps) {
   return (
@@ -341,6 +343,10 @@ export function Hero({
               <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight font-display">
                 {title}
               </h1>
+            )}
+
+            {showSeparator && (
+              <div className="w-20 h-1 bg-primary mx-auto mb-6 rounded-full"></div>
             )}
 
             {description && (

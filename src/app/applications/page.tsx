@@ -130,6 +130,7 @@ export default function ApplicationsPage() {
               <span className="text-primary font-display">notre expertise</span>
             </>
           }
+          showSeparator={true}
         />
       </div>
 
@@ -138,7 +139,7 @@ export default function ApplicationsPage() {
         <Container className="relative">
           {/* Titre centré */}
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-foreground font-display">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground font-display">
               Découvrez nos réalisations
             </h2>
           </div>
@@ -452,16 +453,16 @@ export default function ApplicationsPage() {
             className="text-center py-12"
           >
             <blockquote className="space-y-4">
-              <p className="text-3xl md:text-4xl font-bold text-foreground italic">
+              <p className="text-2xl md:text-4xl font-bold text-foreground italic">
                 &ldquo;La meilleure façon de prédire l&apos;avenir,
                 <br />
                 c&apos;est de le créer.&rdquo;
               </p>
-              <footer className="text-lg text-muted-foreground">
+              <footer className="text-base md:text-lg text-muted-foreground">
                 — Peter Drucker
               </footer>
             </blockquote>
-            <p className="mt-8 text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="mt-8 text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
               Votre idée mérite d&apos;exister. Nous sommes là pour la
               transformer en réalité.
             </p>

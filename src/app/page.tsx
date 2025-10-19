@@ -169,10 +169,10 @@ export default function HomePage() {
       <Section className="pt-10">
         <Container>
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4 font-display">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 font-display">
               Nos Solutions
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-body">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-body">
               à vos demandes
             </p>
           </div>
@@ -269,7 +269,7 @@ export default function HomePage() {
         {/* Retiré variant="muted" pour fond blanc */}
         <Container>
           <motion.h3
-            className="text-center text-3xl font-bold text-foreground mb-8"
+            className="text-center text-2xl md:text-3xl font-bold text-foreground mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -467,7 +467,7 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 font-display">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 font-display">
                 Pourquoi choisir Webbing ?
               </h2>
               <div className="w-20 h-1 bg-primary mx-auto mt-6 rounded-full"></div>

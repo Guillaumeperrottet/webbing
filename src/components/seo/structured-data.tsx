@@ -5,10 +5,17 @@ export function OrganizationSchema() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "Webbing",
+    alternateName: "Webbing Informatique",
     url: "https://webbing.ch",
-    logo: "https://webbing.ch/logo.png",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://webbing.ch/logo-square.png",
+      width: "512",
+      height: "512",
+    },
+    image: "https://webbing.ch/logo-square.png",
     description:
-      "Créateur de solutions SaaS sur mesure pour les entreprises suisses",
+      "Créateur de solutions SaaS sur mesure pour les entreprises suisses. Développement d'applications web modernes : PlanniKeeper, Chaff, SelfKey, SelfCamp.",
     address: {
       "@type": "PostalAddress",
       streetAddress: "Rue de Battentin 1",
@@ -21,13 +28,22 @@ export function OrganizationSchema() {
       telephone: "+41-79-341-40-74",
       contactType: "customer service",
       email: "gp@webbing.ch",
-      availableLanguage: ["French"],
+      availableLanguage: ["French", "fr-CH"],
     },
     founder: {
       "@type": "Person",
       name: "Guillaume Perrottet",
     },
     sameAs: [],
+    areaServed: {
+      "@type": "Country",
+      name: "Switzerland",
+    },
+    serviceType: [
+      "Développement Web",
+      "Solutions SaaS",
+      "Applications Web sur mesure",
+    ],
   };
 
   return (
@@ -44,7 +60,8 @@ export function LocalBusinessSchema() {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: "Webbing",
-    image: "https://webbing.ch/logo.png",
+    image: "https://webbing.ch/logo-square.png",
+    logo: "https://webbing.ch/logo-square.png",
     "@id": "https://webbing.ch",
     url: "https://webbing.ch",
     telephone: "+41793414074",

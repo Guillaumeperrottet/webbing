@@ -459,9 +459,6 @@ export default function ApplicationsPage() {
                 <br />
                 c&apos;est de le créer.&rdquo;
               </p>
-              <footer className="text-base md:text-lg text-muted-foreground">
-                — Peter Drucker
-              </footer>
             </blockquote>
             <p className="mt-8 text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
               Votre idée mérite d&apos;exister. Nous sommes là pour la

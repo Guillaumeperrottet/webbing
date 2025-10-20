@@ -9,13 +9,13 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="relative w-25 h-25">
+            <div className="flex items-center space-x-3 ">
+              <div className="relative w-35 h-35">
                 <Image
                   src="/logo.png"
                   alt="Webbing Logo"
-                  width={160}
-                  height={160}
+                  width={180}
+                  height={180}
                   className="object-contain brightness-0 invert"
                 />
               </div>

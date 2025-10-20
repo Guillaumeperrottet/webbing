@@ -142,7 +142,7 @@ export default function HomePage() {
       {/* Hero Section moderne avec shadcn/ui - Remonté avec marge négative et z-index */}
       <div className="relative z-10 -mt-12 sm:-mt-20 md:-mt-24 lg:-mt-32 xl:-mt-45">
         <Hero
-          badge="Développement Web Suisse"
+          badge="Développement Web"
           title={
             <Image
               src="/webbing_informatique.png"

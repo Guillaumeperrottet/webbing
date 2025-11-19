@@ -136,7 +136,7 @@ export function Footer() {
                 <div className="flex items-center">
                   <div className="mr-3">
                     <a
-                      href="tel:+41791234567"
+                      href="tel:+41793414074"
                       className="phone-button flex items-center justify-center w-10 h-10 rounded-full bg-background border-2 border-background transition-all duration-500 hover:rotate-360 hover:bg-primary group"
                     >
                       <svg
@@ -162,7 +162,7 @@ export function Footer() {
                   <div>
                     <p className="text-xs text-background/50 mb-1">Téléphone</p>
                     <p className="text-sm font-medium text-background">
-                      +41 79 123 45 67
+                      +41 79 341 40 74
                     </p>
                   </div>
                 </div>

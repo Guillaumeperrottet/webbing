@@ -480,11 +480,11 @@ export default function ApplicationsPage() {
           >
             <div className="max-w-3xl mx-auto bg-card rounded-3xl p-12 border shadow-sm">
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                Un projet en tête ?
+                Une application en tête ?
               </h2>
 
               <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-                Discutons-en et créons ensemble votre application.
+                Discutons-en et créons la ensemble.
               </p>
 
               <Button size="lg" className="text-base px-8" asChild>

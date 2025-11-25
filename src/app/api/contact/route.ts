@@ -7,13 +7,13 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, message, service, company } = body;
+    const { email, message, service, company } = body;
 
     // Envoi de l'email via Resend
     const data = await resend.emails.send({
       from: "contact@webbing.ch", // Remplace par ton domaine vérifié
       to: "gp@webbing.ch", // Remplace par l'adresse de réception
-      subject: `Nouveau message de ${name}`,
+      subject: `Nouvelle prise de contact`,
       reply_to: email,
       text: message,
     });

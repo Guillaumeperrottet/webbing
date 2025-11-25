@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <footer className="bg-foreground text-background border-t border-background/10">
       <div className="container mx-auto max-w-6xl px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-12">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 ">
@@ -33,6 +33,53 @@ export function Footer() {
                 Rue de Battentin 1, 1630 Bulle, Suisse
               </span>
             </div>
+          </div>
+
+          {/* Navigation */}
+          <div>
+            <h3 className="font-semibold mb-6 text-background">Navigation</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/"
+                  className="text-sm text-background/70 hover:text-background transition-colors font-medium"
+                >
+                  Accueil
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/applications"
+                  className="text-sm text-background/70 hover:text-background transition-colors font-medium"
+                >
+                  Applications
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/projets"
+                  className="text-sm text-background/70 hover:text-background transition-colors font-medium"
+                >
+                  Projets Web
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about"
+                  className="text-sm text-background/70 hover:text-background transition-colors font-medium"
+                >
+                  À propos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-sm text-background/70 hover:text-background transition-colors font-medium"
+                >
+                  Contact
+                </Link>
+              </li>
+            </ul>
           </div>
 
           {/* Applications */}

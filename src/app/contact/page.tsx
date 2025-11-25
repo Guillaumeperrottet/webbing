@@ -13,13 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Send, CheckCircle, Mail, Phone, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
@@ -291,32 +284,6 @@ export default function ContactPage() {
                         placeholder="Nom de votre entreprise"
                       />
                     </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="service">Solution qui vous intéresse</Label>
-                    <Select
-                      value={formData.service}
-                      onValueChange={(value) =>
-                        handleInputChange("service", value)
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionnez une solution" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="plannikeeper">
-                          PlanniKeeper
-                        </SelectItem>
-                        <SelectItem value="chaff">Chaff</SelectItem>
-                        <SelectItem value="selfkey">SelfKey</SelectItem>
-                        <SelectItem value="selfcamp">SelfCamp</SelectItem>
-                        <SelectItem value="all">
-                          Toutes les solutions
-                        </SelectItem>
-                        <SelectItem value="other">Autre / Conseil</SelectItem>
-                      </SelectContent>
-                    </Select>
                   </div>
 
                   <div className="space-y-2">

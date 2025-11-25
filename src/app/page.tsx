@@ -7,6 +7,7 @@ import {
   FeatureCard,
 } from "@/components/ui/webbing-ui";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Shield, RefreshCw, Globe, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -110,7 +111,9 @@ const applications = [
 
 export default function HomePage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerProjectsRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -122,6 +125,22 @@ export default function HomePage() {
       const scrollIndex = Math.round(scrollLeft / cardWidth);
       const index = scrollIndex % applications.length;
       setCurrentIndex(index);
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const container = scrollContainerProjectsRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollLeft = container.scrollLeft;
+      const cardWidth = container.clientWidth * 0.85 + 8;
+      const scrollIndex = Math.round(scrollLeft / cardWidth);
+      const index = scrollIndex % 2; // 2 projets
+      setCurrentProjectIndex(index);
     };
 
     container.addEventListener("scroll", handleScroll, { passive: true });
@@ -448,6 +467,200 @@ export default function HomePage() {
             </motion.div>
           </div>
         </div>
+      </Section>
+
+      {/* Section Projets Web Récents */}
+      <Section>
+        <Container>
+          <div className="text-center mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 font-display">
+                Nos réalisations web
+              </h2>
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-body">
+                Sites internet sur mesure pour nos clients
+              </p>
+              <div className="w-20 h-1 bg-primary mx-auto mt-6 rounded-full"></div>
+            </motion.div>
+          </div>
+
+          {/* Desktop Grid */}
+          <div className="hidden md:grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {[
+              {
+                name: "Dipiaza - Bar à café",
+                category: "Site web",
+                image: "/projects/dipiaza.png",
+                url: "https://www.dipiaza.ch/",
+                color: "#FD2B12",
+              },
+              {
+                name: "Alpha Hotel - Fribourg",
+                category: "Site web",
+                image: "/projects/alpha-hotel.png",
+                inProgress: true,
+                color: "#6E8C50",
+              },
+            ].map((project, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                viewport={{ once: true }}
+              >
+                <div className="bg-card rounded-2xl border overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
+                  {/* Image */}
+                  <div className="relative h-48 bg-gradient-to-br from-background via-muted/20 to-background overflow-hidden">
+                    <Image
+                      src={project.image}
+                      alt={project.name}
+                      fill
+                      className="object-contain group-hover:scale-105 transition-transform duration-300"
+                    />
+                    {project.inProgress && (
+                      <div className="absolute top-4 right-4">
+                        <Badge className="bg-orange-500/90 text-white backdrop-blur border-0 text-xs">
+                          En développement
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Contenu */}
+                  <div className="p-6">
+                    <Badge
+                      variant="outline"
+                      className="mb-3"
+                      style={{
+                        borderColor: project.color,
+                        color: project.color,
+                      }}
+                    >
+                      {project.category}
+                    </Badge>
+                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors font-display">
+                      {project.name}
+                    </h3>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Mobile Carousel */}
+          <div className="md:hidden relative">
+            <div
+              ref={scrollContainerProjectsRef}
+              className="overflow-x-auto snap-x snap-mandatory scrollbar-hide flex gap-2 px-4 -mx-4"
+            >
+              {Array.from({ length: 10 }).flatMap((_, repeatIndex) =>
+                [
+                  {
+                    name: "Dipiaza - Bar à café",
+                    category: "Site web",
+                    image: "/projects/dipiaza.png",
+                    url: "https://www.dipiaza.ch/",
+                    color: "#FD2B12",
+                  },
+                  {
+                    name: "Alpha Hotel - Fribourg",
+                    category: "Site web",
+                    image: "/projects/alpha-hotel.png",
+                    inProgress: true,
+                    color: "#6E8C50",
+                  },
+                ].map((project, index) => (
+                  <div
+                    key={`${project.name}-${repeatIndex}-${index}`}
+                    className="snap-center flex-shrink-0 w-[85vw] max-w-[340px]"
+                  >
+                    <div className="bg-card rounded-2xl border overflow-hidden h-full">
+                      {/* Image */}
+                      <div className="relative h-48 bg-gradient-to-br from-background via-muted/20 to-background overflow-hidden">
+                        <Image
+                          src={project.image}
+                          alt={project.name}
+                          fill
+                          className="object-contain"
+                        />
+                        {project.inProgress && (
+                          <div className="absolute top-4 right-4">
+                            <Badge className="bg-orange-500/90 text-white backdrop-blur border-0 text-xs">
+                              En dev
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Contenu */}
+                      <div className="p-4">
+                        <Badge
+                          variant="outline"
+                          className="mb-3 text-xs"
+                          style={{
+                            borderColor: project.color,
+                            color: project.color,
+                          }}
+                        >
+                          {project.category}
+                        </Badge>
+                        <h3 className="text-lg font-bold text-foreground font-display">
+                          {project.name}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Indicateurs pastilles */}
+            <div className="flex justify-center gap-2 mt-6">
+              {[0, 1].map((index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    const container = scrollContainerProjectsRef.current;
+                    if (container) {
+                      const cardWidth = container.clientWidth * 0.85 + 8;
+                      const currentScroll = container.scrollLeft;
+                      const currentRepeat = Math.floor(
+                        currentScroll / (cardWidth * 2)
+                      );
+                      container.scrollTo({
+                        left:
+                          currentRepeat * (cardWidth * 2) + cardWidth * index,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    currentProjectIndex === index
+                      ? "bg-foreground w-6"
+                      : "bg-muted-foreground/30"
+                  }`}
+                  aria-label={`Aller au projet ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Bouton voir tous les projets */}
+          <div className="text-center mt-12">
+            <Button size="lg" asChild variant="outline">
+              <Link href="/projets">
+                Voir tous nos projets
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </Container>
       </Section>
 
       {/* Section Valeurs avec design moderne et sobre */}

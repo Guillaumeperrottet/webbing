@@ -118,7 +118,9 @@ export function Footer() {
               </li>
             </ul>
 
-            <h3 className="font-semibold mb-4 mt-6 text-background">Sites Web</h3>
+            <h3 className="font-semibold mb-4 mt-6 text-background">
+              Sites Web
+            </h3>
             <ul className="space-y-3">
               <li>
                 <Link

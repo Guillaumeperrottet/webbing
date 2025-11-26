@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Building2, BarChart3, MapPin, CheckCircle } from "lucide-react";
+import { Building2, BarChart3, MapPin, Globe2 } from "lucide-react";
 
 export function Footer() {
   return (
@@ -108,25 +108,46 @@ export function Footer() {
                   <span className="text-sm font-medium">Chaff</span>
                 </Link>
               </li>
-              <li>
-                <a
-                  href="https://www.selfkey.ch/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center text-background/70 hover:text-background transition-colors"
-                >
-                  <div className="p-1.5 bg-background/10 group-hover:bg-background/20 rounded-lg mr-3 transition-colors">
-                    <CheckCircle className="h-3.5 w-3.5 text-background/70 group-hover:text-background transition-colors" />
-                  </div>
-                  <span className="text-sm font-medium">Selfkey</span>
-                </a>
-              </li>
               <li className="pt-2">
                 <Link
                   href="/applications"
-                  className="text-sm text-background/70 hover:text-primary transition-colors font-medium"
+                  className="text-sm text-background/70 hover:text-background transition-colors font-medium"
                 >
                   Toutes nos solutions →
+                </Link>
+              </li>
+            </ul>
+
+            <h3 className="font-semibold mb-4 mt-6 text-background">Sites Web</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="https://www.dipiaza.ch/"
+                  className="group flex items-center text-background/70 hover:text-background transition-colors"
+                >
+                  <div className="p-1.5 bg-background/10 group-hover:bg-background/20 rounded-lg mr-3 transition-colors">
+                    <Globe2 className="h-3.5 w-3.5 text-background/70 group-hover:text-background transition-colors" />
+                  </div>
+                  <span className="text-sm font-medium">Dipiaza</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://www.popliving.ch/fr"
+                  className="group flex items-center text-background/70 hover:text-background transition-colors"
+                >
+                  <div className="p-1.5 bg-background/10 group-hover:bg-background/20 rounded-lg mr-3 transition-colors">
+                    <Globe2 className="h-3.5 w-3.5 text-background/70 group-hover:text-background transition-colors" />
+                  </div>
+                  <span className="text-sm font-medium">PopLiving</span>
+                </Link>
+              </li>
+              <li className="pt-2">
+                <Link
+                  href="/projets"
+                  className="text-sm text-background/70 hover:text-background transition-colors font-medium"
+                >
+                  Tous nos projets →
                 </Link>
               </li>
             </ul>

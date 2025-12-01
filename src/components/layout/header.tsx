@@ -20,13 +20,13 @@ export function Header() {
       <div className="container mx-auto max-w-6xl px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center justify-center pt-4">
-            <div className="relative w-28 h-12">
+          <Link href="/" className="flex items-center justify-center">
+            <div className="relative w-10 h-10">
               <Image
-                src="/webbing_informatique.png"
+                src="/logo_navbar.png"
                 alt="Webbing Logo"
-                width={120}
-                height={120}
+                width={40}
+                height={40}
                 className="object-contain"
                 priority
               />

@@ -12,7 +12,7 @@ export function Footer() {
             <div className="flex items-center space-x-3 ">
               <div className="relative w-35 h-35">
                 <Image
-                  src="/logo.png"
+                  src="/webbing_informatique.png"
                   alt="Webbing Logo"
                   width={180}
                   height={180}

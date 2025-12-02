@@ -71,7 +71,7 @@ const applications = [
       "Gestion et analyse de la masse salariale",
       "Calcul des ratios de rentabilité par période",
       "Tableaux de bord intuitifs personnalisables",
-      "Hébergement européen conforme RGPD",
+      "Intégration de l'IA pour des analyses prédictives",
     ],
   },
   {

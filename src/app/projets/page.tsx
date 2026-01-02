@@ -11,6 +11,17 @@ import { useRef, useEffect, useState } from "react";
 
 const projects = [
   {
+    name: "Coachingbymarie",
+    category: "Coaching sportif",
+    year: "2026",
+    description:
+      "Site vitrine pour coach sportive diplômée proposant du coaching privé, des cours collectifs en extérieur et en intérieur dans la région de Bulle.",
+    image: "/projects/coachingbymarie.jpg",
+    url: "https://www.coachingbymarie.ch/",
+    tags: ["Design Modern", "Responsive", "Galerie"],
+    color: "#FF6B9D",
+  },
+  {
     name: "Selfcamp",
     category: "Camping automatisé",
     year: "2025",

@@ -39,6 +39,24 @@ const values = [
 
 const applications = [
   {
+    name: "Wisp",
+    category: "Transfert & Stockage",
+    tagline: "Stockez • Partagez • Transférez",
+    description:
+      "Solution suisse de stockage et de partage de fichiers. Bibliothèque d'images organisée par tags et dossiers, transfert rapide, et édition de documents via Collabora — 100% hébergé en Suisse.",
+    logo: "/logo_app/logo_wisp.png",
+    url: "https://wisp.ch/",
+    color: "purple",
+    features: [
+      "Transfert rapide de fichiers jusqu'à 2GB gratuitement",
+      "Bibliothèque d'images avec tags et dossiers",
+      "Partage sécurisé par lien avec mot de passe optionnel",
+      "Édition de documents intégrée via Collabora (open source)",
+      "Indépendance totale de Google Drive et Microsoft 365",
+      "Fichiers hébergés en Suisse 🇨🇭, souveraineté numérique garantie",
+    ],
+  },
+  {
     name: "Plannikeeper",
     category: "Gestion Immobilière",
     tagline: "Organisez • Planifiez • Maîtrisez",
@@ -46,7 +64,7 @@ const applications = [
       "La solution complète pour gérer efficacement vos tâches liées à vos biens immobiliers dans une interface intuitive et élégante.",
     logo: "/logo_app/logo_plannikeeper.png",
     url: "https://www.plannikeeper.ch/",
-    color: "orange", // Couleur orange comme sur le site PlanniKeeper
+    color: "orange",
     features: [
       "Visualisation interactive de vos biens immobiliers",
       "Gestion des tâches simplifiée et centralisée",
@@ -57,24 +75,6 @@ const applications = [
     ],
   },
   {
-    name: "Chaff",
-    category: "Analytics Business",
-    tagline: "Analysez • Modélisez • Décidez",
-    description:
-      "Plateforme d'analyse business pour transformer vos données en insights stratégiques et prendre des décisions éclairées.",
-    logo: "/logo_app/logo_chaff.png",
-    url: "https://www.chaff.ch/",
-    color: "blue", // Couleur bleue pour l'analytics
-    features: [
-      "Analytics en temps réel avec graphiques interactifs",
-      "Suivi quotidien du chiffre d'affaires",
-      "Gestion et analyse de la masse salariale",
-      "Calcul des ratios de rentabilité par période",
-      "Tableaux de bord intuitifs personnalisables",
-      "Intégration de l'IA pour des analyses prédictives",
-    ],
-  },
-  {
     name: "Selfkey",
     category: "Check-in automatique",
     tagline: "Enregistrez • Payez • Accédez",
@@ -82,7 +82,7 @@ const applications = [
       "Solution suisse de check-in automatique 24h/24 : vos clients s'enregistrent, paient et accèdent à leur hébergement sans intervention.",
     logo: "/logo_app/logo_selfkey.png",
     url: "https://www.selfkey.ch/",
-    color: "gray", // Couleur gris clair pour SelfKey
+    color: "gray",
     features: [
       "Check-in 24h/24 par code QR",
       "Paiement sécurisé Stripe (cartes, TWINT, Apple Pay, Google Pay)",
@@ -99,7 +99,7 @@ const applications = [
       "Marque à part entière qui redéfini entièrement la gestion des campings modernes. Née d'une collaboration étroite avec notre client, cette innovation allie technologie, simplicité et design au service du tourisme durable.",
     logo: "/logo_app/logo_selfcamp.png",
     url: "https://www.selfcamp.ch/",
-    color: "green", // Couleur verte pour camping/nature
+    color: "green",
     features: [
       "Des aires de camping modernes et automatisées",
       "Un système d’accès et de paiement sans contact",
@@ -238,7 +238,7 @@ export default function HomePage() {
                       color={app.color}
                     />
                   </div>
-                ))
+                )),
               )}
             </div>
             {/* Indicateurs pastilles */}
@@ -253,7 +253,7 @@ export default function HomePage() {
                       // Scroll vers l'élément le plus proche au centre du carousel
                       const currentScroll = container.scrollLeft;
                       const currentRepeat = Math.floor(
-                        currentScroll / (cardWidth * applications.length)
+                        currentScroll / (cardWidth * applications.length),
                       );
                       container.scrollTo({
                         left:
@@ -616,7 +616,7 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
-                ))
+                )),
               )}
             </div>
 
@@ -631,7 +631,7 @@ export default function HomePage() {
                       const cardWidth = container.clientWidth * 0.85 + 8;
                       const currentScroll = container.scrollLeft;
                       const currentRepeat = Math.floor(
-                        currentScroll / (cardWidth * 2)
+                        currentScroll / (cardWidth * 2),
                       );
                       container.scrollTo({
                         left:

@@ -17,6 +17,18 @@ import { useState, useRef } from "react";
 
 const applications = [
   {
+    name: "Wisp",
+    category: "Transfert & Stockage",
+    tagline: "Stockez • Partagez • Transférez",
+    description:
+      "Solution suisse de stockage et de partage de fichiers. Bibliothèque d'images, transfert rapide jusqu'à 2GB, et édition de documents via Collabora (open source) — une alternative concrète à Google Drive et Microsoft 365, hébergée en Suisse.",
+    testimonial:
+      "Nous dépendions de Google Drive pour nos fichiers et de Google Docs pour l'édition collaborative. Avec Wisp, nous avons migré vers une solution 100% suisse : stockage, partage par lien sécurisé, et édition de documents directement dans le navigateur grâce à Collabora. Nos données ne transitent plus par des serveurs américains. C'est une vraie reprise de contrôle.",
+    logo: "/logo_app/logo_wisp.png",
+    url: "https://wisp.ch/",
+    color: "purple",
+  },
+  {
     name: "PlanniKeeper",
     category: "Gestion Immobilière",
     tagline: "Organisez • Planifiez • Maîtrisez",
@@ -27,18 +39,6 @@ const applications = [
     logo: "/logo_app/logo_plannikeeper.png",
     url: "https://www.plannikeeper.ch/",
     color: "orange",
-  },
-  {
-    name: "Chaff",
-    category: "Analytics Business",
-    tagline: "Analysez • Modélisez • Décidez",
-    description:
-      "Plateforme d'analyse business pour transformer vos données en insights stratégiques et prendre des décisions éclairées.",
-    testimonial:
-      "Notre restaurant générait beaucoup de données mais nous manquions d'outils pour les analyser efficacement. Nous avions besoin de suivre notre chiffre d'affaires quotidien, analyser notre masse salariale et calculer nos ratios de rentabilité. Webbing a créé Chaff, une plateforme qui nous offre des tableaux de bord clairs et des analyses en temps réel pour piloter notre activité avec précision.",
-    logo: "/logo_app/logo_chaff.png",
-    url: "https://www.chaff.ch/",
-    color: "blue",
   },
   {
     name: "SelfKey",
@@ -166,7 +166,7 @@ export default function ApplicationsPage() {
                   const container = e.currentTarget;
                   const cardWidth = container.offsetWidth;
                   const scrollIndex = Math.round(
-                    container.scrollLeft / cardWidth
+                    container.scrollLeft / cardWidth,
                   );
                   const index = scrollIndex % applications.length;
                   setCurrentIndex(index);
@@ -297,7 +297,7 @@ export default function ApplicationsPage() {
                 const container = e.currentTarget;
                 const cardWidth = container.clientWidth * 0.85 + 8;
                 const scrollIndex = Math.round(
-                  container.scrollLeft / cardWidth
+                  container.scrollLeft / cardWidth,
                 );
                 const index = scrollIndex % applications.length;
                 setCurrentIndex(index);
@@ -345,7 +345,7 @@ export default function ApplicationsPage() {
                         <p
                           className={`text-xs text-muted-foreground italic leading-relaxed ${
                             expandedCards.has(
-                              `${app.name}-${repeatIndex}-${index}`
+                              `${app.name}-${repeatIndex}-${index}`,
                             )
                               ? ""
                               : "line-clamp-4"
@@ -370,7 +370,7 @@ export default function ApplicationsPage() {
                             className="text-xs text-primary hover:underline mt-1 font-medium"
                           >
                             {expandedCards.has(
-                              `${app.name}-${repeatIndex}-${index}`
+                              `${app.name}-${repeatIndex}-${index}`,
                             )
                               ? "Lire moins"
                               : "Lire plus"}
@@ -405,7 +405,7 @@ export default function ApplicationsPage() {
                       </Button>
                     </div>
                   </div>
-                ))
+                )),
               )}
             </div>
 
@@ -420,7 +420,7 @@ export default function ApplicationsPage() {
                       const cardWidth = container.clientWidth * 0.85 + 8;
                       const currentScroll = container.scrollLeft;
                       const currentRepeat = Math.floor(
-                        currentScroll / (cardWidth * applications.length)
+                        currentScroll / (cardWidth * applications.length),
                       );
                       container.scrollTo({
                         left:

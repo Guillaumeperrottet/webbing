@@ -173,7 +173,7 @@ export function FeatureCard({
       className={cn(
         "group relative transition-all duration-300 border-border h-full flex flex-col",
         href && "cursor-pointer",
-        className
+        className,
       )}
     >
       <CardHeader className="pb-4">
@@ -192,7 +192,7 @@ export function FeatureCard({
             <div
               className={cn(
                 "p-2 bg-muted rounded-lg transition-colors duration-300",
-                selectedColor.icon
+                selectedColor.icon,
               )}
             >
               <Icon className="h-5 w-5 text-muted-foreground transition-colors duration-300" />
@@ -213,7 +213,7 @@ export function FeatureCard({
           <div className="h-0.5 bg-foreground w-8 group-hover:w-[100%] transition-all duration-300 ease-out mt-1"></div>
         </div>
 
-        <CardDescription className="text-base leading-relaxed">
+        <CardDescription className="text-base leading-relaxed min-h-[6rem]">
           {description}
         </CardDescription>
       </CardHeader>
@@ -229,7 +229,7 @@ export function FeatureCard({
                 <div
                   className={cn(
                     "w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0",
-                    selectedColor.dot
+                    selectedColor.dot,
                   )}
                 ></div>
                 {feature}
@@ -242,7 +242,7 @@ export function FeatureCard({
               variant="outline"
               className={cn(
                 "w-full transition-all duration-300",
-                selectedColor.button
+                selectedColor.button,
               )}
               asChild
             >

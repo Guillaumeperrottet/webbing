@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Building2, BarChart3, MapPin, Globe2 } from "lucide-react";
+import { Building2, Files, MapPin, Globe2 } from "lucide-react";
 
 export function Footer() {
   return (
@@ -99,13 +99,13 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="https://www.chaff.ch/"
+                  href="https://wisp.ch/"
                   className="group flex items-center text-background/70 hover:text-background transition-colors"
                 >
                   <div className="p-1.5 bg-background/10 group-hover:bg-background/20 rounded-lg mr-3 transition-colors">
-                    <BarChart3 className="h-3.5 w-3.5 text-background/70 group-hover:text-background transition-colors" />
+                    <Files className="h-3.5 w-3.5 text-background/70 group-hover:text-background transition-colors" />
                   </div>
-                  <span className="text-sm font-medium">Chaff</span>
+                  <span className="text-sm font-medium">Wisp</span>
                 </Link>
               </li>
               <li className="pt-2">

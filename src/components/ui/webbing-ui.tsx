@@ -210,10 +210,10 @@ export function FeatureCard({
 
         <div className="mb-2">
           <CardTitle className="text-xl text-foreground">{title}</CardTitle>
-          <div className="h-0.5 bg-foreground w-8 group-hover:w-[100%] transition-all duration-300 ease-out mt-1"></div>
+          <div className="h-0.5 bg-foreground w-8 group-hover:w-full transition-all duration-300 ease-out mt-1"></div>
         </div>
 
-        <CardDescription className="text-base leading-relaxed min-h-[6rem]">
+        <CardDescription className="text-base leading-relaxed min-h-24">
           {description}
         </CardDescription>
       </CardHeader>
@@ -228,7 +228,7 @@ export function FeatureCard({
               >
                 <div
                   className={cn(
-                    "w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0",
+                    "w-1.5 h-1.5 rounded-full mt-2 shrink-0",
                     selectedColor.dot,
                   )}
                 ></div>
@@ -272,6 +272,115 @@ export function FeatureCard({
       )}
     </Card>
   );
+}
+
+/**
+ * Composant Image Feature Card - Design horizontal avec image
+ */
+interface ImageFeatureCardProps {
+  title: string;
+  description: string;
+  image: string;
+  badge?: string;
+  href?: string;
+  external?: boolean;
+  bottomMediaSrc?: string;
+  bottomMediaAlt?: string;
+  contentClassName?: string;
+  className?: string;
+}
+
+export function ImageFeatureCard({
+  title,
+  description,
+  image,
+  badge,
+  href,
+  external = false,
+  bottomMediaSrc,
+  bottomMediaAlt,
+  contentClassName,
+  className,
+}: ImageFeatureCardProps) {
+  const cardContent = (
+    <div
+      className={cn(
+        "group relative flex flex-col md:block",
+        href && "cursor-pointer",
+        className,
+      )}
+    >
+      <div className="relative h-[220px] overflow-hidden rounded-[28px] shadow-md md:-ml-32 md:h-[360px] md:w-[calc(100%+8rem)] md:rounded-none">
+        <Image
+          src={image}
+          alt={title}
+          fill
+          className="object-cover object-[35%_center]"
+        />
+      </div>
+
+      <div className="relative -mt-24 px-4 md:mt-0 md:absolute md:top-[20%] md:right-0 md:w-full md:translate-x-1/2 md:px-0">
+        <div
+          className={cn(
+            "bg-white rounded-3xl shadow-xl p-5 sm:p-6 md:p-8 transition-all duration-300 group-hover:shadow-2xl group-hover:-translate-y-1 flex flex-col gap-4 min-h-60 md:min-h-[400px]",
+            contentClassName,
+          )}
+        >
+          {badge && (
+            <Badge
+              variant="outline"
+              className="self-start text-xs border-gray-200 bg-gray-50 text-gray-700"
+            >
+              {badge}
+            </Badge>
+          )}
+
+          <h3 className="text-lg md:text-lg font-bold text-gray-900 font-display leading-tight">
+            {title}
+          </h3>
+
+          <p className="text-sm md:text-sm text-gray-600 leading-relaxed font-body">
+            {description}
+          </p>
+
+          {bottomMediaSrc ? (
+            <div className="mt-auto flex justify-center pt-1">
+              <Image
+                src={bottomMediaSrc}
+                alt={bottomMediaAlt || "Illustration"}
+                width={320}
+                height={90}
+                unoptimized
+                className="h-12 w-auto max-w-[220px] rotate-89 scale-150 object-contain md:h-14 md:max-w-[260px] md:scale-160"
+              />
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        {...(external && {
+          target: "_blank",
+          rel: "noopener noreferrer",
+        })}
+        onClick={() =>
+          track("Application Click", {
+            app: title,
+            category: badge || "unknown",
+          })
+        }
+      >
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return cardContent;
 }
 
 /**

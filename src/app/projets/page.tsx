@@ -9,7 +9,30 @@ import Image from "next/image";
 import { track } from "@vercel/analytics";
 import { useRef, useEffect, useState } from "react";
 
-const projects = [
+interface Project {
+  name: string;
+  category: string;
+  year: string;
+  description: string;
+  image: string;
+  url: string;
+  tags: string[];
+  color: string;
+  inProgress?: boolean;
+}
+
+const projects: Project[] = [
+  {
+    name: "Alpha Hotel",
+    category: "Hôtel",
+    year: "2026",
+    description:
+      "Site web pour l'Alpha Hotel à Fribourg. Design élégant avec système de réservation intégré et présentation des services de l'établissement.",
+    image: "/projects/alpha-hotel.png",
+    url: "https://www.alpha-hotel.ch/",
+    tags: ["Moderne", "Réservation"],
+    color: "#6E8C50",
+  },
   {
     name: "Coachingbymarie",
     category: "Coaching sportif",
@@ -31,18 +54,6 @@ const projects = [
     url: "https://www.selfcamp.ch/",
     tags: ["Map interactive", "Paiements en ligne", "Temps réel"],
     color: "#849A4F",
-  },
-  {
-    name: "Alpha Hotel",
-    category: "Hôtel",
-    year: "2025",
-    description:
-      "Site web pour l'Alpha Hotel à Fribourg. Design élégant avec système de réservation intégré et présentation des services de l'établissement.",
-    image: "/projects/alpha-hotel.png",
-    url: "#",
-    tags: ["Moderne", "Réservation", "En développement"],
-    color: "#6E8C50",
-    inProgress: true,
   },
   {
     name: "PopLiving",
@@ -320,7 +331,7 @@ export default function ProjetsPage() {
                       </div>
                     </div>
                   </div>
-                ))
+                )),
               )}
             </div>
 
@@ -335,7 +346,7 @@ export default function ProjetsPage() {
                       const cardWidth = container.clientWidth * 0.85 + 8;
                       const currentScroll = container.scrollLeft;
                       const currentRepeat = Math.floor(
-                        currentScroll / (cardWidth * projects.length)
+                        currentScroll / (cardWidth * projects.length),
                       );
                       container.scrollTo({
                         left:

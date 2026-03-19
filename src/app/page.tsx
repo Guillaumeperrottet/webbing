@@ -1,196 +1,161 @@
 "use client";
 
 import {
-  Hero,
   Section,
   Container,
-  FeatureCard,
+  ImageFeatureCard,
 } from "@/components/ui/webbing-ui";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Shield, RefreshCw, Globe, ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useRef, useEffect, useState } from "react";
-import { WaveSeparator } from "@/components/ui/wave-separator";
 import { track } from "@vercel/analytics";
 
-const values = [
-  {
-    icon: RefreshCw,
-    title: "Évolution continue",
-    description:
-      "Nous sommes à l'écoute de vos retours et utilisons des frameworks modernes pour évoluer aussi rapidement qu'internet.",
-  },
-  {
-    icon: Globe,
-    title: "Installation simplifiée",
-    description:
-      "Applications web accessibles depuis n'importe quel navigateur, sans installation ni maintenance technique de votre côté.",
-  },
-  {
-    icon: Shield,
-    title: "Sécurité Suisse",
-    description:
-      "Vos données sont hébergées et protégées selon les standards européens les plus stricts en matière de sécurité et de confidentialité.",
-  },
-];
+const trustLogos = [
+  { src: "/trust/logo-potentille.png", alt: "Potentille" },
+  { src: "/trust/lodges.png", alt: "Lodges" },
+  { src: "/trust/alpha.png", alt: "Alpha" },
+  { src: "/trust/popliving.png", alt: "PopLiving" },
+  { src: "/trust/dipiaza.png", alt: "Dipiaza" },
+  { src: "/trust/logo-campus.png", alt: "Campus Logo" },
+] as const;
 
 const applications = [
   {
-    name: "Wisp",
-    category: "Transfert & Stockage",
-    tagline: "Stockez • Partagez • Transférez",
+    name: "Applications Web",
+    category: "Votre programme",
+    tagline: "Développez • Automatisez • Évoluez",
     description:
-      "Solution suisse de stockage et de partage de fichiers. Bibliothèque d'images organisée par tags et dossiers, transfert rapide, et édition de documents via Collabora — 100% hébergé en Suisse.",
+      "Pour créer votre application, adaptée à vos besoins, des intégrations personnalisées et une architecture performante. Nous nous occupons de tout, de la conception à l'hébergement en Suisse 🇨🇭.",
     logo: "/logo_app/logo_wisp.png",
-    url: "https://wisp.ch/",
+    image: "/wisp_accueil.png",
+    url: "/applications",
     color: "purple",
     features: [
-      "Transfert rapide de fichiers jusqu'à 2GB gratuitement",
-      "Bibliothèque d'images avec tags et dossiers",
-      "Partage sécurisé par lien avec mot de passe optionnel",
-      "Édition de documents intégrée via Collabora (open source)",
-      "Indépendance totale de Google Drive et Microsoft 365",
-      "Fichiers hébergés en Suisse 🇨🇭, souveraineté numérique garantie",
+      "Architecture scalable et performante",
+      "Intégrations API personnalisées",
+      "Authentification sécurisée",
+      "Base de données optimisée",
+      "Support et maintenance inclus",
+      "Hébergement en Suisse 🇨🇭",
     ],
   },
   {
-    name: "Plannikeeper",
-    category: "Gestion Immobilière",
-    tagline: "Organisez • Planifiez • Maîtrisez",
+    name: "Sites Internet",
+    category: "Vitrines & Portfolios",
+    tagline: "Créez • Présentez • Convertissez",
     description:
-      "La solution complète pour gérer efficacement vos tâches liées à vos biens immobiliers dans une interface intuitive et élégante.",
+      "Des sites web évolutifs et simples qui mettent en valeur votre activité et vos envies.",
     logo: "/logo_app/logo_plannikeeper.png",
-    url: "https://www.plannikeeper.ch/",
+    image: "/alpha_accueil.png",
+    url: "/projets",
     color: "orange",
     features: [
-      "Visualisation interactive de vos biens immobiliers",
-      "Gestion des tâches simplifiée et centralisée",
-      "Mode collaboratif en temps réel avec votre équipe",
-      "Centralisation documentaire complète",
-      "Communication facilitée avec assignation de tâches",
-      "Notifications automatiques et historique",
+      "Design personnalisé et moderne",
+      "Optimisation SEO intégrée",
+      "Mobile-first responsive",
+      "Formulaires de contact",
+      "Analyses et statistiques",
+      "Maintenance et support continu",
     ],
   },
   {
-    name: "Selfkey",
-    category: "Check-in automatique",
-    tagline: "Enregistrez • Payez • Accédez",
+    name: "SelfCamp",
+    category: "Self check-in",
+    tagline: "Réservez • Payez • Accédez",
     description:
-      "Solution suisse de check-in automatique 24h/24 : vos clients s'enregistrent, paient et accèdent à leur hébergement sans intervention.",
+      "Une solution complète pour créer des aires de camping-car qui bénéficient aux communes, aux régions et aux vanlifers. En partenariat avec l'UFT.",
     logo: "/logo_app/logo_selfkey.png",
-    url: "https://www.selfkey.ch/",
+    image: "/selfcamp_accueil.png",
+    url: "https://www.selfcamp.ch/",
     color: "gray",
     features: [
-      "Check-in 24h/24 par code QR",
-      "Paiement sécurisé Stripe (cartes, TWINT, Apple Pay, Google Pay)",
-      "Envoi automatique des codes d'accès par email après paiement",
-      "Installation rapide et configuration simple",
-      "Interface intuitive pour établissements et clients",
-    ],
-  },
-  {
-    name: "Selfcamp",
-    category: "Solution Camping",
-    tagline: "Réservez • Campez • Profitez",
-    description:
-      "Marque à part entière qui redéfini entièrement la gestion des campings modernes. Née d'une collaboration étroite avec notre client, cette innovation allie technologie, simplicité et design au service du tourisme durable.",
-    logo: "/logo_app/logo_selfcamp.png",
-    url: "https://www.selfcamp.ch/",
-    color: "green",
-    features: [
-      "Des aires de camping modernes et automatisées",
-      "Un système d’accès et de paiement sans contact",
-      "Une gestion complète et connectée pour les exploitants",
-      "Une expérience fluide et sans application pour les voyageurs",
+      "Carte interactive des emplacements",
+      "Réservation 24h/24 automatisée",
+      "Paiements en ligne sécurisés",
+      "Synchronisation temps réel",
+      "Gestion des utilisateurs",
+      "Notifications automatiques",
     ],
   },
 ];
 
 export default function HomePage() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const scrollContainerProjectsRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const scrollLeft = container.scrollLeft;
-      const cardWidth = container.clientWidth * 0.85 + 8; // Ajusté pour gap-2
-      const scrollIndex = Math.round(scrollLeft / cardWidth);
-      const index = scrollIndex % applications.length;
-      setCurrentIndex(index);
-    };
-
-    container.addEventListener("scroll", handleScroll, { passive: true });
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const container = scrollContainerProjectsRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const scrollLeft = container.scrollLeft;
-      const cardWidth = container.clientWidth * 0.85 + 8;
-      const scrollIndex = Math.round(scrollLeft / cardWidth);
-      const index = scrollIndex % 2; // 2 projets
-      setCurrentProjectIndex(index);
-    };
-
-    container.addEventListener("scroll", handleScroll, { passive: true });
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Image de fond avec vague blanche */}
-      <WaveSeparator
-        imageSrc="/background_accueil.jpg"
-        imageAlt="Webbing - Applications web sur mesure"
-        imageHeight={600}
-        fillColor="#ffffff"
-        className="mb-0"
-      />
-
-      {/* Hero Section moderne avec shadcn/ui - Remonté avec marge négative et z-index */}
-      <div className="relative z-10 -mt-12 sm:-mt-20 md:-mt-24 lg:-mt-32 xl:-mt-45">
-        <Hero
-          badge="Développement Web"
-          title={
-            <Image
-              src="/webbing_informatique.png"
-              alt="Webbing Informatique"
-              width={300}
-              height={100}
-              className="mx-auto"
-              priority
-            />
-          }
-          description="Nous créons des applications et sites web personnalisés pour votre entreprise. Développés en Suisse, simples et efficaces."
-          className="py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24"
+    <div className="flex flex-col">
+      <div className="relative -mt-16 min-h-svh overflow-hidden md:-mt-20 md:h-[120vh]">
+        <Image
+          src="/lac_gruyère.jpg"
+          alt="Webbing - Applications web sur mesure"
+          fill
+          priority
+          className="object-cover scale-115 md:scale-110"
         />
+
+        <div className="absolute inset-0 bg-black/35 md:bg-black/20" />
+
+        <div className="relative z-10 flex min-h-svh flex-col items-center justify-center px-5 pb-24 pt-28 text-center md:h-full md:justify-start md:px-4 md:pt-40">
+          <Image
+            src="/webbing_informatique_blanc.png"
+            alt="Webbing Informatique"
+            width={300}
+            height={100}
+            className="mx-auto mb-10 h-auto w-[220px] sm:w-[260px] md:mb-16 md:mt-4 md:w-[360px] lg:w-[400px]"
+            priority
+          />
+          <h1 className="max-w-[12ch] text-balance text-4xl font-bold text-white font-display sm:text-5xl md:max-w-4xl md:text-5xl lg:text-6xl">
+            Votre fidèle créateur
+          </h1>
+          <p className="mb-8 mt-4 max-w-md text-base leading-relaxed text-white/90 sm:text-lg md:text-xl">
+            Solutions web accessibles, créatives et simples. Donnez à votre
+            activité l&apos;impact qu&apos;elle mérite.
+          </p>
+          <button
+            type="button"
+            aria-label="Descendre vers nos services"
+            className="mt-2 inline-flex items-center justify-center rounded-full p-2 text-white/90 transition-colors hover:text-white"
+            onClick={() => {
+              document
+                .getElementById("solutions")
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            <ChevronDown className="h-8 w-8 animate-bounce" />
+          </button>
+        </div>
+
+        <svg
+          className="absolute bottom-0 left-0 w-full"
+          viewBox="0 0 1200 100"
+          preserveAspectRatio="none"
+          style={{ height: "100px" }}
+        >
+          <polygon points="0,45 1200,-5 1200,18 0,68" fill="#000000" />
+        </svg>
+
+        <svg
+          className="absolute bottom-0 left-0 w-full"
+          viewBox="0 0 1200 100"
+          preserveAspectRatio="none"
+          style={{ height: "100px" }}
+        >
+          <polygon points="0,50 1200,0 1200,100 0,100" fill="white" />
+        </svg>
       </div>
 
-      {/* Applications avec FeatureCard moderne */}
-      <Section className="pt-10">
+      <Section className="pt-2 md:pt-0" id="solutions">
         <Container>
-          <div className="text-center mb-12">
+          <div className="mb-10 text-center md:mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 font-display">
               Nos Solutions
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-body">
-              à vos demandes
-            </p>
           </div>
 
-          {/* Desktop Grid */}
-          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div
+            className="hidden md:grid md:grid-cols-3 gap-y-32"
+            style={{ columnGap: "18rem" }}
+          >
             {applications.map((app, index) => (
               <motion.div
                 key={index}
@@ -198,87 +163,63 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="h-full"
               >
-                <FeatureCard
+                <ImageFeatureCard
                   title={app.name}
                   description={app.description}
-                  logo={app.logo}
+                  image={app.image}
                   badge={app.category}
                   href={app.url}
-                  external={true}
-                  features={app.features}
-                  color={app.color}
+                  contentClassName={
+                    app.name === "Sites Internet"
+                      ? "md:min-h-[340px]"
+                      : undefined
+                  }
+                  bottomMediaSrc={
+                    app.name === "SelfCamp" ? "/UFT.gif" : undefined
+                  }
+                  bottomMediaAlt={
+                    app.name === "SelfCamp" ? "Partenariat UFT" : undefined
+                  }
                 />
               </motion.div>
             ))}
           </div>
 
-          {/* Mobile Carousel with Snap Scrolling */}
-          <div className="md:hidden relative">
-            <div
-              ref={scrollContainerRef}
-              className="overflow-x-auto snap-x snap-mandatory scrollbar-hide flex gap-2 px-4 -mx-4"
-            >
-              {/* Beaucoup de répétitions pour un scroll vraiment long */}
-              {Array.from({ length: 20 }).flatMap((_, repeatIndex) =>
-                applications.map((app, index) => (
-                  <div
-                    key={`${app.name}-${repeatIndex}-${index}`}
-                    className="snap-center flex-shrink-0 w-[85vw] max-w-[340px]"
-                  >
-                    <FeatureCard
-                      title={app.name}
-                      description={app.description}
-                      logo={app.logo}
-                      badge={app.category}
-                      href={app.url}
-                      external={true}
-                      features={app.features}
-                      color={app.color}
-                    />
-                  </div>
-                )),
-              )}
-            </div>
-            {/* Indicateurs pastilles */}
-            <div className="flex justify-center gap-2 mt-6">
-              {applications.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    const container = scrollContainerRef.current;
-                    if (container) {
-                      const cardWidth = container.clientWidth * 0.85 + 8;
-                      // Scroll vers l'élément le plus proche au centre du carousel
-                      const currentScroll = container.scrollLeft;
-                      const currentRepeat = Math.floor(
-                        currentScroll / (cardWidth * applications.length),
-                      );
-                      container.scrollTo({
-                        left:
-                          currentRepeat * (cardWidth * applications.length) +
-                          cardWidth * index,
-                        behavior: "smooth",
-                      });
-                    }
-                  }}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    currentIndex === index
-                      ? "bg-foreground w-6"
-                      : "bg-muted-foreground/30"
-                  }`}
-                  aria-label={`Aller à ${applications[index].name}`}
+          <div className="grid grid-cols-1 gap-8 md:hidden">
+            {applications.map((app, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <ImageFeatureCard
+                  title={app.name}
+                  description={app.description}
+                  image={app.image}
+                  badge={app.category}
+                  href={app.url}
+                  contentClassName={
+                    app.name === "Sites Internet"
+                      ? "md:min-h-[340px]"
+                      : undefined
+                  }
+                  bottomMediaSrc={
+                    app.name === "SelfCamp" ? "/UFT.gif" : undefined
+                  }
+                  bottomMediaAlt={
+                    app.name === "SelfCamp" ? "Partenariat UFT" : undefined
+                  }
                 />
-              ))}
-            </div>
+              </motion.div>
+            ))}
           </div>
         </Container>
       </Section>
 
-      {/* Trust By Section avec carousel pleine largeur */}
       <Section className="overflow-hidden">
-        {/* Retiré variant="muted" pour fond blanc */}
         <Container>
           <motion.h3
             className="text-center text-2xl md:text-3xl font-bold text-foreground mb-8"
@@ -286,93 +227,33 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-          >
-            Ils nous font confiance
-          </motion.h3>
+          ></motion.h3>
         </Container>
 
-        {/* Carousel pleine largeur qui sort de l'écran */}
         <div className="relative w-screen left-1/2 -translate-x-1/2">
-          {/* Version mobile : animation automatique */}
           <div className="md:hidden overflow-hidden">
             <motion.div
-              className="flex gap-8 items-center py-12"
-              animate={{ x: [0, -((160 + 32) * 6)] }} // (width + gap) * nombre de logos
+              className="flex items-center gap-5 py-8"
+              animate={{ x: [0, -((112 + 20) * trustLogos.length)] }}
               transition={{
                 repeat: Infinity,
-                duration: 15,
+                duration: 12,
                 ease: "linear",
                 repeatType: "loop",
               }}
               style={{ willChange: "transform" }}
             >
-              {/* Première série de logos */}
-              {[
-                { src: "/trust/logo-potentille.png", alt: "Potentille" },
-                { src: "/trust/lodges.png", alt: "Lodges" },
-                { src: "/trust/alpha.png", alt: "Alpha" },
-                { src: "/trust/popliving.png", alt: "PopLiving" },
-                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-              ].map((logo, idx) => (
+              {trustLogos.concat(trustLogos).map((logo, idx) => (
                 <div
-                  key={idx}
-                  className="flex-shrink-0 flex items-center justify-center w-40 h-20"
+                  key={`${logo.alt}-${idx}`}
+                  className="flex h-16 w-28 shrink-0 items-center justify-center"
                 >
                   <Image
                     src={logo.src}
                     alt={logo.alt}
-                    width={160}
-                    height={80}
-                    className="max-h-16 w-auto object-contain opacity-70"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-
-              {/* Duplication pour la continuité */}
-              {[
-                { src: "/trust/logo-potentille.png", alt: "Potentille" },
-                { src: "/trust/lodges.png", alt: "Lodges" },
-                { src: "/trust/alpha.png", alt: "Alpha" },
-                { src: "/trust/popliving.png", alt: "PopLiving" },
-                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-              ].map((logo, idx) => (
-                <div
-                  key={`dup-${idx}`}
-                  className="flex-shrink-0 flex items-center justify-center w-40 h-20"
-                >
-                  <Image
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={160}
-                    height={80}
-                    className="max-h-16 w-auto object-contain opacity-70"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-
-              {/* Troisième série pour un scroll ultra fluide */}
-              {[
-                { src: "/trust/logo-potentille.png", alt: "Potentille" },
-                { src: "/trust/lodges.png", alt: "Lodges" },
-                { src: "/trust/alpha.png", alt: "Alpha" },
-                { src: "/trust/popliving.png", alt: "PopLiving" },
-                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-              ].map((logo, idx) => (
-                <div
-                  key={`trip-${idx}`}
-                  className="flex-shrink-0 flex items-center justify-center w-40 h-20"
-                >
-                  <Image
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={160}
-                    height={80}
-                    className="max-h-16 w-auto object-contain opacity-70"
+                    width={112}
+                    height={64}
+                    className="max-h-12 w-auto object-contain opacity-70"
                     loading="lazy"
                   />
                 </div>
@@ -380,11 +261,10 @@ export default function HomePage() {
             </motion.div>
           </div>
 
-          {/* Version desktop : animation automatique */}
           <div className="hidden md:block overflow-hidden">
             <motion.div
               className="flex gap-16 items-center py-12"
-              animate={{ x: [0, -((180 + 64) * 6)] }} // (width + gap) * nombre de logos
+              animate={{ x: [0, -((180 + 64) * trustLogos.length)] }}
               transition={{
                 repeat: Infinity,
                 duration: 20,
@@ -393,66 +273,10 @@ export default function HomePage() {
               }}
               style={{ willChange: "transform" }}
             >
-              {/* Première série de logos */}
-              {[
-                { src: "/trust/logo-potentille.png", alt: "Potentille" },
-                { src: "/trust/lodges.png", alt: "Lodges" },
-                { src: "/trust/alpha.png", alt: "Alpha" },
-                { src: "/trust/popliving.png", alt: "PopLiving" },
-                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-              ].map((logo, idx) => (
+              {trustLogos.concat(trustLogos).map((logo, idx) => (
                 <div
-                  key={idx}
-                  className="flex-shrink-0 flex items-center justify-center w-48 h-24"
-                >
-                  <Image
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={180}
-                    height={90}
-                    className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-
-              {/* Duplication pour la continuité */}
-              {[
-                { src: "/trust/logo-potentille.png", alt: "Potentille" },
-                { src: "/trust/lodges.png", alt: "Lodges" },
-                { src: "/trust/alpha.png", alt: "Alpha" },
-                { src: "/trust/popliving.png", alt: "PopLiving" },
-                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-              ].map((logo, idx) => (
-                <div
-                  key={`dup-${idx}`}
-                  className="flex-shrink-0 flex items-center justify-center w-48 h-24"
-                >
-                  <Image
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={180}
-                    height={90}
-                    className="max-h-20 w-auto object-contain transition-all duration-500 opacity-70 hover:opacity-100 hover:scale-110"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-
-              {/* Troisième série pour un scroll ultra fluide */}
-              {[
-                { src: "/trust/logo-potentille.png", alt: "Potentille" },
-                { src: "/trust/lodges.png", alt: "Lodges" },
-                { src: "/trust/alpha.png", alt: "Alpha" },
-                { src: "/trust/popliving.png", alt: "PopLiving" },
-                { src: "/trust/dipiaza.png", alt: "Dipiaza" },
-                { src: "/trust/logo-campus.png", alt: "Campus Logo" },
-              ].map((logo, idx) => (
-                <div
-                  key={`trip-${idx}`}
-                  className="flex-shrink-0 flex items-center justify-center w-48 h-24"
+                  key={`${logo.alt}-${idx}`}
+                  className="shrink-0 flex items-center justify-center w-48 h-24"
                 >
                   <Image
                     src={logo.src}
@@ -469,254 +293,7 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* Section Projets Web Récents */}
-      <Section>
-        <Container>
-          <div className="text-center mb-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 font-display">
-                Nos réalisations web
-              </h2>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-body">
-                Sites internet sur mesure pour nos clients
-              </p>
-              <div className="w-20 h-1 bg-primary mx-auto mt-6 rounded-full"></div>
-            </motion.div>
-          </div>
-
-          {/* Desktop Grid */}
-          <div className="hidden md:grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {[
-              {
-                name: "Dipiaza - Bar à café",
-                category: "Site web",
-                image: "/projects/dipiaza.png",
-                url: "https://www.dipiaza.ch/",
-                color: "#FD2B12",
-              },
-              {
-                name: "Alpha Hotel - Fribourg",
-                category: "Site web",
-                image: "/projects/alpha-hotel.png",
-                inProgress: true,
-                color: "#6E8C50",
-              },
-            ].map((project, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                viewport={{ once: true }}
-              >
-                <div className="bg-card rounded-2xl border overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
-                  {/* Image */}
-                  <div className="relative h-48 bg-gradient-to-br from-background via-muted/20 to-background overflow-hidden">
-                    <Image
-                      src={project.image}
-                      alt={project.name}
-                      fill
-                      className="object-contain group-hover:scale-105 transition-transform duration-300"
-                    />
-                    {project.inProgress && (
-                      <div className="absolute top-4 right-4">
-                        <Badge className="bg-orange-500/90 text-white backdrop-blur border-0 text-xs">
-                          En développement
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Contenu */}
-                  <div className="p-6">
-                    <Badge
-                      variant="outline"
-                      className="mb-3"
-                      style={{
-                        borderColor: project.color,
-                        color: project.color,
-                      }}
-                    >
-                      {project.category}
-                    </Badge>
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors font-display">
-                      {project.name}
-                    </h3>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Mobile Carousel */}
-          <div className="md:hidden relative">
-            <div
-              ref={scrollContainerProjectsRef}
-              className="overflow-x-auto snap-x snap-mandatory scrollbar-hide flex gap-2 px-4 -mx-4"
-            >
-              {Array.from({ length: 10 }).flatMap((_, repeatIndex) =>
-                [
-                  {
-                    name: "Dipiaza - Bar à café",
-                    category: "Site web",
-                    image: "/projects/dipiaza.png",
-                    url: "https://www.dipiaza.ch/",
-                    color: "#FD2B12",
-                  },
-                  {
-                    name: "Alpha Hotel - Fribourg",
-                    category: "Site web",
-                    image: "/projects/alpha-hotel.png",
-                    inProgress: true,
-                    color: "#6E8C50",
-                  },
-                ].map((project, index) => (
-                  <div
-                    key={`${project.name}-${repeatIndex}-${index}`}
-                    className="snap-center flex-shrink-0 w-[85vw] max-w-[340px]"
-                  >
-                    <div className="bg-card rounded-2xl border overflow-hidden h-full">
-                      {/* Image */}
-                      <div className="relative h-48 bg-gradient-to-br from-background via-muted/20 to-background overflow-hidden">
-                        <Image
-                          src={project.image}
-                          alt={project.name}
-                          fill
-                          className="object-contain"
-                        />
-                        {project.inProgress && (
-                          <div className="absolute top-4 right-4">
-                            <Badge className="bg-orange-500/90 text-white backdrop-blur border-0 text-xs">
-                              En dev
-                            </Badge>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Contenu */}
-                      <div className="p-4">
-                        <Badge
-                          variant="outline"
-                          className="mb-3 text-xs"
-                          style={{
-                            borderColor: project.color,
-                            color: project.color,
-                          }}
-                        >
-                          {project.category}
-                        </Badge>
-                        <h3 className="text-lg font-bold text-foreground font-display">
-                          {project.name}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                )),
-              )}
-            </div>
-
-            {/* Indicateurs pastilles */}
-            <div className="flex justify-center gap-2 mt-6">
-              {[0, 1].map((index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    const container = scrollContainerProjectsRef.current;
-                    if (container) {
-                      const cardWidth = container.clientWidth * 0.85 + 8;
-                      const currentScroll = container.scrollLeft;
-                      const currentRepeat = Math.floor(
-                        currentScroll / (cardWidth * 2),
-                      );
-                      container.scrollTo({
-                        left:
-                          currentRepeat * (cardWidth * 2) + cardWidth * index,
-                        behavior: "smooth",
-                      });
-                    }
-                  }}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    currentProjectIndex === index
-                      ? "bg-foreground w-6"
-                      : "bg-muted-foreground/30"
-                  }`}
-                  aria-label={`Aller au projet ${index + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Bouton voir tous les projets */}
-          <div className="text-center mt-12">
-            <Button size="lg" asChild variant="outline">
-              <Link href="/projets">
-                Voir tous nos projets
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </Container>
-      </Section>
-
-      {/* Section Valeurs avec design moderne et sobre */}
-      <Section>
-        <Container>
-          <div className="text-center mb-12 md:mb-20">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 font-display">
-                Pourquoi choisir Webbing ?
-              </h2>
-              <div className="w-20 h-1 bg-primary mx-auto mt-6 rounded-full"></div>
-            </motion.div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
-            {values.map((value, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
-                viewport={{ once: true }}
-                className="group"
-              >
-                <div className="relative rounded-2xl p-6 md:p-8 h-full border border-border/50 hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 md:hover:-translate-y-2">
-                  {/* Icône avec effet hover */}
-                  <div className="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-primary/10 rounded-xl mb-4 md:mb-6 group-hover:bg-primary/20 transition-colors duration-300">
-                    <value.icon className="h-6 w-6 md:h-7 md:w-7 text-primary" />
-                  </div>
-
-                  {/* Titre */}
-                  <h3 className="text-lg md:text-xl font-bold text-foreground mb-3 md:mb-4 group-hover:text-primary transition-colors duration-300 font-display">
-                    {value.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-muted-foreground leading-relaxed text-sm font-body">
-                    {value.description}
-                  </p>
-
-                  {/* Bordure décorative au hover */}
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary/0 via-primary to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-2xl"></div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </Container>
-      </Section>
-
-      {/* CTA */}
-      <section className="py-24 px-4 bg-background">
+      <section className="bg-background px-4 py-16 md:py-24">
         <div className="container mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -725,18 +302,18 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <div className="max-w-3xl mx-auto bg-card rounded-3xl p-12 border shadow-sm">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 font-display">
+            <div className="mx-auto max-w-3xl rounded-2xl border bg-card p-6 shadow-sm sm:p-8 md:rounded-3xl md:p-12">
+              <h2 className="mb-4 text-3xl font-bold text-foreground font-display md:mb-6 md:text-4xl">
                 Un projet en tête ?
               </h2>
 
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed font-body">
+              <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-muted-foreground font-body md:text-lg">
                 Discutons-en et créons ensemble vos idées.
               </p>
 
               <Button
                 size="lg"
-                className="text-base px-8"
+                className="w-full px-8 text-base sm:w-auto"
                 asChild
                 onClick={() =>
                   track("CTA Click", {

@@ -124,24 +124,24 @@ export function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="https://www.dipiaza.ch/"
+                  href="https://www.alpha-hotel.ch/"
                   className="group flex items-center text-background/70 hover:text-background transition-colors"
                 >
                   <div className="p-1.5 bg-background/10 group-hover:bg-background/20 rounded-lg mr-3 transition-colors">
                     <Globe2 className="h-3.5 w-3.5 text-background/70 group-hover:text-background transition-colors" />
                   </div>
-                  <span className="text-sm font-medium">Dipiaza</span>
+                  <span className="text-sm font-medium">Alpha Hotel</span>
                 </Link>
               </li>
               <li>
                 <Link
-                  href="https://www.popliving.ch/fr"
+                  href="https://www.coachingbymarie.ch/"
                   className="group flex items-center text-background/70 hover:text-background transition-colors"
                 >
                   <div className="p-1.5 bg-background/10 group-hover:bg-background/20 rounded-lg mr-3 transition-colors">
                     <Globe2 className="h-3.5 w-3.5 text-background/70 group-hover:text-background transition-colors" />
                   </div>
-                  <span className="text-sm font-medium">PopLiving</span>
+                  <span className="text-sm font-medium">CoachingByMarie</span>
                 </Link>
               </li>
               <li className="pt-2">

@@ -1,111 +1,78 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
+import { motion, AnimatePresence } from "framer-motion";
+
+const navLinks = [
+  { href: "/", label: "Accueil" },
+  { href: "/applications", label: "Applications" },
+  { href: "/projets", label: "Projets" },
+  { href: "/about", label: "À propos" },
+  { href: "/contact", label: "Contact" },
+];
 
 export function Header() {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto max-w-6xl px-4">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center justify-center">
-            <div className="relative w-10 h-10">
-              <Image
-                src="/logo_navbar.png"
-                alt="Webbing Logo"
-                width={40}
-                height={40}
-                className="object-contain"
-                priority
-              />
-            </div>
-          </Link>
+    <header className="absolute top-0 z-50 w-full">
+      <div className="w-full px-4 sm:px-6 md:px-10">
+        <div className="relative flex h-16 items-center justify-end gap-6 sm:h-20 sm:gap-12">
+          <nav className="hidden md:flex items-center gap-9">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`rounded-full px-3 py-2 text-base font-medium transition-colors ${
+                  pathname === link.href
+                    ? "bg-white/20 text-white"
+                    : "text-white/85 hover:text-white"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
-          {/* Navigation Desktop */}
-          <NavigationMenu className="hidden md:flex">
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href="/"
-                    className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/50 hover:text-foreground focus:bg-muted/50 focus:text-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 text-muted-foreground"
-                  >
-                    Accueil
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
+          <Button
+            asChild
+            size="lg"
+            className="hidden md:flex rounded-full bg-white px-6 text-base text-black transition-all hover:bg-black hover:text-white"
+          >
+            <Link href="/contact">Nous contacter</Link>
+          </Button>
 
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href="/applications"
-                    className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/50 hover:text-foreground focus:bg-muted/50 focus:text-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 text-muted-foreground"
-                  >
-                    Applications
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href="/projets"
-                    className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/50 hover:text-foreground focus:bg-muted/50 focus:text-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 text-muted-foreground"
-                  >
-                    Projets
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href="/about"
-                    className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/50 hover:text-foreground focus:bg-muted/50 focus:text-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 text-muted-foreground"
-                  >
-                    À propos
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href="/contact"
-                    className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/50 hover:text-foreground focus:bg-muted/50 focus:text-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 text-muted-foreground"
-                  >
-                    Contact
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-
-          {/* CTA Button */}
-          <div className="hidden md:flex">
-            <Button asChild>
-              <Link href="/contact">Nous contacter</Link>
-            </Button>
-          </div>
-
-          {/* Mobile Menu Button */}
           <Button
             variant="ghost"
-            className="md:hidden"
+            className="rounded-full text-white/90 hover:bg-white/10 hover:text-white md:hidden"
             size="sm"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-navigation"
           >
             {isMenuOpen ? (
               <X className="h-6 w-6" />
@@ -114,54 +81,46 @@ export function Header() {
             )}
           </Button>
         </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden border-t border-border bg-background">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              <Link
-                href="/"
-                className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Accueil
-              </Link>
-              <Link
-                href="/applications"
-                className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Applications
-              </Link>
-              <Link
-                href="/projets"
-                className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Projets
-              </Link>
-              <Link
-                href="/about"
-                className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                À propos
-              </Link>
-              <Link
-                href="/contact"
-                className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact
-              </Link>
-              <div className="px-3 py-2">
-                <Button className="w-full" asChild>
-                  <Link href="/contact">Nous contacter</Link>
-                </Button>
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              id="mobile-navigation"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.18 }}
+              className="absolute right-0 top-14 z-50 w-[min(88vw,300px)] overflow-hidden rounded-2xl border border-border/60 bg-background/92 shadow-lg backdrop-blur md:hidden"
+            >
+              <div className="px-4 pt-4 pb-2">
+                <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                  Navigation
+                </p>
               </div>
-            </div>
-          </div>
-        )}
+
+              <nav className="flex flex-col gap-1 px-3 pb-3">
+                {navLinks.map((link) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.14 }}
+                  >
+                    <Link
+                      href={link.href}
+                      className={`block rounded-xl px-4 py-3 text-base font-medium transition-colors ${
+                        pathname === link.href
+                          ? "bg-muted text-foreground"
+                          : "text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );

@@ -219,7 +219,7 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      <Section className="overflow-hidden">
+      <Section className="overflow-hidden pt-24 md:pt-32">
         <Container>
           <motion.h3
             className="text-center text-2xl md:text-3xl font-bold text-foreground mb-8"

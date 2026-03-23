@@ -1,470 +1,184 @@
 "use client";
 
-import { Hero, Section, Container } from "@/components/ui/webbing-ui";
+import { Section, Container } from "@/components/ui/webbing-ui";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { WaveSeparator } from "@/components/ui/wave-separator";
-import {
-  ExternalLink,
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useState, useRef } from "react";
 
-const applications = [
+interface Application {
+  name: string;
+  category: string;
+  tagline: string;
+  description: string;
+  logo: string;
+  image: string;
+  url: string;
+  colorHex: string;
+  partnerUrl?: string;
+}
+
+const applications: Application[] = [
   {
     name: "Wisp",
     category: "Transfert & Stockage",
-    tagline: "Stockez • Partagez • Transférez",
+    tagline: "Cloud suisse",
     description:
-      "Solution suisse de stockage et de partage de fichiers. Bibliothèque d'images, transfert rapide jusqu'à 2GB, et édition de documents via Collabora (open source) — une alternative concrète à Google Drive et Microsoft 365, hébergée en Suisse.",
-    testimonial:
-      "Nous dépendions de Google Drive pour nos fichiers et de Google Docs pour l'édition collaborative. Avec Wisp, nous avons migré vers une solution 100% suisse : stockage, partage par lien sécurisé, et édition de documents directement dans le navigateur grâce à Collabora. Nos données ne transitent plus par des serveurs américains. C'est une vraie reprise de contrôle.",
+      "Solution suisse de stockage et de partage de fichiers. Bibliothèque d'images, transfert rapide jusqu'à 2GB, et édition de documents via Collabora — une alternative concrète à Google Drive et Microsoft 365, hébergée en Suisse.",
     logo: "/logo_app/logo_wisp.png",
+    image: "/wisp_application.png",
     url: "https://wisp.ch/",
-    color: "purple",
+    colorHex: "#996BCF",
+  },
+  {
+    name: "SelfCamp",
+    category: "Solution Camping",
+    tagline: "La liberté de camper sans contrainte",
+    description:
+      "Une solution complète pour créer des aires de camping-car qui bénéficient aux communes, aux régions et aux vanlifers. En collaboration avec l'Union fribourgeoise du Tourisme.",
+    logo: "/logo_app/logo_selfcamp.png",
+    image: "/selfcamp_accueil.png",
+    url: "https://www.selfcamp.ch/",
+    colorHex: "#3A4D2A",
+    partnerUrl: "https://fribourg.ch/fr/uft-ftv/",
   },
   {
     name: "PlanniKeeper",
     category: "Gestion Immobilière",
     tagline: "Organisez • Planifiez • Maîtrisez",
     description:
-      "Gestion efficace de vos tâches liées à vos biens immobiliers dans une interface intuitive et élégante.",
-    testimonial:
-      "Nous gérions plusieurs biens immobiliers avec des feuilles Excel et des emails dispersés. Nous cherchions une solution centralisée pour organiser nos tâches, suivre l'avancement des travaux et faciliter la communication avec nos équipes. Webbing a développé PlanniKeeper, une plateforme intuitive qui nous permet aujourd'hui de gérer efficacement tous nos biens depuis une seule interface.",
+      "Gestion efficace de vos tâches liées à vos biens immobiliers dans une interface intuitive et élégante. Planifiez les travaux, suivez les interventions et centralisez toute la gestion depuis une seule plateforme.",
     logo: "/logo_app/logo_plannikeeper.png",
+    image: "/plannikeeper_application.png",
     url: "https://www.plannikeeper.ch/",
-    color: "orange",
+    colorHex: "#7c2d0a",
   },
   {
     name: "SelfKey",
     category: "Check-in automatique",
-    tagline: "Enregistrez • Payez • Accédez",
+    tagline: "Check-in automatique pour hébergements",
     description:
-      "Solution de check-in automatique 24h/24 : vos clients s'enregistrent, paient et accèdent à leur hébergement sans intervention.",
-    testimonial:
-      "Notre établissement recevait des clients à toute heure, mais nous ne pouvions pas assurer une permanence 24h/24 à la réception. Nous cherchions une solution pour automatiser le check-in. Webbing a développé SelfKey, un système simple par QR code qui permet à nos clients de s'enregistrer et payer en ligne à n'importe quelle heure.",
+      "Solution de check-in automatique 24h/24 : vos clients s'enregistrent, paient et accèdent à leur hébergement. Libérez votre équipe des contraintes horaires.",
     logo: "/logo_app/logo_selfkey.png",
+    image: "/selfkey_application.png",
     url: "https://www.selfkey.ch/",
-    color: "gray",
-  },
-  {
-    name: "SelfCamp",
-    category: "Solution Camping",
-    tagline: "Réservez • Campez • Profitez",
-    description:
-      "Marque à part entière qui redéfini entièrement la gestion des campings modernes. Née d'une collaboration étroite avec notre client, cette innovation allie technologie, simplicité et design au service du tourisme durable.",
-    testimonial:
-      "Nous faisions face à un double défi : le camping sauvage sur nos terrains et la nouvelle obligation légale de percevoir la taxe de séjour. Il nous fallait une solution pour réguler l'accès, automatiser la perception de cette taxe obligatoire, et offrir une expérience moderne aux campeurs. En collaboration avec Webbing, nous avons créé SelfCamp, bien plus qu'un simple outil : une marque complète qui transforme le secteur. Les visiteurs réservent et paient en ligne 24h/24, la taxe de séjour est automatiquement collectée selon la réglementation.",
-    logo: "/logo_app/logo_selfcamp.png",
-    url: "https://www.selfcamp.ch/",
-    color: "green",
+    colorHex: "#1c2a3a",
   },
 ];
 
 export default function ApplicationsPage() {
-  const scrollContainerDesktopRef = useRef<HTMLDivElement>(null);
-  const scrollContainerMobileRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
-
-  const scroll = (direction: "left" | "right") => {
-    const container = scrollContainerDesktopRef.current;
-    if (!container) return;
-
-    const cardWidth = container.offsetWidth;
-    const maxScroll = container.scrollWidth - container.clientWidth;
-    const currentScroll = container.scrollLeft;
-
-    if (direction === "right") {
-      // Si on est à la fin, revenir au début
-      if (currentScroll >= maxScroll - 10) {
-        container.scrollTo({
-          left: 0,
-          behavior: "smooth",
-        });
-      } else {
-        container.scrollBy({
-          left: cardWidth,
-          behavior: "smooth",
-        });
-      }
-    } else {
-      // Si on est au début, aller à la fin
-      if (currentScroll <= 10) {
-        container.scrollTo({
-          left: maxScroll,
-          behavior: "smooth",
-        });
-      } else {
-        container.scrollBy({
-          left: -cardWidth,
-          behavior: "smooth",
-        });
-      }
-    }
-  };
-
   return (
     <div className="min-h-screen">
-      {/* Image de fond avec vague blanche */}
-      <WaveSeparator
-        imageSrc="/background_applications.png"
-        imageAlt="Applications Webbing"
-        imageHeight={600}
-        fillColor="#ffffff"
-        className="mb-0"
-      />
-
-      {/* Hero Section moderne - Remonté avec marge négative et z-index */}
-      <div className="relative z-10 -mt-12 sm:-mt-15 md:-mt-30 lg:-mt-32 xl:-mt-40">
-        <Hero
-          badge="Nos Applications"
-          title={
-            <>
-              <span className="font-display">Votre vision, </span>
-              <span className="text-primary font-display">notre expertise</span>
-            </>
-          }
-          showSeparator={true}
-          className="py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24"
+      {/* Image de fond avec titre en overlay */}
+      <div className="relative">
+        <WaveSeparator
+          imageSrc="/background_applications.png"
+          imageAlt="Applications Webbing"
+          imageHeight={600}
+          fillColor="#ffffff"
+          className="mb-0"
         />
+        <div className="absolute inset-0 flex items-start justify-center pt-24 sm:pt-28 md:pt-36 lg:pt-44">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white font-display text-center drop-shadow-lg px-4">
+            Vos Applications
+          </h1>
+        </div>
       </div>
 
-      {/* Section Applications principales - Carousel */}
-      <Section id="applications" className="pt-1 md:pt-12">
-        <Container className="relative">
-          {/* Titre centré */}
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground font-display">
-              Découvrez nos réalisations
-            </h2>
-          </div>
+      {/* Phrase introductive */}
+      <p className="relative z-10 -mt-10 mb-8 text-center text-base text-muted-foreground sm:-mt-16 md:-mt-20 lg:-mt-28 md:mb-12 md:text-lg">
+        Toutes nos applications sont accessibles en ligne et hébergées en Suisse
+      </p>
 
-          {/* Desktop: Carousel avec flèches */}
-          <div className="hidden md:block relative">
-            {/* Flèche gauche */}
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => scroll("left")}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-
-            {/* Carousel Desktop */}
-            <div className="relative">
-              <div
-                ref={scrollContainerDesktopRef}
-                className="flex overflow-x-auto overflow-y-hidden snap-x snap-mandatory scrollbar-hide scroll-smooth gap-8 py-8"
-                onScroll={(e) => {
-                  const container = e.currentTarget;
-                  const cardWidth = container.offsetWidth;
-                  const scrollIndex = Math.round(
-                    container.scrollLeft / cardWidth,
-                  );
-                  const index = scrollIndex % applications.length;
-                  setCurrentIndex(index);
-                }}
+      {/* Section Applications */}
+      <Section id="applications" className="pt-8 md:pt-16 pb-16">
+        <Container
+          size="xl"
+          className="relative md:max-w-[98vw] lg:max-w-[96vw] xl:max-w-[94vw]"
+        >
+          {/* Grille 2 colonnes sur desktop avec espacement central */}
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-x-40 md:gap-y-20 lg:gap-x-48 xl:gap-x-64">
+            {applications.map((app, index) => (
+              <motion.div
+                key={app.name}
+                initial={{ opacity: 0, y: 60 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.75, delay: (index % 2) * 0.1 }}
+                viewport={{ once: true, margin: "-60px" }}
+                className={`relative ${
+                  index % 2 === 0
+                    ? "md:-ml-12 lg:-ml-16 xl:-ml-20"
+                    : "md:-mr-12 lg:-mr-16 xl:-mr-20 md:mt-24"
+                }`}
               >
-                {applications.map((app, index) => (
-                  <motion.div
-                    key={app.name}
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="snap-center flex-shrink-0 w-full"
-                  >
-                    <div className="w-full max-w-4xl mx-auto bg-card rounded-2xl p-8 shadow-sm border">
-                      <div className="flex items-center gap-3 mb-6">
-                        <Badge variant="outline">{app.category}</Badge>
-                      </div>
-
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="relative w-16 h-16 flex items-center justify-center flex-shrink-0">
-                          <Image
-                            src={app.logo}
-                            alt={app.name}
-                            width={64}
-                            height={64}
-                            className="object-contain"
-                          />
-                        </div>
-                        <div className="group cursor-pointer">
-                          <h2 className="text-4xl font-bold text-foreground">
-                            {app.name}
-                          </h2>
-                          <div className="h-1 bg-foreground w-12 group-hover:w-[100%] transition-all duration-300 ease-out mt-1"></div>
-                        </div>
-                      </div>
-
-                      <p className="text-sm font-medium text-muted-foreground mb-4 tracking-wide">
-                        {app.tagline}
-                      </p>
-
-                      <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                        {app.description}
-                      </p>
-
-                      {/* Témoignage du client */}
-                      <div className="bg-muted/30 rounded-xl p-6 mb-8 border-l-4 border-primary/20">
-                        <p className="text-sm text-muted-foreground italic leading-relaxed">
-                          &ldquo;{app.testimonial}&rdquo;
-                        </p>
-                      </div>
-
-                      <div className="flex flex-col sm:flex-row gap-4">
-                        <Button
-                          size="lg"
-                          variant="outline"
-                          className={`flex-1 ${
-                            app.color === "orange"
-                              ? "border-[#D66135]/20 text-[#D66135] hover:bg-[#D66135]/10 hover:text-[#D66135] hover:border-[#D66135]/40"
-                              : app.color === "blue"
-                                ? "border-blue-100 text-blue-600/70 hover:bg-blue-50/50 hover:text-blue-600 hover:border-blue-200"
-                                : app.color === "gray"
-                                  ? "border-gray-200 text-gray-600/70 hover:bg-gray-50/50 hover:text-gray-600 hover:border-gray-300"
-                                  : app.color === "green"
-                                    ? "border-[#a8b785]/20 text-[#a8b785] hover:bg-[#a8b785]/10 hover:text-[#a8b785] hover:border-[#a8b785]/40"
-                                    : "border-primary/10 text-primary/70 hover:bg-primary/5 hover:text-primary hover:border-primary/30"
-                          }`}
-                          asChild
-                        >
-                          <Link
-                            href={app.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Découvrir {app.name}
-                            <ExternalLink className="ml-2 h-4 w-4" />
-                          </Link>
-                        </Button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Flèche droite */}
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => scroll("right")}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </Button>
-
-            {/* Indicateurs de pagination pour desktop */}
-            <div className="flex justify-center gap-2 mt-6">
-              {applications.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    const container = scrollContainerDesktopRef.current;
-                    if (container) {
-                      const cardWidth = container.offsetWidth;
-                      container.scrollTo({
-                        left: cardWidth * index,
-                        behavior: "smooth",
-                      });
-                    }
-                  }}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    currentIndex === index
-                      ? "bg-foreground w-6"
-                      : "bg-muted-foreground/30"
-                  }`}
-                  aria-label={`Aller à ${applications[index].name}`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Mobile: Carousel avec snap scrolling (même style que page d'accueil) */}
-          <div className="md:hidden relative">
-            <div
-              ref={scrollContainerMobileRef}
-              className="overflow-x-auto snap-x snap-mandatory scrollbar-hide flex gap-2 px-4 -mx-4"
-              onScroll={(e) => {
-                const container = e.currentTarget;
-                const cardWidth = container.clientWidth * 0.85 + 8;
-                const scrollIndex = Math.round(
-                  container.scrollLeft / cardWidth,
-                );
-                const index = scrollIndex % applications.length;
-                setCurrentIndex(index);
-              }}
-            >
-              {/* Beaucoup de répétitions pour un scroll vraiment long */}
-              {Array.from({ length: 20 }).flatMap((_, repeatIndex) =>
-                applications.map((app, index) => (
-                  <div
-                    key={`${app.name}-${repeatIndex}-${index}`}
-                    className="snap-center flex-shrink-0 w-[85vw] max-w-[340px]"
-                  >
-                    <div className="bg-card rounded-2xl p-6 shadow-sm border h-full flex flex-col">
-                      <div className="flex items-center gap-3 mb-4">
-                        <Badge variant="outline" className="text-xs">
-                          {app.category}
-                        </Badge>
-                      </div>
-
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="relative w-10 h-10 flex items-center justify-center flex-shrink-0">
-                          <Image
-                            src={app.logo}
-                            alt={app.name}
-                            width={40}
-                            height={40}
-                            className="object-contain"
-                          />
-                        </div>
-                        <h3 className="text-xl font-bold text-foreground">
-                          {app.name}
-                        </h3>
-                      </div>
-
-                      <p className="text-xs font-medium text-muted-foreground mb-3 tracking-wide">
-                        {app.tagline}
-                      </p>
-
-                      <p className="text-sm text-muted-foreground mb-4 leading-relaxed flex-grow">
-                        {app.description}
-                      </p>
-
-                      {/* Témoignage compact */}
-                      <div className="bg-muted/30 rounded-lg p-3 mb-4 border-l-2 border-primary/20">
-                        <p
-                          className={`text-xs text-muted-foreground italic leading-relaxed ${
-                            expandedCards.has(
-                              `${app.name}-${repeatIndex}-${index}`,
-                            )
-                              ? ""
-                              : "line-clamp-4"
-                          }`}
-                        >
-                          &ldquo;{app.testimonial}&rdquo;
-                        </p>
-                        {app.testimonial.length > 200 && (
-                          <button
-                            onClick={() => {
-                              const cardId = `${app.name}-${repeatIndex}-${index}`;
-                              setExpandedCards((prev) => {
-                                const newSet = new Set(prev);
-                                if (newSet.has(cardId)) {
-                                  newSet.delete(cardId);
-                                } else {
-                                  newSet.add(cardId);
-                                }
-                                return newSet;
-                              });
-                            }}
-                            className="text-xs text-primary hover:underline mt-1 font-medium"
-                          >
-                            {expandedCards.has(
-                              `${app.name}-${repeatIndex}-${index}`,
-                            )
-                              ? "Lire moins"
-                              : "Lire plus"}
-                          </button>
-                        )}
-                      </div>
-
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className={`w-full ${
-                          app.color === "orange"
-                            ? "border-[#D66135]/20 text-[#D66135] hover:bg-[#D66135]/10 hover:text-[#D66135] hover:border-[#D66135]/40"
-                            : app.color === "blue"
-                              ? "border-blue-100 text-blue-600/70 hover:bg-blue-50/50 hover:text-blue-600 hover:border-blue-200"
-                              : app.color === "gray"
-                                ? "border-gray-200 text-gray-600/70 hover:bg-gray-50/50 hover:text-gray-600 hover:border-gray-300"
-                                : app.color === "green"
-                                  ? "border-[#a8b785]/20 text-[#a8b785] hover:bg-[#a8b785]/10 hover:text-[#a8b785] hover:border-[#a8b785]/40"
-                                  : "border-primary/10 text-primary/70 hover:bg-primary/5 hover:text-primary hover:border-primary/30"
-                        }`}
-                        asChild
-                      >
-                        <Link
-                          href={app.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Découvrir
-                          <ExternalLink className="ml-2 h-3 w-3" />
-                        </Link>
-                      </Button>
-                    </div>
+                {/* Image avec encadré minimaliste */}
+                <div className="relative mb-8">
+                  <div className="relative aspect-[4/3.3] overflow-hidden shadow-lg md:aspect-4/3">
+                    <Image
+                      src={app.image}
+                      alt={app.name}
+                      fill
+                      className="object-cover object-center"
+                    />
                   </div>
-                )),
-              )}
-            </div>
 
-            {/* Indicateurs pastilles (même style que page d'accueil) */}
-            <div className="flex justify-center gap-2 mt-6">
-              {applications.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    const container = scrollContainerMobileRef.current;
-                    if (container) {
-                      const cardWidth = container.clientWidth * 0.85 + 8;
-                      const currentScroll = container.scrollLeft;
-                      const currentRepeat = Math.floor(
-                        currentScroll / (cardWidth * applications.length),
-                      );
-                      container.scrollTo({
-                        left:
-                          currentRepeat * (cardWidth * applications.length) +
-                          cardWidth * index,
-                        behavior: "smooth",
-                      });
-                    }
-                  }}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    currentIndex === index
-                      ? "bg-foreground w-6"
-                      : "bg-muted-foreground/30"
-                  }`}
-                  aria-label={`Aller à ${applications[index].name}`}
-                />
-              ))}
-            </div>
+                  {/* Encadré minimaliste impactant qui sort de l'image */}
+                  <div
+                    className={`absolute z-10 flex min-h-[140px] min-w-[200px] max-w-[280px] items-center justify-center rounded-2xl bg-white px-8 py-8 shadow-xl md:min-h-40 md:min-w-60 ${
+                      index % 2 === 0
+                        ? "bottom-0 -right-8 -translate-y-[10%] md:-right-12"
+                        : "top-0 -left-8 translate-y-[8%] md:-left-12"
+                    }`}
+                  >
+                    <h3
+                      style={{ color: app.colorHex }}
+                      className="text-center text-lg font-bold leading-tight font-display sm:text-xl"
+                    >
+                      {app.tagline}
+                    </h3>
+                  </div>
+                </div>
+
+                {/* Description et CTA sous l'image */}
+                <div className="space-y-4">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    {app.partnerUrl
+                      ? app.description
+                          .split("l'Union fribourgeoise du Tourisme")
+                          .map((part, i, arr) =>
+                            i < arr.length - 1 ? (
+                              <span key={i}>
+                                {part}
+                                <Link
+                                  href={app.partnerUrl!}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="underline underline-offset-2 hover:text-foreground transition-colors"
+                                >
+                                  l&apos;Union fribourgeoise du Tourisme
+                                </Link>
+                              </span>
+                            ) : (
+                              <span key={i}>{part}</span>
+                            ),
+                          )
+                      : app.description}
+                  </p>
+                  <Link
+                    href={app.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-sm font-medium text-foreground transition-colors hover:text-primary"
+                  >
+                    En savoir plus
+                    <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </Container>
-      </Section>
-
-      {/* Section Citation inspirante */}
-      <Section variant="muted">
-        <Container>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center py-12"
-          >
-            <blockquote className="space-y-4">
-              <p className="text-2xl md:text-4xl font-bold text-foreground italic">
-                &ldquo;La meilleure façon de prédire l&apos;avenir,
-                <br />
-                c&apos;est de le créer.&rdquo;
-              </p>
-            </blockquote>
-            <p className="mt-8 text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
-              Votre idée mérite d&apos;exister. Nous sommes là pour la
-              transformer en réalité.
-            </p>
-          </motion.div>
         </Container>
       </Section>
 
@@ -482,11 +196,9 @@ export default function ApplicationsPage() {
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
                 Une application en tête ?
               </h2>
-
               <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
                 Discutons-en et créons la ensemble.
               </p>
-
               <Button size="lg" className="text-base px-8" asChild>
                 <Link href="/contact">
                   Nous contacter

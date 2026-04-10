@@ -56,15 +56,15 @@ const applications: Application[] = [
     colorHex: "#7c2d0a",
   },
   {
-    name: "SelfKey",
-    category: "Check-in automatique",
-    tagline: "Check-in automatique pour hébergements",
+    name: "OpenWind",
+    category: "Sports de vent",
+    tagline: "Trouvez votre spot, capturez le vent",
     description:
-      "Solution de check-in automatique 24h/24 : vos clients s'enregistrent, paient et accèdent à leur hébergement. Libérez votre équipe des contraintes horaires.",
-    logo: "/logo_app/logo_selfkey.png",
-    image: "/selfkey_application.png",
-    url: "https://www.selfkey.ch/",
-    colorHex: "#1c2a3a",
+      "Plateforme communautaire et open-source dédiée aux passionnés de kitesurf, wing ou parapente. Découvrez les meilleurs spots, consultez les prévisions de vent en temps réel et planifiez vos sessions en cherchant le vent grâce au module de planification.",
+    logo: "/logo_app/logo_openwind.png",
+    image: "/openwind_application.png",
+    url: "https://www.openwind.ch/",
+    colorHex: "#0284c7",
   },
 ];
 

@@ -6,11 +6,11 @@ import {
   ImageFeatureCard,
 } from "@/components/ui/webbing-ui";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { track } from "@vercel/analytics";
 
 const trustLogos = [
   { src: "/trust/logo-potentille.png", alt: "Potentille" },
@@ -80,6 +80,59 @@ const applications = [
     ],
   },
 ];
+
+function OpenWindImages() {
+  const [swapped, setSwapped] = useState(false);
+
+  const front = swapped
+    ? "/openwind_accueil.png"
+    : "/openwind_planif_accueil.png";
+  const back = swapped ? "/openwind_application.png" : "/openwind_accueil.png";
+  const frontAlt = swapped
+    ? "OpenWind — prévisions vent 7 jours"
+    : "OpenWind — application spots et prévisions vent";
+  const backAlt = swapped
+    ? "OpenWind — application spots et prévisions vent"
+    : "OpenWind — prévisions vent 7 jours";
+
+  return (
+    <div
+      className="relative pb-20 pr-8 cursor-pointer select-none"
+      onMouseEnter={() => setSwapped(true)}
+      onMouseLeave={() => setSwapped(false)}
+      onClick={() => setSwapped((s) => !s)}
+    >
+      {/* Image arrière — dépasse en bas à droite */}
+      <motion.div
+        className="absolute bottom-0 right-0 w-3/4 overflow-hidden rounded-xl shadow-lg border-4 border-background"
+        animate={{ scale: swapped ? 1.03 : 1, opacity: swapped ? 1 : 0.85 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+      >
+        <Image
+          src={back}
+          alt={backAlt}
+          width={1400}
+          height={900}
+          className="w-full h-auto"
+        />
+      </motion.div>
+      {/* Image avant */}
+      <motion.div
+        className="relative z-10 w-[85%] overflow-hidden rounded-2xl shadow-xl"
+        animate={{ scale: swapped ? 0.97 : 1 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+      >
+        <Image
+          src={front}
+          alt={frontAlt}
+          width={1400}
+          height={900}
+          className="w-full h-auto"
+        />
+      </motion.div>
+    </div>
+  );
+}
 
 export default function HomePage() {
   return (
@@ -294,39 +347,67 @@ export default function HomePage() {
       </Section>
 
       <section className="bg-background px-4 py-16 md:py-24">
-        <div className="container mx-auto max-w-5xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+        <div className="container mx-auto max-w-6xl">
+          <motion.p
+            className="mb-3 text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground"
+            initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="text-center"
           >
-            <div className="mx-auto max-w-3xl rounded-2xl border bg-card p-6 shadow-sm sm:p-8 md:rounded-3xl md:p-12">
-              <h2 className="mb-4 text-3xl font-bold text-foreground font-display md:mb-6 md:text-4xl">
-                Un projet en tête ?
-              </h2>
+            Dernière réalisation
+          </motion.p>
 
-              <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-muted-foreground font-body md:text-lg">
-                Discutons-en et créons ensemble vos idées.
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16"
+          >
+            {/* Images interactives */}
+            <OpenWindImages />
+
+            {/* Info */}
+            <div className="flex flex-col gap-6">
+              <Image
+                src="/logo_app/logo_openwind.png"
+                alt="OpenWind"
+                width={180}
+                height={48}
+                className="h-10 w-auto object-contain"
+              />
+
+              <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+                Plateforme communautaire et open-sourcedédiée aux passionnés de
+                kitesurf, wing ou parapente. Découvrez les meilleurs spots,
+                consultez les prévisions de vent en temps réel et testez le
+                module de planification pour trouver le vent idéal pour vos
+                sessions.
               </p>
 
-              <Button
-                size="lg"
-                className="w-full px-8 text-base sm:w-auto"
-                asChild
-                onClick={() =>
-                  track("CTA Click", {
-                    section: "homepage",
-                    action: "contact_button",
-                  })
-                }
-              >
-                <Link href="/contact">
-                  Nous contacter
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              <div className="flex flex-wrap gap-4">
+                <Button
+                  size="lg"
+                  className="bg-sky-600 hover:bg-sky-700"
+                  asChild
+                >
+                  <Link
+                    href="https://www.openwind.ch/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Visiter openwind.ch
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link href="/applications">
+                    Toutes nos applications
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
             </div>
           </motion.div>
         </div>

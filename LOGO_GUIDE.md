@@ -25,7 +25,7 @@
 - Taille : 1200x630 px (ratio 1.91:1)
 - Format : JPG ou PNG
 - Usage : Partage sur réseaux sociaux (Facebook, LinkedIn, Twitter)
-- Contenu suggéré : Logo + slogan "Solutions SaaS Suisses"
+- Contenu suggéré : Logo + slogan "Solutions web suisses"
 
 **apple-touch-icon.png**
 
@@ -96,9 +96,9 @@ Ces fichiers génèrent automatiquement un "W" blanc sur fond noir. Vous pouvez 
 - [ ] Créer le logo principal 512x512 px
 - [ ] Créer logo.png et placer dans /public/
 - [ ] Générer favicon.ico avec RealFaviconGenerator
-- [ ] Créer og-image.jpg (1200x630 px)
-- [ ] Créer icon-192.png
-- [ ] Créer icon-512.png
+- [x] Créer og-image.jpg (1200x630 px)
+- [x] Créer icon-192.png
+- [x] Créer icon-512.png
 - [ ] Créer apple-touch-icon.png (180x180 px)
 - [ ] Tester sur https://www.websiteplanet.com/webtools/favicon-tester/
 

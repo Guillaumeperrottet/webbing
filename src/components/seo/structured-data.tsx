@@ -15,7 +15,7 @@ export function OrganizationSchema() {
     },
     image: "https://webbing.ch/logo-square.png",
     description:
-      "Créateur de solutions SaaS sur mesure pour les entreprises suisses. Développement d'applications web modernes : PlanniKeeper, Chaff, SelfKey, SelfCamp.",
+      "Créateur de solutions web sur mesure pour les entreprises suisses. Développement d'applications et de sites modernes : Wisp, SelfCamp, PlanniKeeper, OpenWind.",
     address: {
       "@type": "PostalAddress",
       streetAddress: "Rue de Battentin 1",
@@ -34,14 +34,14 @@ export function OrganizationSchema() {
       "@type": "Person",
       name: "Guillaume Perrottet",
     },
-    sameAs: [],
+    sameAs: ["https://github.com/Guillaumeperrottet"],
     areaServed: {
       "@type": "Country",
       name: "Switzerland",
     },
     serviceType: [
       "Développement Web",
-      "Solutions SaaS",
+      "Solutions web",
       "Applications Web sur mesure",
     ],
   };

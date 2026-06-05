@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "À propos - Webbing | Créateur de solutions digitales sur mesure",
+  title: "À propos | Créateur de solutions digitales sur mesure",
   description:
-    "Découvrez Webbing : développement d'applications SaaS sur mesure en Suisse. Technologies modernes, proximité client, innovation et accompagnement personnalisé.",
+    "Découvrez Webbing : développement d'applications web et sites internet sur mesure en Suisse. Technologies modernes, proximité client, innovation et accompagnement personnalisé.",
   keywords:
-    "développement web Suisse, agence SaaS Fribourg, développeur Bulle, Next.js, TypeScript, applications sur mesure",
+    "développement web Suisse, agence web Fribourg, développeur Bulle, Next.js, TypeScript, applications sur mesure",
+  alternates: {
+    canonical: "/about",
+  },
   openGraph: {
     title: "À propos - Webbing | Créateur de solutions digitales",
     description:

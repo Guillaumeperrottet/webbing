@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import Image from "next/image";
 
 interface WaveSeparatorProps {
@@ -30,17 +31,26 @@ export function WaveSeparator({
   imageAlt = "hero",
   imageHeight = 600,
 }: WaveSeparatorProps) {
+  const imageHeightStyle = {
+    "--wave-image-height": `${imageHeight}px`,
+  } as CSSProperties;
+
   return (
     <div className={`hero_image relative w-full overflow-hidden ${className}`}>
       {/* Image de fond - prend toute la largeur avec hauteur responsive */}
-      <Image
-        src={imageSrc}
-        alt={imageAlt}
-        width={1440}
-        height={imageHeight}
-        className="w-full h-[350px] sm:h-[420px] md:h-[520px] lg:h-[600px] object-cover object-bottom"
-        priority
-      />
+      <div
+        className="relative h-[350px] sm:h-[420px] md:h-[520px] lg:h-[var(--wave-image-height)]"
+        style={imageHeightStyle}
+      >
+        <Image
+          src={imageSrc}
+          alt={imageAlt}
+          fill
+          sizes="100vw"
+          className="object-cover object-bottom"
+          priority
+        />
+      </div>
 
       {/* SVG de la vague - positionné au-dessus de l'image */}
       {/* Le viewBox définit un système de coordonnées virtuel de 1440x390 */}

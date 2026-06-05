@@ -12,13 +12,13 @@ import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: {
-    default: "Webbing - Solutions SaaS Suisses | Développement sur mesure",
+    default: "Webbing - Applications web et sites internet sur mesure",
     template: "%s | Webbing",
   },
   description:
-    "Webbing crée des applications SaaS sur mesure pour les entreprises suisses. PlanniKeeper, Chaff, SelfKey, SelfCamp. Développement web moderne à Bulle, Fribourg.",
+    "Webbing crée des applications web et sites internet sur mesure pour les entreprises suisses. Wisp, SelfCamp, PlanniKeeper, OpenWind. Développement web moderne à Bulle, Fribourg.",
   keywords:
-    "SaaS Suisse, développement web Fribourg, agence digitale Bulle, PlanniKeeper, Chaff, applications sur mesure, Next.js, TypeScript",
+    "applications web Suisse, développement web Fribourg, agence digitale Bulle, Wisp, SelfCamp, PlanniKeeper, OpenWind, applications sur mesure, Next.js, TypeScript",
   authors: [{ name: "Guillaume Perrottet", url: "https://webbing.ch" }],
   creator: "Webbing",
   publisher: "Webbing",
@@ -27,9 +27,9 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Webbing - Solutions SaaS Suisses",
+    title: "Webbing - Applications web et sites internet sur mesure",
     description:
-      "Créateur de solutions digitales sur mesure. PlanniKeeper, Chaff, SelfKey, SelfCamp.",
+      "Créateur de solutions digitales sur mesure. Wisp, SelfCamp, PlanniKeeper, OpenWind.",
     url: "https://webbing.ch",
     siteName: "Webbing",
     locale: "fr_CH",
@@ -39,13 +39,13 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Webbing - Solutions SaaS Suisses",
+        alt: "Webbing - Applications web et sites internet sur mesure",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Webbing - Solutions SaaS Suisses",
+    title: "Webbing - Applications web et sites internet sur mesure",
     description: "Créateur de solutions digitales sur mesure en Suisse",
     images: ["/og-image.jpg"],
   },

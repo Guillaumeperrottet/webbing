@@ -26,7 +26,7 @@ const applications: Application[] = [
     category: "Transfert & Stockage",
     tagline: "Cloud suisse",
     description:
-      "Solution suisse de stockage et de partage de fichiers. Bibliothèque d'images, transfert rapide jusqu'à 2GB, et édition de documents via Collabora — une alternative concrète à Google Drive et Microsoft 365, hébergée en Suisse.",
+      "Solution suisse de stockage et de partage de fichiers. Bibliothèque d'images, transfert rapide jusqu'à 2 GB, et édition de documents via Collabora — une alternative concrète à Google Drive et Microsoft 365, hébergée en Suisse.",
     logo: "/logo_app/logo_wisp.png",
     image: "/wisp_application.png",
     url: "https://wisp.ch/",
@@ -120,6 +120,7 @@ export default function ApplicationsPage() {
                       src={app.image}
                       alt={app.name}
                       fill
+                      sizes="(max-width: 768px) 100vw, 45vw"
                       className="object-cover object-center"
                     />
                   </div>
@@ -197,7 +198,7 @@ export default function ApplicationsPage() {
                 Une application en tête ?
               </h2>
               <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-                Discutons-en et créons la ensemble.
+                Discutons-en et créons-la ensemble.
               </p>
               <Button size="lg" className="text-base px-8" asChild>
                 <Link href="/contact">

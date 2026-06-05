@@ -17,8 +17,8 @@ Ce document liste tous les événements personnalisés trackés dans l'applicati
 
 **Données personnalisées**:
 
-- `app`: Nom de l'application (ex: "PlanniKeeper", "Chaff", "SelfKey", "SelfCamp")
-- `category`: Catégorie de l'application (ex: "Gestion Immobilière", "Analytics Business")
+- `app`: Nom de l'application (ex: "Wisp", "SelfCamp", "PlanniKeeper", "OpenWind")
+- `category`: Catégorie de l'application (ex: "Cloud suisse", "Gestion Immobilière")
 
 **Utilité**: Mesurer l'intérêt pour chaque application et identifier les plus populaires.
 

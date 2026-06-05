@@ -143,6 +143,7 @@ export default function HomePage() {
           alt="Webbing - Applications web sur mesure"
           fill
           priority
+          sizes="100vw"
           className="object-cover scale-115 md:scale-110"
         />
 
@@ -379,7 +380,7 @@ export default function HomePage() {
               />
 
               <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-                Plateforme communautaire et open-sourcedédiée aux passionnés de
+                Plateforme communautaire et open-source dédiée aux passionnés de
                 kitesurf, wing ou parapente. Découvrez les meilleurs spots,
                 consultez les prévisions de vent en temps réel et testez le
                 module de planification pour trouver le vent idéal pour vos

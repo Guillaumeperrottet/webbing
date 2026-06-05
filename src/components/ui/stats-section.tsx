@@ -27,7 +27,7 @@ const stats = [
     value: 5,
     suffix: " ans",
     label: "D'expertise",
-    description: "Dans le développement SaaS",
+    description: "Dans le développement web",
   },
 ];
 

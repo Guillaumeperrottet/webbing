@@ -40,7 +40,7 @@ const projects: Project[] = [
       "Site vitrine pour coach sportive diplômée proposant du coaching privé, des cours collectifs en extérieur et en intérieur dans la région de Bulle.",
     image: "/projects/coaching_projet.png",
     url: "https://www.coachingbymarie.ch/",
-    tags: ["Design Modern", "Responsive", "Galerie"],
+    tags: ["Design moderne", "Responsive", "Galerie"],
     color: "#FF6B9D",
   },
   {
@@ -73,7 +73,7 @@ const projects: Project[] = [
       "Site vitrine moderne pour Dipiaza, bar à café à Bulle. Design élégant et responsive mettant en valeur les produits et l'atmosphère du restaurant.",
     image: "/projects/dipiaza_projet.png",
     url: "https://www.dipiaza.ch/",
-    tags: ["Simplicité", "Design Modern", "Coffee"],
+    tags: ["Simplicité", "Design moderne", "Café"],
     color: "#FD2B12",
   },
 ];
@@ -198,6 +198,7 @@ export default function ProjetsPage() {
                           src={project.image}
                           alt={project.name}
                           fill
+                          sizes="85vw"
                           className="object-contain"
                         />
 

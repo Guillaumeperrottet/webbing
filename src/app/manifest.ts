@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Webbing - Solutions SaaS Suisses",
+    name: "Webbing - Solutions web suisses",
     short_name: "Webbing",
     description:
       "Créateur de solutions digitales sur mesure pour les entreprises suisses",

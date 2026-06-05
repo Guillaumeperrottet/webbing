@@ -34,15 +34,17 @@ Layouts créés pour chaque page avec métadonnées spécifiques :
 
 ### Principaux
 
-- SaaS Suisse
+- Applications web Suisse
 - Développement web Fribourg / Bulle
 - Applications sur mesure
-- PlanniKeeper, Chaff, SelfKey, SelfCamp
+- Wisp, SelfCamp, PlanniKeeper, OpenWind
 
 ### Secondaires
 
 - Gestion immobilière
-- Business intelligence
+- Cloud suisse
+- Camping automatisé
+- Sports de vent
 - Next.js, TypeScript
 - Solutions digitales Suisse romande
 
@@ -67,12 +69,12 @@ Layouts créés pour chaque page avec métadonnées spécifiques :
 
 3. **Contenu**
    - Blog pour contenus SEO
-   - Pages pour chaque application (PlanniKeeper, Chaff, etc.)
+   - Pages pour chaque application (Wisp, SelfCamp, PlanniKeeper, OpenWind)
    - Études de cas clients
 
 4. **Technique**
-   - Ajouter les images OG (og-image.jpg)
-   - Créer les icônes PWA (icon-192.png, icon-512.png)
+   - Maintenir les images OG (og-image.jpg)
+   - Maintenir les icônes PWA (icon-192.png, icon-512.png)
    - Optimiser les Core Web Vitals
 
 5. **Backlinks**
@@ -87,7 +89,7 @@ Layouts créés pour chaque page avec métadonnées spécifiques :
 
 ## 📊 Métriques à surveiller
 
-- Position sur "SaaS Suisse"
+- Position sur "applications web Suisse"
 - Position sur "développement web Fribourg"
 - Trafic organique
 - Taux de conversion contact

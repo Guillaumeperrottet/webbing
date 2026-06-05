@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Applications - Webbing | PlanniKeeper, Chaff, SelfKey, SelfCamp",
+  title: "Applications | Wisp, SelfCamp, PlanniKeeper, OpenWind",
   description:
-    "Découvrez nos applications SaaS : PlanniKeeper pour l'immobilier, Chaff pour l'analytics, SelfKey pour les check-ins et SelfCamp pour les campings. Solutions suisses innovantes.",
+    "Découvrez nos applications web : Wisp pour le cloud suisse, SelfCamp pour les campings, PlanniKeeper pour l'immobilier et OpenWind pour les sports de vent.",
   keywords:
-    "PlanniKeeper, Chaff analytics, SelfKey, SelfCamp, gestion immobilière, business intelligence, check-in automatique, SaaS Suisse",
+    "Wisp, SelfCamp, PlanniKeeper, OpenWind, cloud suisse, gestion immobilière, camping automatisé, sports de vent, applications web Suisse",
+  alternates: {
+    canonical: "/applications",
+  },
   openGraph: {
     title: "Nos Applications - Webbing",
     description:
-      "PlanniKeeper, Chaff, SelfKey et SelfCamp : des solutions SaaS innovantes pour votre business.",
+      "Wisp, SelfCamp, PlanniKeeper et OpenWind : des solutions web concrètes, hébergées en Suisse.",
     url: "https://webbing.ch/applications",
     type: "website",
     locale: "fr_CH",

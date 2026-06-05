@@ -21,8 +21,8 @@ export function Footer() {
               </div>
             </div>
             <p className="text-background/70 text-base mb-6 max-w-md leading-relaxed">
-              Solutions SaaS (logiciels accessibles directement en ligne)
-              innovantes conçues en Suisse pour optimiser votre gestion
+              Applications web et sites internet conçus en Suisse pour
+              valoriser votre activité et simplifier votre gestion
               d&apos;entreprise.
             </p>
             <div className="flex items-center text-background/70">
@@ -163,7 +163,8 @@ export function Footer() {
                 <div className="flex items-center">
                   <div className="mr-3">
                     <a
-                      href="mailto:contact@webbing.ch"
+                      href="mailto:gp@webbing.ch"
+                      aria-label="Envoyer un email à Webbing"
                       className="email-button flex items-center justify-center w-10 h-10 rounded-full bg-background border-2 border-background transition-all duration-500 hover:rotate-360 hover:bg-primary group"
                     >
                       <svg
@@ -207,6 +208,7 @@ export function Footer() {
                   <div className="mr-3">
                     <a
                       href="tel:+41793414074"
+                      aria-label="Appeler Webbing"
                       className="phone-button flex items-center justify-center w-10 h-10 rounded-full bg-background border-2 border-background transition-all duration-500 hover:rotate-360 hover:bg-primary group"
                     >
                       <svg
@@ -245,6 +247,7 @@ export function Footer() {
                       href="https://github.com/Guillaumeperrottet"
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="Voir le profil GitHub de Guillaume Perrottet"
                       className="github-button flex items-center justify-center w-10 h-10 rounded-full bg-background border-2 border-background transition-all duration-500 hover:rotate-360 hover:bg-primary group"
                     >
                       <svg
@@ -280,20 +283,6 @@ export function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-sm text-background/70 mb-4 md:mb-0">
               © {new Date().getFullYear()} Webbing. Tous droits réservés.
-            </div>
-            <div className="flex space-x-6">
-              <Link
-                href="/privacy"
-                className="text-xs text-background/70 hover:text-background transition-colors"
-              >
-                Confidentialité
-              </Link>
-              <Link
-                href="/terms"
-                className="text-xs text-background/70 hover:text-background transition-colors"
-              >
-                Conditions d&apos;utilisation
-              </Link>
             </div>
           </div>
         </div>

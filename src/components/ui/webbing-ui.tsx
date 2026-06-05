@@ -315,6 +315,7 @@ export function ImageFeatureCard({
           src={image}
           alt={title}
           fill
+          sizes="(max-width: 768px) 100vw, 33vw"
           className="object-cover object-[35%_center]"
         />
       </div>

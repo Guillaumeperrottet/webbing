@@ -21,6 +21,7 @@ import { track } from "@vercel/analytics";
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -38,6 +39,7 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError("");
 
     try {
       const response = await fetch("/api/contact", {
@@ -65,9 +67,16 @@ export default function ContactPage() {
           message: "",
           service: "",
         });
+      } else {
+        setSubmitError(
+          "Le message n'a pas pu être envoyé. Vous pouvez aussi nous écrire à gp@webbing.ch.",
+        );
       }
     } catch (error) {
       console.error("Erreur lors de l'envoi:", error);
+      setSubmitError(
+        "Le message n'a pas pu être envoyé. Vous pouvez aussi nous écrire à gp@webbing.ch.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -89,7 +98,7 @@ export default function ContactPage() {
                 </div>
                 <CardTitle className="text-2xl">Message envoyé !</CardTitle>
                 <CardDescription>
-                  Merci pour votre message. Notre vous répondrons dans les plus
+                  Merci pour votre message. Nous vous répondrons dans les plus
                   brefs délais.
                 </CardDescription>
               </CardHeader>
@@ -331,6 +340,11 @@ export default function ContactPage() {
                       </>
                     )}
                   </Button>
+                  {submitError && (
+                    <p className="text-sm text-destructive" role="alert">
+                      {submitError}
+                    </p>
+                  )}
                 </form>
               </CardContent>
             </Card>

@@ -357,7 +357,7 @@ export default function HomePage() {
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            Dernière réalisation
+            Dernières réalisations
           </motion.p>
 
           <motion.div
@@ -411,6 +411,68 @@ export default function HomePage() {
                 </Button>
               </div>
             </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="mt-16 grid grid-cols-1 items-center gap-10 md:mt-24 md:grid-cols-2 md:gap-16"
+          >
+            <div className="order-2 flex flex-col gap-6 md:order-1">
+              <Image
+                src="/trust/pattus.svg"
+                alt="Pattùs Hotel"
+                width={180}
+                height={90}
+                className="h-14 w-auto object-contain"
+              />
+
+              <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+                Site multilingue pour Pattùs Hotel, un hôtel contemporain au
+                bord du lac de Neuchâtel. Une expérience éditoriale immersive
+                pour présenter les chambres, le restaurant, les événements et la
+                réservation en ligne.
+              </p>
+
+              <div className="flex flex-wrap gap-4">
+                <Button
+                  size="lg"
+                  className="bg-[#9A1F19] hover:bg-[#7f1814]"
+                  asChild
+                >
+                  <Link
+                    href="https://www.pattushotel.ch/fr"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Visiter pattushotel.ch
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link href="/projets">
+                    Tous nos projets
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            <motion.div
+              className="order-1 overflow-hidden rounded-2xl shadow-xl md:order-2"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+            >
+              <Image
+                src="/projects/pattus_projet.jpg"
+                alt="Pattùs Hotel - site internet"
+                width={1570}
+                height={892}
+                className="aspect-video w-full object-cover"
+              />
+            </motion.div>
           </motion.div>
         </div>
       </section>

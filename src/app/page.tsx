@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 
 const trustLogos = [
+  { src: "/trust/pattus.svg", alt: "Pattùs Hotel" },
   { src: "/trust/logo-potentille.png", alt: "Potentille" },
   { src: "/trust/lodges.png", alt: "Lodges" },
   { src: "/trust/alpha.png", alt: "Alpha" },

@@ -22,6 +22,17 @@ interface Project {
 
 const projects: Project[] = [
   {
+    name: "Pattùs Hotel",
+    category: "Hôtel & restaurant",
+    year: "2026",
+    description:
+      "Site multilingue pour Pattùs Hotel à Saint-Aubin-Sauges, au bord du lac de Neuchâtel. Univers éditorial immersif, présentation des chambres, restaurant, événements et réservation en ligne.",
+    image: "/projects/pattus_projet.jpg",
+    url: "https://www.pattushotel.ch/fr",
+    tags: ["Multilingue", "Réservation", "Hôtellerie"],
+    color: "#25395D",
+  },
+  {
     name: "Alpha Hotel",
     category: "Hôtel",
     year: "2026",

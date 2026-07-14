@@ -18,6 +18,7 @@ const navLinks = [
 export function Header() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isLightHeader = pathname === "/contact";
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -48,8 +49,12 @@ export function Header() {
                 href={link.href}
                 className={`rounded-full px-3 py-2 text-base font-medium transition-colors ${
                   pathname === link.href
-                    ? "bg-white/20 text-white"
-                    : "text-white/85 hover:text-white"
+                    ? isLightHeader
+                      ? "bg-foreground/10 text-foreground"
+                      : "bg-white/20 text-white"
+                    : isLightHeader
+                      ? "text-foreground/75 hover:text-foreground"
+                      : "text-white/85 hover:text-white"
                 }`}
               >
                 {link.label}
@@ -60,14 +65,22 @@ export function Header() {
           <Button
             asChild
             size="lg"
-            className="hidden md:flex rounded-full bg-white px-6 text-base text-black transition-all hover:bg-black hover:text-white"
+            className={`hidden rounded-full px-6 text-base transition-all md:flex ${
+              isLightHeader
+                ? "bg-foreground text-background hover:bg-foreground/85"
+                : "bg-white text-black hover:bg-black hover:text-white"
+            }`}
           >
             <Link href="/contact">Nous contacter</Link>
           </Button>
 
           <Button
             variant="ghost"
-            className="rounded-full text-white/90 hover:bg-white/10 hover:text-white md:hidden"
+            className={`rounded-full md:hidden ${
+              isLightHeader
+                ? "text-foreground/90 hover:bg-muted hover:text-foreground"
+                : "text-white/90 hover:bg-white/10 hover:text-white"
+            }`}
             size="sm"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}

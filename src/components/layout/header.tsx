@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Menu } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "Accueil" },
@@ -17,123 +17,55 @@ const navLinks = [
 
 export function Header() {
   const pathname = usePathname();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isLightHeader = pathname === "/contact";
+  const menuRef = useRef<HTMLDetailsElement>(null);
 
   useEffect(() => {
-    setIsMenuOpen(false);
+    if (menuRef.current) menuRef.current.open = false;
   }, [pathname]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsMenuOpen(false);
+      if (event.key === "Escape" && menuRef.current?.open) {
+        menuRef.current.open = false;
+        menuRef.current.querySelector("summary")?.focus();
       }
     };
-
     window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
   return (
-    <header className="absolute top-0 z-50 w-full">
-      <div className="w-full px-4 sm:px-6 md:px-10">
-        <div className="relative flex h-16 items-center justify-end gap-6 sm:h-20 sm:gap-12">
-          <nav className="hidden md:flex items-center gap-9">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`rounded-full px-3 py-2 text-base font-medium transition-colors ${
-                  pathname === link.href
-                    ? isLightHeader
-                      ? "bg-foreground/10 text-foreground"
-                      : "bg-white/20 text-white"
-                    : isLightHeader
-                      ? "text-foreground/75 hover:text-foreground"
-                      : "text-white/85 hover:text-white"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          <Button
-            asChild
-            size="lg"
-            className={`hidden rounded-full px-6 text-base transition-all md:flex ${
-              isLightHeader
-                ? "bg-foreground text-background hover:bg-foreground/85"
-                : "bg-white text-black hover:bg-black hover:text-white"
-            }`}
-          >
+    <header className="site-header">
+      <div className="site-container header-inner">
+        <Link href="/" aria-label="Webbing, accueil" className="header-brand">
+          <Image src="/webbing_informatique.png" alt="Webbing" width={96} height={64} className="h-16 w-24 object-contain" priority />
+        </Link>
+        <nav aria-label="Navigation principale" className="hidden items-center gap-1 lg:flex">
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href} className="nav-link" aria-current={pathname === link.href ? "page" : undefined}>
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Button asChild size="lg" className="text-sm sm:text-base">
             <Link href="/contact">Nous contacter</Link>
           </Button>
-
-          <Button
-            variant="ghost"
-            className={`rounded-full md:hidden ${
-              isLightHeader
-                ? "text-foreground/90 hover:bg-muted hover:text-foreground"
-                : "text-white/90 hover:bg-white/10 hover:text-white"
-            }`}
-            size="sm"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-navigation"
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </Button>
-        </div>
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              id="mobile-navigation"
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.18 }}
-              className="absolute right-0 top-14 z-50 w-[min(88vw,300px)] overflow-hidden rounded-2xl border border-border/60 bg-background/92 shadow-lg backdrop-blur md:hidden"
-            >
-              <div className="px-4 pt-4 pb-2">
-                <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
-                  Navigation
-                </p>
-              </div>
-
-              <nav className="flex flex-col gap-1 px-3 pb-3">
+          <details ref={menuRef} className="group lg:hidden">
+            <summary aria-label="Menu de navigation" className="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-md hover:bg-secondary [&::-webkit-details-marker]:hidden">
+              <Menu aria-hidden="true" className="h-6 w-6" />
+            </summary>
+            <nav id="mobile-navigation" aria-label="Navigation mobile" className="mobile-nav absolute left-0 right-0 top-full z-50 bg-background px-4 shadow-sm">
+              <div className="site-container">
                 {navLinks.map((link) => (
-                  <motion.div
-                    key={link.href}
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.14 }}
-                  >
-                    <Link
-                      href={link.href}
-                      className={`block rounded-xl px-4 py-3 text-base font-medium transition-colors ${
-                        pathname === link.href
-                          ? "bg-muted text-foreground"
-                          : "text-foreground hover:bg-muted"
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  </motion.div>
+                  <Link key={link.href} href={link.href} className="nav-link" aria-current={pathname === link.href ? "page" : undefined}>
+                    {link.label}
+                  </Link>
                 ))}
-              </nav>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </div>
+            </nav>
+          </details>
+        </div>
       </div>
     </header>
   );

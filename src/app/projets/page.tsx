@@ -1,9 +1,7 @@
 "use client";
 
-import { Section, Container } from "@/components/ui/webbing-ui";
-import { WaveSeparator } from "@/components/ui/wave-separator";
+import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import { track } from "@vercel/analytics";
 import { useRef, useEffect, useState } from "react";
@@ -89,275 +87,218 @@ const projects: Project[] = [
   },
 ];
 
+function ProjectCard({ project }: { project: Project }) {
+  return (
+    <article className="min-w-0">
+      <div className="overflow-hidden rounded-lg border border-border bg-muted">
+        <Image
+          src={project.image}
+          alt={`Aperçu du site ${project.name}`}
+          width={800}
+          height={600}
+          sizes="(min-width: 1440px) 640px, (min-width: 768px) 46vw, 85vw"
+          className="h-auto w-full"
+        />
+      </div>
+      <div className="pt-5">
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm text-muted-foreground">
+          <span>{project.category}</span>
+          <span>{project.year}</span>
+        </div>
+        <h2 className="project-name mb-3 min-w-0 break-words font-display font-bold text-foreground">
+          {project.name}
+        </h2>
+        <p className="mb-4 max-w-prose text-base leading-relaxed text-muted-foreground">
+          {project.description}
+        </p>
+        <ul aria-label={`Caractéristiques de ${project.name}`} className="mb-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+          {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
+        </ul>
+        {project.inProgress ? (
+          <p className="py-3 text-base text-muted-foreground">Bientôt disponible</p>
+        ) : (
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              track("Project Click", {
+                project: project.name,
+                category: project.category,
+              })
+            }
+            aria-label={`Voir le site ${project.name} (nouvel onglet)`}
+            className="inline-flex min-h-11 items-center gap-2 rounded-sm text-base font-medium text-foreground underline decoration-border underline-offset-4 hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+          >
+            Voir le site
+            <ExternalLink aria-hidden="true" className="h-4 w-4" />
+          </a>
+        )}
+      </div>
+    </article>
+  );
+}
+
 export default function ProjetsPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const scrollToProject = (index: number) => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const firstCard = container.children[0] as HTMLElement | undefined;
+    const card = container.children[index] as HTMLElement | undefined;
+    if (!firstCard || !card) return;
+    container.scrollTo({
+      left: card.offsetLeft - firstCard.offsetLeft,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
+  };
 
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
     const handleScroll = () => {
-      const scrollLeft = container.scrollLeft;
-      const cardWidth = container.clientWidth * 0.85 + 8;
-      const scrollIndex = Math.round(scrollLeft / cardWidth);
-      const index = scrollIndex % projects.length;
-      setCurrentIndex(index);
+      const cards = Array.from(container.children) as HTMLElement[];
+      const firstCard = cards[0];
+      if (!firstCard) return;
+      const maximumScroll = Math.max(0, container.scrollWidth - container.clientWidth);
+      const offsets = cards.map((card) =>
+        Math.min(card.offsetLeft - firstCard.offsetLeft, maximumScroll),
+      );
+      const nearestIndex = offsets.reduce(
+        (nearest, offset, index) =>
+          Math.abs(offset - container.scrollLeft) <
+          Math.abs(offsets[nearest] - container.scrollLeft)
+            ? index
+            : nearest,
+        0,
+      );
+      setCurrentIndex(nearestIndex);
     };
 
     container.addEventListener("scroll", handleScroll, { passive: true });
-    return () => container.removeEventListener("scroll", handleScroll);
+    const resizeObserver = new ResizeObserver(handleScroll);
+    resizeObserver.observe(container);
+    handleScroll();
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+      resizeObserver.disconnect();
+    };
   }, []);
 
   return (
-    <div className="min-h-screen">
-      {/* Image de fond avec titre en overlay */}
-      <div className="relative">
-        <WaveSeparator
-          imageSrc="/background-projet.jpg"
-          imageAlt="Projets Web Webbing"
-          imageHeight={600}
-          fillColor="#ffffff"
-          className="mb-0"
-        />
-        <div className="absolute inset-0 flex items-start justify-center pt-24 sm:pt-28 md:pt-36 lg:pt-44">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white font-display text-center drop-shadow-lg px-4">
-            Vos Projets
-          </h1>
+    <>
+      <section className="page-intro">
+        <div className="site-container grid min-w-0 items-center gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-16">
+          <div className="min-w-0">
+            <h1 className="page-title">Vos projets</h1>
+            <p className="page-lead">
+              Découvrez nos projets de sites internet réalisés pour nos clients.
+            </p>
+          </div>
+          <div className="overflow-hidden rounded-lg">
+            <Image
+              src="/background-projet.jpg"
+              alt="Projets Web Webbing"
+              width={1000}
+              height={600}
+              priority
+              sizes="(min-width: 768px) 40vw, 100vw"
+              className="aspect-[2/1] w-full object-cover"
+            />
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Phrase introductive */}
-      <p className="relative z-10 -mt-10 mb-8 text-center text-base text-muted-foreground sm:-mt-16 md:-mt-20 lg:-mt-28 md:mb-12 md:text-lg">
-        Découvrez nos projets de sites internet réalisés pour nos clients.
-      </p>
-
-      {/* Section Projets */}
-      <Section className="pt-1 md:pt-12">
-        <Container
-          size="xl"
-          className="relative md:max-w-[98vw] lg:max-w-[96vw] xl:max-w-[94vw]"
-        >
-          {/* Desktop Grid */}
-          <div className="hidden md:grid md:grid-cols-2 gap-x-6 lg:gap-x-8 xl:gap-x-10 gap-y-6">
-            {projects.map((project, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.75, delay: (index % 2) * 0.1 }}
-                viewport={{ once: true, margin: "-60px" }}
-                className={`group ${index % 2 !== 0 ? "mt-24" : ""}`}
-              >
-                <a
-                  href={project.inProgress ? undefined : project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() =>
-                    !project.inProgress &&
-                    track("Project Click", {
-                      project: project.name,
-                      category: project.category,
-                    })
-                  }
-                  className={
-                    project.inProgress ? "cursor-default" : "cursor-pointer"
-                  }
-                >
-                  {/* Image avec overlay hover */}
-                  <div className="relative overflow-hidden shadow-md">
-                    <Image
-                      src={project.image}
-                      alt={project.name}
-                      width={800}
-                      height={600}
-                      className="w-full h-auto transition-transform duration-500 group-hover:scale-105"
-                    />
-                    {/* Overlay au hover */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-8 text-center">
-                      <p className="text-white/90 text-sm leading-relaxed mb-3">
-                        {project.description}
-                      </p>
-                      {!project.inProgress && (
-                        <span className="inline-flex items-center text-white text-xs font-medium gap-1 border border-white/50 rounded-full px-3 py-1">
-                          Voir le site <ExternalLink className="h-3 w-3" />
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </a>
-              </motion.div>
+      <section id="pattus-hotel" className="site-section pt-0" aria-label="Nos réalisations">
+        <div className="site-container">
+          <div className="hidden grid-cols-[repeat(2,minmax(0,1fr))] gap-x-8 gap-y-14 md:grid lg:gap-x-12 lg:gap-y-20">
+            {projects.map((project) => (
+              <ProjectCard key={project.name} project={project} />
             ))}
           </div>
 
-          {/* Mobile Carousel */}
-          <div className="md:hidden relative">
+          <div className="md:hidden">
             <div
               ref={scrollContainerRef}
-              className="overflow-x-auto snap-x snap-mandatory scrollbar-hide flex gap-2 px-4 -mx-4"
+              tabIndex={0}
+              role="region"
+              aria-label="Réalisations. Utilisez les flèches du clavier pour parcourir les projets."
+              aria-roledescription="carrousel"
+              onKeyDown={(event) => {
+                if (event.target !== event.currentTarget) return;
+                let nextIndex: number;
+                if (event.key === "ArrowRight") nextIndex = Math.min(currentIndex + 1, projects.length - 1);
+                else if (event.key === "ArrowLeft") nextIndex = Math.max(currentIndex - 1, 0);
+                else if (event.key === "Home") nextIndex = 0;
+                else if (event.key === "End") nextIndex = projects.length - 1;
+                else return;
+                event.preventDefault();
+                scrollToProject(nextIndex);
+              }}
+              className="relative flex snap-x snap-mandatory gap-5 overflow-x-auto rounded-sm pb-3 scrollbar-hide focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
             >
-              {Array.from({ length: 20 }).flatMap((_, repeatIndex) =>
-                projects.map((project, index) => (
-                  <div
-                    key={`${project.name}-${repeatIndex}-${index}`}
-                    className="snap-center shrink-0 w-[85vw] max-w-[340px]"
-                  >
-                    <div className="bg-card rounded-2xl border overflow-hidden h-full">
-                      {/* Image du projet */}
-                      <div className="relative h-48 bg-linear-to-br from-background via-muted/20 to-background overflow-hidden">
-                        <Image
-                          src={project.image}
-                          alt={project.name}
-                          fill
-                          sizes="85vw"
-                          className="object-contain"
-                        />
-
-                        {/* Badge année */}
-                        <div className="absolute top-4 right-4 z-10 flex gap-2">
-                          {project.inProgress && (
-                            <span className="inline-flex items-center rounded-full bg-orange-500/90 px-2 py-0.5 text-xs text-white backdrop-blur">
-                              En dev
-                            </span>
-                          )}
-                          <span className="inline-flex items-center rounded-full border bg-background/95 px-2 py-0.5 text-xs backdrop-blur">
-                            {project.year}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Contenu */}
-                      <div className="p-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <span
-                            className="inline-flex items-center rounded-full border px-2 py-0.5 text-xs"
-                            style={{
-                              borderColor: project.color,
-                              color: project.color,
-                            }}
-                          >
-                            {project.category}
-                          </span>
-                        </div>
-
-                        <h3 className="text-lg font-bold text-foreground mb-2 font-display">
-                          {project.name}
-                        </h3>
-
-                        <p className="text-sm text-muted-foreground mb-3 leading-relaxed font-body">
-                          {project.description}
-                        </p>
-
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-1.5 mb-3">
-                          {project.tags.slice(0, 3).map((tag, tagIndex) => (
-                            <span
-                              key={tagIndex}
-                              className="inline-flex items-center text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-
-                        {/* Lien */}
-                        {project.inProgress ? (
-                          <div className="inline-flex items-center text-sm font-medium text-muted-foreground">
-                            Bientôt disponible
-                          </div>
-                        ) : (
-                          <a
-                            href={project.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() =>
-                              track("Project Click", {
-                                project: project.name,
-                                category: project.category,
-                              })
-                            }
-                            className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-                          >
-                            Voir le site
-                            <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )),
-              )}
+              {projects.map((project, index) => (
+                <div
+                  key={project.name}
+                  role="group"
+                  aria-roledescription="diapositive"
+                  aria-label={`${index + 1} sur ${projects.length}`}
+                  className="min-w-0 w-[88%] shrink-0 snap-start"
+                >
+                  <ProjectCard project={project} />
+                </div>
+              ))}
             </div>
 
-            {/* Indicateurs pastilles */}
-            <div className="flex justify-center gap-2 mt-6">
-              {projects.map((_, index) => (
+            <div className="mt-5 flex flex-wrap justify-center gap-1" aria-label="Choisir une réalisation">
+              {projects.map((project, index) => (
                 <button
-                  key={index}
-                  onClick={() => {
-                    const container = scrollContainerRef.current;
-                    if (container) {
-                      const cardWidth = container.clientWidth * 0.85 + 8;
-                      const currentScroll = container.scrollLeft;
-                      const currentRepeat = Math.floor(
-                        currentScroll / (cardWidth * projects.length),
-                      );
-                      container.scrollTo({
-                        left:
-                          currentRepeat * (cardWidth * projects.length) +
-                          cardWidth * index,
-                        behavior: "smooth",
-                      });
-                    }
-                  }}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    currentIndex === index
-                      ? "bg-foreground w-6"
-                      : "bg-muted-foreground/30"
-                  }`}
-                  aria-label={`Aller à ${projects[index].name}`}
-                />
+                  key={project.name}
+                  type="button"
+                  onClick={() => scrollToProject(index)}
+                  aria-label={`Aller à ${project.name}`}
+                  aria-current={currentIndex === index ? "true" : undefined}
+                  className="flex h-11 w-11 items-center justify-center rounded-md hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`h-2 rounded-full ${currentIndex === index ? "w-6 bg-foreground" : "w-2 bg-muted-foreground"}`}
+                  />
+                </button>
               ))}
             </div>
           </div>
-        </Container>
-      </Section>
+        </div>
+      </section>
 
-      {/* CTA */}
-      <Section>
-        <Container>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <div className="max-w-3xl mx-auto bg-card rounded-3xl p-12 border shadow-sm">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 font-display">
-                Un projet de site internet ?
-              </h2>
-
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed font-body">
-                Discutons-en et créons ensemble votre site web.
-              </p>
-
-              <a
-                href="/contact"
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-8 py-2"
-                onClick={() =>
-                  track("CTA Click", {
-                    section: "projets",
-                    action: "contact_button",
-                  })
-                }
-              >
-                Nous contacter
-              </a>
-            </div>
-          </motion.div>
-        </Container>
-      </Section>
-    </div>
+      <section className="site-section border-t border-border bg-secondary">
+        <div className="site-container flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+          <div>
+            <h2 className="section-heading">Un projet de site internet ?</h2>
+            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+              Discutons-en et créons ensemble votre site web.
+            </p>
+          </div>
+          <Button asChild size="lg" className="min-h-11">
+            <a
+              href="/contact"
+              onClick={() =>
+                track("CTA Click", {
+                  section: "projets",
+                  action: "contact_button",
+                })
+              }
+            >
+              Nous contacter
+            </a>
+          </Button>
+        </div>
+      </section>
+    </>
   );
 }

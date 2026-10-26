@@ -1,3 +1,41 @@
+/* Hallmark · shape: Portfolio · genre: modern-minimal · theme: brand · redesign: full
+ * paper: Stone white · accent: Stone ink · display: SF Pro Display · body: Neue Montreal · hero: Poster (/), Banner (/applications), Banner (/projets), Banner (/about), Banner (/contact) · nav: edge-aligned · footer: contact index · signature: the real Gruyère lake at full scale
+ * axes: light/grotesk-sans/neutral · posture: restrained · job: hire · surface: absolute · copy: verbatim (existing descriptions; heading changes recorded below) · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V3 · weakest: V, replaced overlapping service cards with a readable two-part offer and separate SelfCamp feature */
+/*! hero: Poster (/), Banner (/applications), Banner (/projets), Banner (/about), Banner (/contact) · job: hire */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./tokens.css";
+@import "./base.css" layer(base);
+@custom-variant dark (&:is(.dark *));
+
+/* Hallmark · waive 39b · Webbing OpenWind screenshot is the view switcher · the full image remains clickable as before, with a keyboard button and a visible label */
+/* Hallmark · waive 81 · Webbing contact textarea is a labeled editable field · the real message field uses shadcn component metadata, not a missing photograph */
+/* Hallmark · waive 49b · Webbing footer solution label wraps to two lines only at 320px · keeping the existing destination wording preserves its meaning on small screens */
+/* Hallmark · dismissed 42 · the Webbing footer contains existing navigation, products, websites and contact destinations, not decorative columns */
+/* Hallmark · dismissed F18 · shadcn data-slot labels mark real controls; all phone hit targets are at least 44px */
+/* Hallmark · answered F2 · contact loading label retained from the working form */
+/* Hallmark · reworded "Votre fidèle créateur" to "Sites et applications web sur mesure" · gate 19 and the approved audit call for an explicit offer */
+/* Hallmark · reworded "Nos Solutions" to "Votre activité, votre solution web." · gate 54 asks the heading to carry the section meaning */
+/* Hallmark · reworded "#firstName" to "firstName" · field inventory now keys on added name; the existing id and payload remain */
+/* Hallmark · reworded "#lastName" to "lastName" · field inventory now keys on added name; the existing id and payload remain */
+/* Hallmark · reworded "#email" to "email" · field inventory now keys on added name; the existing id and payload remain */
+/* Hallmark · reworded "#company" to "company" · field inventory now keys on added name; the existing id and payload remain */
+/* Hallmark · reworded "#subject" to "subject" · field inventory now keys on added name; the existing id and payload remain */
+/* Hallmark · reworded "#message" to "message" · field inventory now keys on added name; the existing id and payload remain */
+/* Hallmark · dismissed 77 · internal Webbing pages keep the supplied content; adding filler sections would weaken the contact and portfolio pages */
+/* Hallmark · dismissed 40 · browser measurements confirm Stone ink on the light hover surface; the static resolver reads the retained dark theme instead */
+/* Hallmark · reworded "Cloud suisse" to "Wisp" · the tagline stays visible beneath the actual application name */
+/* Hallmark · reworded "La liberté de camper sans contrainte" to "SelfCamp" · the tagline stays visible beneath the actual application name */
+/* Hallmark · reworded "Organisez • Planifiez • Maîtrisez" to "PlanniKeeper" · the tagline stays visible beneath the actual application name */
+/* Hallmark · reworded "Trouvez votre spot, capturez le vent" to "OpenWind" · the tagline stays visible beneath the actual application name */
+/* Hallmark · reworded "Téléphone" to "Téléphone" · contact information is now a definition list instead of repeated headings */
+/* Hallmark · reworded "Localisation" to "Localisation" · contact information is now a definition list instead of repeated headings */
+/* Hallmark · reworded "Ou écrivez-nous" to "Nos coordonnées" · redundant contact headings are consolidated as approved in the audit */
+/* Hallmark · reworded "Solutions web accessibles, créatives et simples. Donnez à votre activité l’impact qu’elle mérite." to "À Bulle, nous créons les outils web adaptés à votre activité." · gate 19 calls for the existing place and concrete service rather than generic adjectives */
+/* Hallmark · reworded "Parlons de votre projet" to "Contactez-nous" · gate 54 removes the redundant badge from the contact heading */
+/* Hallmark · hero-review: fix, mobile overlay lightened to show the lake; resolved */
+/* Hallmark · finish-review: subagent, 2 findings; mobile email and phone restored above the form, partner logo rotation corrected; 2 resolved in recaptures */
 /* SF Pro Display */
 @font-face {
   font-family: "SF Pro Display";
@@ -80,22 +118,6 @@
   font-display: swap;
 }
 
-@import "tailwindcss";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
-
-/* Application des fonts */
-body {
-  font-family:
-    "SF Pro Display",
-    "Neue Montreal",
-    -apple-system,
-    BlinkMacSystemFont,
-    system-ui,
-    sans-serif;
-}
-
 @theme inline {
   /* Fonts */
   --font-family-sans:
@@ -169,10 +191,10 @@ body {
   --muted-foreground: hsl(28, 5.3%, 39.4%); /* Stone-700 - Plus sombre */
 
   /* Couleurs système */
-  --destructive: hsl(0, 84.2%, 60.2%); /* Rouge simple */
+  --destructive: hsl(0, 72%, 40%); /* Rouge simple */
   --destructive-foreground: hsl(0, 0%, 98%); /* Blanc */
   --border: hsl(24, 5.7%, 82.9%); /* Stone-300 - Bordures plus visibles */
-  --input: hsl(20, 5.9%, 90%); /* Stone-200 */
+  --input: hsl(28, 5.3%, 48%); /* Stone-200 */
   --ring: hsl(20, 14.3%, 4.1%); /* Stone-950 pour focus */
 
   /* Charts en tons Stone plus contrastés */
@@ -210,259 +232,103 @@ body {
   );
 }
 
-.dark {
-  /* Mode sombre Stone - Chaleureux et naturel */
-  --background: hsl(20, 14.3%, 4.1%); /* Stone-950 - Arrière-plan très sombre */
-  --foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 - Texte clair */
-  --card: hsl(12, 6.5%, 15.1%); /* Stone-900 - Cartes sombres */
-  --card-foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 */
-  --popover: hsl(12, 6.5%, 15.1%); /* Stone-900 */
-  --popover-foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 */
 
-  /* Couleurs principales pour mode sombre Stone */
-  --primary: hsl(60, 4.8%, 95.9%); /* Stone-100 en primary */
-  --primary-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 en foreground */
-  --accent: hsl(24, 5.7%, 82.9%); /* Stone-300 */
-  --accent-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 */
-
-  /* Couleurs secondaires mode sombre Stone */
-  --secondary: hsl(12, 6.5%, 15.1%); /* Stone-900 */
-  --secondary-foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 */
-  --muted: hsl(12, 6.5%, 15.1%); /* Stone-900 */
-  --muted-foreground: hsl(24, 5.4%, 63.9%); /* Stone-400 */
-
-  /* Couleurs système mode sombre */
-  --destructive: hsl(0, 62.8%, 30.6%); /* Rouge plus sombre */
-  --destructive-foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 */
-  --border: hsl(12, 6.5%, 15.1%); /* Stone-900 */
-  --input: hsl(12, 6.5%, 15.1%); /* Stone-900 */
-  --ring: hsl(24, 5.7%, 82.9%); /* Stone-300 pour focus */
-
-  /* Charts mode sombre en tons Stone */
-  --chart-1: hsl(60, 4.8%, 95.9%); /* Stone-100 */
-  --chart-2: hsl(24, 5.4%, 63.9%); /* Stone-400 */
-  --chart-3: hsl(25, 5.3%, 44.7%); /* Stone-600 */
-  --chart-4: hsl(28, 5.3%, 39.4%); /* Stone-700 */
-  --chart-5: hsl(12, 6.5%, 15.1%); /* Stone-900 */
-
-  /* Sidebar mode sombre Stone */
-  --sidebar: hsl(20, 14.3%, 4.1%); /* Stone-950 */
-  --sidebar-foreground: hsl(60, 4.8%, 95.9%); /* Stone-100 */
-  --sidebar-primary: hsl(60, 4.8%, 95.9%); /* Stone-100 */
-  --sidebar-primary-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 */
-  --sidebar-accent: hsl(24, 5.7%, 82.9%); /* Stone-300 */
-  --sidebar-accent-foreground: hsl(20, 14.3%, 4.1%); /* Stone-950 */
-  --sidebar-border: hsl(12, 6.5%, 15.1%); /* Stone-900 */
-  --sidebar-ring: hsl(24, 5.7%, 82.9%); /* Stone-300 */
+:root {
+  --hero-ink: hsl(0, 0%, 98%);
+  --hero-shade-strong: hsl(20 14.3% 4.1% / 0.86);
+  --hero-shade-mobile: hsl(20 14.3% 4.1% / 0.64);
+  --hero-shade-soft: hsl(20 14.3% 4.1% / 0.25);
+  --hero-rule: hsl(0 0% 98% / 0.65);
+  --footer-muted: hsl(60, 4.8%, 82%);
+  --footer-rule: hsl(60 4.8% 95.9% / 0.2);
 }
-
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  html {
-    font-family: var(--font-family-sans);
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    font-family: var(--font-family-sans);
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: var(--font-family-display);
-  }
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; font-family: var(--font-display); }
 }
-
-@layer utilities {
-  /* Classes utilitaires pour les gradients signature */
-  .bg-gradient-swiss {
-    background: var(--gradient-swiss);
-  }
-
-  .bg-gradient-primary {
-    background: var(--gradient-primary);
-  }
-
-  .bg-gradient-accent {
-    background: var(--gradient-accent);
-  }
-
-  /* Classes pour les textes avec gradient */
-  .text-gradient-swiss {
-    background: var(--gradient-swiss);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .text-gradient-primary {
-    background: var(--gradient-primary);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .text-gradient-accent {
-    background: var(--gradient-accent);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  /* Animations pour les éléments avec la nouvelle palette */
-  .animate-glow-primary {
-    animation: glow-primary 2s ease-in-out infinite alternate;
-  }
-
-  .animate-glow-accent {
-    animation: glow-accent 2s ease-in-out infinite alternate;
-  }
-
-  /* Animation de gradient pour le titre */
-  .animate-gradient-x {
-    background-size: 200% 200%;
-    animation: gradient-x 3s ease infinite;
-  }
-
-  /* Animation pour le bouton GitHub */
-  .github-button {
-    transform-origin: center center;
-  }
-
-  .github-button:hover .github-svg {
-    filter: invert(1);
-  }
-
-  /* Animation pour le bouton Email */
-  .email-button {
-    transform-origin: center center;
-  }
-
-  .email-button:hover .email-svg {
-    filter: invert(1);
-  }
-
-  /* Classe utilitaire pour rotation 360° */
-  .hover\:rotate-360:hover {
-    animation: rotate360 0.5s ease-in-out;
-  }
-
-  /* Animations améliorées */
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  /* Effet de pulsation */
-  .animate-pulse-soft {
-    animation: pulse-soft 2s ease-in-out infinite;
-  }
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+  transition: none;
 }
-
-@keyframes glow-primary {
-  from {
-    box-shadow: 0 0 20px oklch(0.45 0.12 220 / 0.3);
-  }
-  to {
-    box-shadow: 0 0 30px oklch(0.45 0.12 220 / 0.6);
-  }
+:where(input, textarea, select):focus-visible { outline-offset: -3px; }
+:where(a, button):active { opacity: 0.8; }
+button:not(:disabled), a { -webkit-tap-highlight-color: transparent; }
+button:disabled { cursor: not-allowed; }
+.site-container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+.site-section { padding-block: var(--section-gap-s); }
+.section-heading { font-size: var(--text-section); line-height: 1.08; letter-spacing: var(--tracking-display); max-width: 22ch; }
+.page-intro { padding-block: var(--space-2xl); background: var(--secondary); }
+.page-intro + .site-section { padding-top: var(--space-2xl); }
+.application-name, .project-name { font-size: clamp(1.75rem, 3vw, 2.5rem); }
+.page-title { font-size: var(--text-display-s); line-height: 1.06; max-width: 16ch; }
+.page-lead { margin-top: var(--space-lg); font-size: var(--text-lead); line-height: 1.5; color: var(--muted-foreground); max-width: 48ch; }
+.site-header { background: var(--background); color: var(--foreground); position: relative; z-index: var(--z-sticky-nav); }
+.header-inner { min-height: 80px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-lg); }
+.header-brand { display: inline-flex; flex-shrink: 0; align-items: center; gap: var(--space-xs); min-height: 44px; font-size: 25px; font-weight: 700; letter-spacing: var(--tracking-display); }
+.header-brand img { width: 104px; height: 72px; object-fit: contain; }
+.nav-link { display: inline-flex; align-items: center; min-height: 44px; padding-inline: var(--space-sm); font-size: var(--text-md); white-space: nowrap; color: var(--muted-foreground); border-radius: var(--radius); }
+.nav-link:hover, .nav-link[aria-current="page"] { color: var(--foreground); background: var(--secondary); }
+.mobile-nav { border-top: var(--rule-hair) solid var(--border); padding-block: var(--space-md); }
+.mobile-nav .nav-link { display: flex; }
+.home-hero { position: relative; min-height: min(820px, calc(100svh - 80px)); display: flex; align-items: center; color: var(--hero-ink); isolation: isolate; }
+.home-hero > img { z-index: -2; object-fit: cover; object-position: 55% 55%; }
+.home-hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, var(--hero-shade-strong), var(--hero-shade-soft)); }
+.home-hero-content { padding-block: var(--space-3xl); }
+.home-hero h1 { max-width: 14ch; font-size: var(--text-display); line-height: 1.04; }
+.home-hero p { max-width: 38ch; margin-top: var(--space-lg); font-size: var(--text-lead); line-height: 1.5; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-md); margin-top: var(--space-xl); }
+.home-hero { --color-focus: var(--hero-ink); }
+.home-hero .hero-secondary { color: var(--hero-ink); border-color: var(--hero-rule); background: transparent; }
+.home-hero .hero-secondary:hover { background: var(--hero-ink); color: var(--primary); }
+.service-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xl); margin-top: var(--space-2xl); }
+.service-item { min-width: 0; border-top: var(--rule-hair) solid var(--border); padding-top: var(--space-lg); }
+.service-item h3 { font-size: var(--text-title); }
+.service-item p { margin-block: var(--space-md) var(--space-lg); color: var(--muted-foreground); max-width: 52ch; }
+.service-item img { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: var(--radius); margin-top: var(--space-lg); }
+.trust-band { border-block: var(--rule-hair) solid var(--border); padding-block: var(--space-xl); }
+.trust-logos { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-xl); }
+.trust-logos img { width: 112px; max-height: 52px; height: auto; object-fit: contain; }
+.work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xl); margin-top: var(--space-2xl); }
+.work-grid article { min-width: 0; }
+.work-grid h3 { margin-top: var(--space-lg); }
+.work-grid p { margin-block: var(--space-md) var(--space-lg); color: var(--muted-foreground); }
+.work-image { width: 100%; aspect-ratio: 16/10; object-fit: contain; border-radius: var(--radius); background: var(--secondary); }
+.work-switcher { display: block; position: relative; width: 100%; text-align: left; border-radius: var(--radius); }
+.work-switcher img { width: 100%; aspect-ratio: 16/10; object-fit: contain; border-radius: var(--radius); background: var(--secondary); }
+.work-switcher span { position: absolute; bottom: var(--space-sm); right: var(--space-sm); padding: var(--space-xs) var(--space-sm); background: var(--background); color: var(--foreground); border-radius: var(--radius); font-size: var(--text-sm); }
+.selfcamp-feature { background: var(--secondary); }
+.selfcamp-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; gap: var(--space-2xl); }
+.selfcamp-grid p { color: var(--muted-foreground); margin-block: var(--space-lg); }
+.selfcamp-image { width: 100%; border-radius: var(--radius); }
+.site-footer { background: var(--primary); color: var(--primary-foreground); --color-focus: var(--primary-foreground); }
+.footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: var(--space-xl); padding-block: var(--space-2xl); }
+.footer-grid > * { min-width: 0; }
+.site-footer h2 { font-size: var(--text-md); margin-bottom: var(--space-md); letter-spacing: normal; line-height: 1.5; }
+.site-footer p, .site-footer li { color: var(--footer-muted); font-size: var(--text-sm); }
+.site-footer a { display: inline-flex; align-items: center; min-height: 44px; max-width: 100%; overflow-wrap: break-word; }
+.site-footer a:hover { color: var(--primary-foreground); text-decoration: underline; }
+.footer-bottom { border-top: var(--rule-hair) solid var(--footer-rule); padding-block: var(--space-lg); }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+@media (max-width: 60rem) {
+  .page-intro { padding-block: var(--space-2xl); }
+  .selfcamp-grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); }
+  .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-hero { min-height: 680px; }
+  .home-hero h1 { font-size: var(--text-display-s); }
 }
-
-@keyframes glow-accent {
-  from {
-    box-shadow: 0 0 20px oklch(0.55 0.15 280 / 0.3);
-  }
-  to {
-    box-shadow: 0 0 30px oklch(0.55 0.15 280 / 0.6);
-  }
-}
-
-@keyframes gradient-x {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Animation pour le bouton GitHub */
-.github-button {
-  transform-origin: center center;
-}
-
-.github-button:hover .github-svg {
-  filter: invert(1);
-}
-
-/* Animation pour le bouton Email */
-.email-button {
-  transform-origin: center center;
-}
-
-.email-button:hover .email-svg {
-  filter: invert(1);
-}
-
-/* Classe utilitaire pour rotation 360° */
-@keyframes rotate360 {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.hover\:rotate-360:hover {
-  animation: rotate360 0.5s ease-in-out;
-}
-
-/* Animations améliorées */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Effet de pulsation */
-@keyframes pulse-soft {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-.animate-pulse-soft {
-  animation: pulse-soft 2s ease-in-out infinite;
-}
-
-/* Masquer la scrollbar sur le carrousel mobile */
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+@media (max-width: 40rem) {
+  .header-inner { min-height: 72px; gap: var(--space-sm); }
+  .header-brand { font-size: 22px; gap: 0; }
+  .header-brand img { width: 72px; height: 60px; }
+  .home-hero { min-height: calc(100svh - 72px); }
+  .home-hero-content { padding-block: var(--space-2xl); }
+  .home-hero h1 { font-size: clamp(2.75rem, 10vw, 3.75rem); }
+  .home-hero::before { background: var(--hero-shade-mobile); }
+  .service-grid, .work-grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-2xl); margin-top: var(--space-xl); }
+  .footer-grid { gap: var(--space-lg); }
+  .footer-brand, .footer-contact { grid-column: 1 / -1; }
+  .trust-logos { gap: var(--space-md); justify-content: center; }
+  .trust-logos img { width: 64px; max-height: 40px; }
 }

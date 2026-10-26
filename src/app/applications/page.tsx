@@ -1,11 +1,6 @@
-"use client";
-
-import { Section, Container } from "@/components/ui/webbing-ui";
 import { Button } from "@/components/ui/button";
-import { WaveSeparator } from "@/components/ui/wave-separator";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import Image from "next/image";
 
 interface Application {
@@ -16,22 +11,12 @@ interface Application {
   logo: string;
   image: string;
   url: string;
-  colorHex: string;
+  imageWidth: number;
+  imageHeight: number;
   partnerUrl?: string;
 }
 
 const applications: Application[] = [
-  {
-    name: "Wisp",
-    category: "Transfert & Stockage",
-    tagline: "Cloud suisse",
-    description:
-      "Solution suisse de stockage et de partage de fichiers. Bibliothèque d'images, transfert rapide jusqu'à 2 GB, et édition de documents via Collabora — une alternative concrète à Google Drive et Microsoft 365, hébergée en Suisse.",
-    logo: "/logo_app/logo_wisp.png",
-    image: "/wisp_application.png",
-    url: "https://wisp.ch/",
-    colorHex: "#996BCF",
-  },
   {
     name: "SelfCamp",
     category: "Solution Camping",
@@ -41,8 +26,21 @@ const applications: Application[] = [
     logo: "/logo_app/logo_selfcamp.png",
     image: "/selfcamp_accueil.png",
     url: "https://www.selfcamp.ch/",
-    colorHex: "#3A4D2A",
+    imageWidth: 3004,
+    imageHeight: 1922,
     partnerUrl: "https://fribourg.ch/fr/uft-ftv/",
+  },
+  {
+    name: "Wisp",
+    category: "Transfert & Stockage",
+    tagline: "Cloud suisse",
+    description:
+      "Solution suisse de stockage et de partage de fichiers. Bibliothèque d'images, transfert rapide jusqu'à 2 GB, et édition de documents via Collabora — une alternative concrète à Google Drive et Microsoft 365, hébergée en Suisse.",
+    logo: "/logo_app/logo_wisp.png",
+    image: "/wisp_application.png",
+    url: "https://wisp.ch/",
+    imageWidth: 3438,
+    imageHeight: 1926,
   },
   {
     name: "PlanniKeeper",
@@ -53,7 +51,8 @@ const applications: Application[] = [
     logo: "/logo_app/logo_plannikeeper.png",
     image: "/plannikeeper_application.png",
     url: "https://www.plannikeeper.ch/",
-    colorHex: "#7c2d0a",
+    imageWidth: 3450,
+    imageHeight: 1918,
   },
   {
     name: "OpenWind",
@@ -64,87 +63,80 @@ const applications: Application[] = [
     logo: "/logo_app/logo_openwind.png",
     image: "/openwind_application.png",
     url: "https://www.openwind.ch/",
-    colorHex: "#0284c7",
+    imageWidth: 3334,
+    imageHeight: 1934,
   },
 ];
 
 export default function ApplicationsPage() {
+  const [selfcamp, ...otherApplications] = applications;
   return (
-    <div className="min-h-screen">
-      {/* Image de fond avec titre en overlay */}
-      <div className="relative">
-        <WaveSeparator
-          imageSrc="/background_applications.png"
-          imageAlt="Applications Webbing"
-          imageHeight={600}
-          fillColor="#ffffff"
-          className="mb-0"
-        />
-        <div className="absolute inset-0 flex items-start justify-center pt-24 sm:pt-28 md:pt-36 lg:pt-44">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white font-display text-center drop-shadow-lg px-4">
-            Vos Applications
-          </h1>
+    <>
+      <section id="selfcamp" className="page-intro">
+        <div className="site-container grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:gap-12">
+          <div className="min-w-0">
+            <Image src={selfcamp.logo} alt="" width={80} height={80} className="mb-6 h-20 w-20 object-contain" />
+            <h1 className="page-title">{selfcamp.name}</h1>
+            <p className="page-lead mt-6">{selfcamp.tagline}</p>
+            <p className="mt-6 max-w-prose text-base leading-relaxed text-muted-foreground">
+              Une solution complète pour créer des aires de camping-car qui bénéficient aux communes, aux régions et aux vanlifers. En collaboration avec{' '}
+              <Link href={selfcamp.partnerUrl!} target="_blank" rel="noopener noreferrer" className="rounded-sm underline underline-offset-4">l’Union fribourgeoise du Tourisme</Link>.
+            </p>
+            <Button size="lg" className="mt-8" asChild>
+              <Link href={selfcamp.url} target="_blank" rel="noopener noreferrer">Découvrir SelfCamp<ArrowRight aria-hidden="true" /></Link>
+            </Button>
+          </div>
+          <Image
+            src={selfcamp.image}
+            alt="SelfCamp, réservation d’aires de camping-car"
+            width={selfcamp.imageWidth}
+            height={selfcamp.imageHeight}
+            priority
+            sizes="(max-width: 767px) 100vw, 55vw"
+            className="h-auto w-full rounded-lg"
+          />
         </div>
-      </div>
+      </section>
 
-      {/* Phrase introductive */}
-      <p className="relative z-10 -mt-10 mb-8 text-center text-base text-muted-foreground sm:-mt-16 md:-mt-20 lg:-mt-28 md:mb-12 md:text-lg">
-        Toutes nos applications sont accessibles en ligne et hébergées en Suisse
-      </p>
-
-      {/* Section Applications */}
-      <Section id="applications" className="pt-8 md:pt-16 pb-16">
-        <Container
-          size="xl"
-          className="relative md:max-w-[98vw] lg:max-w-[96vw] xl:max-w-[94vw]"
-        >
-          {/* Grille 2 colonnes sur desktop avec espacement central */}
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-x-40 md:gap-y-20 lg:gap-x-48 xl:gap-x-64">
-            {applications.map((app, index) => (
-              <motion.div
-                key={app.name}
-                initial={{ opacity: 0, y: 60 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.75, delay: (index % 2) * 0.1 }}
-                viewport={{ once: true, margin: "-60px" }}
-                className={`relative ${
-                  index % 2 === 0
-                    ? "md:-ml-12 lg:-ml-16 xl:-ml-20"
-                    : "md:-mr-12 lg:-mr-16 xl:-mr-20 md:mt-24"
-                }`}
-              >
-                {/* Image avec encadré minimaliste */}
-                <div className="relative mb-8">
-                  <div className="relative aspect-[4/3.3] overflow-hidden shadow-lg md:aspect-4/3">
-                    <Image
-                      src={app.image}
-                      alt={app.name}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 45vw"
-                      className="object-cover object-center"
-                    />
-                  </div>
-
-                  {/* Encadré minimaliste impactant qui sort de l'image */}
-                  <div
-                    className={`absolute z-10 flex min-h-[140px] min-w-[200px] max-w-[280px] items-center justify-center rounded-2xl bg-white px-8 py-8 shadow-xl md:min-h-40 md:min-w-60 ${
-                      index % 2 === 0
-                        ? "bottom-0 -right-8 -translate-y-[10%] md:-right-12"
-                        : "top-0 -left-8 translate-y-[8%] md:-left-12"
-                    }`}
-                  >
-                    <h3
-                      style={{ color: app.colorHex }}
-                      className="text-center text-lg font-bold leading-tight font-display sm:text-xl"
-                    >
-                      {app.tagline}
+      <section id="applications" className="site-section">
+        <div className="site-container">
+          <h2 className="section-heading">Nos autres applications web</h2>
+          <p className="page-lead">Toutes nos applications sont accessibles en ligne et hébergées en Suisse.</p>
+          <div className="mt-12 grid grid-cols-[minmax(0,1fr)] gap-x-8 gap-y-16 lg:grid-cols-[repeat(3,minmax(0,1fr))]">
+            {otherApplications.map((app) => (
+              <article key={app.name} className="flex min-w-0 flex-col">
+                <div className="mb-6 flex min-h-20 items-center gap-4">
+                  <Image
+                    src={app.logo}
+                    alt=""
+                    width={64}
+                    height={64}
+                    className="h-16 w-16 shrink-0 object-contain"
+                  />
+                  <div className="min-w-0">
+                    <h3 className="application-name min-w-0 break-words font-display font-bold text-foreground">
+                      {app.name}
                     </h3>
+                    <p className="mt-2 text-base leading-relaxed text-muted-foreground">
+                      {app.tagline}
+                    </p>
                   </div>
                 </div>
 
-                {/* Description et CTA sous l'image */}
-                <div className="space-y-4">
-                  <p className="text-sm leading-relaxed text-muted-foreground">
+                <Image
+                  src={app.image}
+                  alt={`Interface de ${app.name}`}
+                  width={app.imageWidth}
+                  height={app.imageHeight}
+                  sizes="(max-width: 767px) 100vw, (max-width: 1439px) 50vw, 640px"
+                  className="mb-6 h-auto w-full rounded-lg border border-border"
+                />
+
+                <div className="flex flex-1 flex-col items-start">
+                  <p className="mb-3 text-sm text-muted-foreground">
+                    {app.category}
+                  </p>
+                  <p className="mb-6 text-base leading-relaxed text-muted-foreground">
                     {app.partnerUrl
                       ? app.description
                           .split("l'Union fribourgeoise du Tourisme")
@@ -156,7 +148,7 @@ export default function ApplicationsPage() {
                                   href={app.partnerUrl!}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="underline underline-offset-2 hover:text-foreground transition-colors"
+                                  className="rounded-sm underline underline-offset-4 transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring motion-reduce:transition-none"
                                 >
                                   l&apos;Union fribourgeoise du Tourisme
                                 </Link>
@@ -167,49 +159,40 @@ export default function ApplicationsPage() {
                           )
                       : app.description}
                   </p>
-                  <Link
-                    href={app.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-sm font-medium text-foreground transition-colors hover:text-primary"
-                  >
-                    En savoir plus
-                    <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
+                  <Button variant="outline" size="lg" className="mt-auto" asChild>
+                    <Link
+                      href={app.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`En savoir plus sur ${app.name}`}
+                    >
+                      En savoir plus
+                      <ArrowRight aria-hidden="true" />
+                    </Link>
+                  </Button>
                 </div>
-              </motion.div>
+              </article>
             ))}
           </div>
-        </Container>
-      </Section>
-
-      {/* CTA */}
-      <section className="py-24 px-4 bg-background">
-        <div className="container mx-auto max-w-5xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <div className="max-w-3xl mx-auto bg-card rounded-3xl p-12 border shadow-sm">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                Une application en tête ?
-              </h2>
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-                Discutons-en et créons-la ensemble.
-              </p>
-              <Button size="lg" className="text-base px-8" asChild>
-                <Link href="/contact">
-                  Nous contacter
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-          </motion.div>
         </div>
       </section>
-    </div>
+
+      <section className="site-section border-t border-border bg-muted">
+        <div className="site-container flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0">
+            <h2 className="section-heading">Une application en tête ?</h2>
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+              Discutons-en et créons-la ensemble.
+            </p>
+          </div>
+          <Button size="lg" className="shrink-0" asChild>
+            <Link href="/contact">
+              Nous contacter
+              <ArrowRight aria-hidden="true" />
+            </Link>
+          </Button>
+        </div>
+      </section>
+    </>
   );
 }

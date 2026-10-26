@@ -1,0 +1,25 @@
+{
+  "scanned": "2026-10-26",
+  "findings": {
+    "fonts": "SF Pro Display and Neue Montreal, src/app/globals.css and src/app/tokens.css",
+    "palette": "Existing Stone neutral palette",
+    "motion": "Decorative reveals and logo marquee replaced by static content; necessary control transitions respect reduced motion",
+    "spacing": "Capped 1360px container and responsive shared spacing",
+    "framework": "Next.js 15.3.8 App Router"
+  },
+  "preserve": [
+    "Webbing logo",
+    "lake photograph",
+    "real project captures",
+    "portrait",
+    "existing claims and destinations",
+    "contact API and analytics"
+  ],
+  "introduce": [
+    "explicit homepage offer",
+    "readable service and portfolio layouts",
+    "progressive mobile menu",
+    "visible keyboard focus",
+    "responsive contact layout"
+  ]
+}

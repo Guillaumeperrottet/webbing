@@ -1,0 +1,57 @@
+[
+  {
+    "mode": "redesign",
+    "depth": "full",
+    "scope": "site",
+    "shape": "Portfolio",
+    "theme": "brand",
+    "axes": "light/grotesk-sans/neutral",
+    "hero": "Poster (/), Banner (internal pages)",
+    "nav": "edge-aligned",
+    "footer": "contact index",
+    "imagery": "existing lake photograph and actual project screenshots",
+    "photos": [
+      "lac-gruyere.jpg"
+    ],
+    "entry": "src/app/page.tsx",
+    "fingerprint": [
+      "poster",
+      "two-part offer",
+      "static trust band",
+      "project grid",
+      "SelfCamp split",
+      "contact index"
+    ],
+    "sections": [
+      "Hero",
+      "Services",
+      "Trust",
+      "SelfCamp",
+      "Work",
+      "Footer"
+    ],
+    "signature": "the Gruyère lake at full scale behind an explicit Bulle studio offer",
+    "waived": [
+      "39b",
+      "49b",
+      "81"
+    ],
+    "prompt": "Apply the approved Hallmark audit to Webbing, preserving the brand, supplied facts, destinations, contact form and analytics.",
+    "heroReview": "fix: mobile overlay lightened, resolved",
+    "finishReview": "subagent: two findings, both resolved in recaptures",
+    "validation": {
+      "floorFails": 0,
+      "openReflex": 0,
+      "responsive": "all five routes at seven widths",
+      "form": "error and success simulated with intercepted requests, no email sent",
+      "links": "all per-route destinations preserved",
+      "fields": "all six IDs and required/type contracts preserved; added names change Hallmark inventory aliases"
+    },
+    "date": "2026-10-26",
+    "followups": [
+      "SelfCamp is the primary application example on the homepage and Applications page",
+      "Pattùs Hotel is the primary website example",
+      "Lake image renamed to ASCII for reliable production asset lookup"
+    ]
+  }
+]

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { showcaseProjects } from "@/data/portfolio";
 import { ProjectContactLink, ProjectLink } from "@/components/project-link";
 import { ProjectPreview } from "@/components/project-preview";
@@ -17,6 +17,10 @@ const sectionAliases: Record<string, number> = {
 
 const applicationCount = showcaseProjects.filter((project) => project.application).length;
 const folderDepth = (index: number, selected: number) => index === selected ? 0 : index < selected ? index + 1 : index;
+const folderDuration = (node: Element) => {
+  const value = getComputedStyle(node).getPropertyValue("--dur-folder").trim();
+  return parseFloat(value) * (value.endsWith("ms") ? 1 : 1000);
+};
 
 function FolderGroup({ id, label, first, count, selected, enhanced }: { id: string; label: string; first: number; count: number; selected: number; enhanced: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -44,7 +48,7 @@ function FolderGroup({ id, label, first, count, selected, enhanced }: { id: stri
     const before = previousHeights.current;
     previousHeights.current = heights;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const duration = parseFloat(getComputedStyle(ref.current).getPropertyValue("--dur-folder"));
+    const duration = folderDuration(ref.current);
     const animations: Animation[] = [];
 
     if (!media.matches) hooks.forEach((hook, index) => {
@@ -107,7 +111,10 @@ function FolderLabel({ id, name }: { id: string; name: string }) {
 }
 
 export function ProjectShowcase() {
-  const [selected, setSelected] = useState(0);
+  const [{ selected, settled, revision }, setSelection] = useState({ selected: 0, settled: true, revision: 0 });
+  const chooseProject = useCallback((index: number) => {
+    setSelection((current) => current.selected === index ? current : { selected: index, settled: false, revision: current.revision + 1 });
+  }, []);
   const [enhanced, setEnhanced] = useState(false);
   const [notesVisible, setNotesVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -129,7 +136,7 @@ export function ProjectShowcase() {
       const projectIndex = showcaseProjects.findIndex((project) => project.id === (study?.projectId ?? id));
       const index = projectIndex >= 0 ? projectIndex : sectionAliases[id];
       if (index === undefined) return;
-      setSelected(index);
+      chooseProject(index);
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const studyDetails = study ? document.getElementById(study.id) : null;
@@ -152,7 +159,7 @@ export function ProjectShowcase() {
       window.removeEventListener("hashchange", followLocation);
       window.removeEventListener("popstate", followLocation);
     };
-  }, []);
+  }, [chooseProject]);
 
   useEffect(() => {
     const binder = binderRef.current;
@@ -167,15 +174,26 @@ export function ProjectShowcase() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (previousSelection.current === selected) return;
+  useLayoutEffect(() => {
+    let disposed = false;
+    const settle = () => {
+      if (disposed) return;
+      setSelection((current) => current.revision === revision && !current.settled ? { ...current, settled: true } : current);
+    };
+    if (previousSelection.current === selected) {
+      settle();
+      return;
+    }
     const from = previousSelection.current;
     previousSelection.current = selected;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (media.matches) return;
+    if (media.matches) {
+      settle();
+      return;
+    }
     const style = getComputedStyle(binderRef.current!);
     const pull = parseFloat(style.getPropertyValue("--folder-pull"));
-    const duration = parseFloat(style.getPropertyValue("--dur-folder"));
+    const duration = folderDuration(binderRef.current!);
     const options = { duration, easing: "cubic-bezier(0.16, 1, 0.3, 1)" };
     const targets = [frontMotionRef.current, tabRefs.current[selected]];
     const animations = targets.flatMap((target) => target ? [target.animate([
@@ -193,19 +211,25 @@ export function ProjectShowcase() {
         { transform: "translateY(0) scale(1)" },
       ], options));
     }
-    const cancel = () => { if (media.matches) animations.forEach((animation) => animation.cancel()); };
-    const stopOnResize = () => animations.forEach((animation) => animation.cancel());
+    void Promise.allSettled(animations.map((animation) => animation.finished)).then(settle);
+    const stop = () => {
+      animations.forEach((animation) => animation.cancel());
+      settle();
+    };
+    const cancel = () => { if (media.matches) stop(); };
+    const stopOnResize = stop;
     media.addEventListener("change", cancel);
     window.addEventListener("resize", stopOnResize);
     return () => {
+      disposed = true;
       animations.forEach((animation) => animation.cancel());
       media.removeEventListener("change", cancel);
       window.removeEventListener("resize", stopOnResize);
     };
-  }, [selected]);
+  }, [selected, revision]);
 
   const selectProject = (index: number, focus = false) => {
-    setSelected(index);
+    chooseProject(index);
     // Safari limits History calls. Keep selection immediate and coalesce rapid key repeats.
     if (hashUpdate.current) clearTimeout(hashUpdate.current);
     const syncHash = () => {
@@ -245,12 +269,12 @@ export function ProjectShowcase() {
   };
 
   return (
-    <DemoPlaybackProvider>
-    <section ref={sectionRef} id="realisations" className="project-showcase" aria-labelledby="showcase-title" data-enhanced={enhanced} data-js={enhanced ? "true" : undefined}>
+    <DemoPlaybackProvider settled={settled}>
+    <section ref={sectionRef} id="realisations" className="project-showcase" aria-labelledby="showcase-title" data-enhanced={enhanced} data-js={enhanced ? "true" : undefined} data-sheet-settled={settled}>
       <div className="site-container">
         <div id="applications" className="anchor-target" />
         <div id="sites-web" className="anchor-target" />
-        <h2 id="showcase-title" className="section-heading">Nos réalisations, en action.</h2>
+        <h2 id="showcase-title" className="visually-hidden">Nos réalisations, en action.</h2>
         <div className="showcase-shell">
           <div ref={binderRef} className="project-binder" data-notes-visible={notesVisible} style={{ "--folder-count": showcaseProjects.length } as CSSProperties}>
             <div className="folder-groups" role="group" aria-label="Types de réalisations">
@@ -314,6 +338,7 @@ export function ProjectShowcase() {
                 role={enhanced ? "tabpanel" : undefined}
                 aria-labelledby={enhanced ? `tab-${project.id}` : undefined}
                 hidden={enhanced && selected !== index}
+                data-case-study={caseStudies.some((study) => study.projectId === project.id)}
                 tabIndex={enhanced ? 0 : undefined}
                 className="project-panel" style={{ "--project-accent": `var(--project-${project.id})` } as CSSProperties}
               >
@@ -326,11 +351,11 @@ export function ProjectShowcase() {
                         {project.application ? `Ouvrir ${project.name}` : `Visiter ${project.name}`}
                       </ProjectLink>
                     </header>
+                    <p className="project-service project-panel-benefit">{project.benefit}</p>
                     <div className="project-panel-preview">
                       <ProjectPreview name={project.name} screens={project.screens} priority={index === 0} active={!enhanced || selected === index} demo={project.id} />
                     </div>
                     <div className="project-panel-summary">
-                      <p className="project-service">{project.benefit}</p>
                       <p>{project.description}</p>
                       <ul className="project-capabilities" aria-label={`Fonctionnalités de ${project.name}`}>
                         {project.features.map((feature) => <li key={feature}>{feature}</li>)}

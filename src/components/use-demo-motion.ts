@@ -8,11 +8,14 @@ export type DemoSequence = readonly { selector: string; frames: MotionFrame[] }[
 
 // One native clock per scene: hidden projects retain their position without doing work.
 export function useDemoMotion(root: RefObject<HTMLDivElement | null>, active: boolean, sequence: DemoSequence, durationMs?: number) {
-  const paused = useDemoPlayback()?.paused ?? false;
+  const playback = useDemoPlayback();
+  const paused = playback?.paused ?? false;
+  const settled = playback?.settled ?? true;
   const animations = useRef<Animation[]>([]);
   const [visible, setVisible] = useState(false);
   const [pageVisible, setPageVisible] = useState(true);
   const [reduced, setReduced] = useState(true);
+  const [prepared, setPrepared] = useState(false);
   const [started, setStarted] = useState(false);
 
   useEffect(() => {
@@ -34,13 +37,15 @@ export function useDemoMotion(root: RefObject<HTMLDivElement | null>, active: bo
     };
   }, [root]);
 
-  const canRun = active && visible && pageVisible && !reduced && !paused;
-  useEffect(() => { if (canRun) setStarted(true); }, [canRun]);
+  // Prepare the initial pose before paint, keeping the clock still while the sheet moves.
+  useLayoutEffect(() => { if (active && !reduced) setPrepared(true); }, [active, reduced]);
+  const canRun = active && visible && pageVisible && !reduced && !paused && settled;
+  useLayoutEffect(() => { if (canRun) setStarted(true); }, [canRun]);
   const running = canRun && started;
 
   useLayoutEffect(() => {
     const node = root.current;
-    if (!node || !started || reduced) return;
+    if (!node || !prepared || reduced) return;
     const style = getComputedStyle(node);
     const easing = { enter: style.getPropertyValue("--ease-out").trim(), soft: style.getPropertyValue("--ease-selfcamp-soft").trim() };
     const duration = style.getPropertyValue("--dur-selfcamp").trim();
@@ -58,11 +63,11 @@ export function useDemoMotion(root: RefObject<HTMLDivElement | null>, active: bo
       created.forEach((animation) => animation.cancel());
       animations.current = [];
     };
-  }, [root, sequence, started, reduced, durationMs]);
+  }, [root, sequence, prepared, reduced, durationMs]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     animations.current.forEach((animation) => { if (running) animation.play(); else animation.pause(); });
-  }, [running, started, reduced]);
+  }, [running, prepared, reduced]);
 
   return { started: started && !reduced, running, reduced };
 }

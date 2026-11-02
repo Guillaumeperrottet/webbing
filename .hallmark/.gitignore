@@ -6,3 +6,10 @@ compare.html
 
 *-check.json
 verification.json
+
+# Local browser verification artifacts
+*-verification.json
+
+# Local before/after visual review captures
+style-before/
+motion-before/

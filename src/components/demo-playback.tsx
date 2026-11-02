@@ -3,10 +3,10 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { Pause, Play } from "lucide-react";
 
-type DemoPlayback = { paused: boolean; motionAllowed: boolean; togglePause: () => void };
+type DemoPlayback = { paused: boolean; motionAllowed: boolean; settled: boolean; togglePause: () => void };
 const PlaybackContext = createContext<DemoPlayback | null>(null);
 
-export function DemoPlaybackProvider({ children }: { children: ReactNode }) {
+export function DemoPlaybackProvider({ children, settled = true }: { children: ReactNode; settled?: boolean }) {
   const [paused, setPaused] = useState(false);
   const [motionAllowed, setMotionAllowed] = useState(false);
 
@@ -18,7 +18,7 @@ export function DemoPlaybackProvider({ children }: { children: ReactNode }) {
     return () => media.removeEventListener("change", sync);
   }, []);
 
-  return <PlaybackContext.Provider value={{ paused, motionAllowed, togglePause: () => setPaused((value) => !value) }}>{children}</PlaybackContext.Provider>;
+  return <PlaybackContext.Provider value={{ paused, motionAllowed, settled, togglePause: () => setPaused((value) => !value) }}>{children}</PlaybackContext.Provider>;
 }
 
 export function useDemoPlayback() {

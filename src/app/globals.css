@@ -1,7 +1,8 @@
-/* Hallmark · shape: Workbench · genre: modern-minimal · theme: brand · redesign: full
+/* Hallmark · shape: Workbench · genre: modern-minimal · theme: brand · redesign: polish
  * paper: Stone white · accent: raspberry on warm grey paper · display: SF Pro Display · body: Neue Montreal · hero: Banner (/) · nav: project anchors · footer: colophon · signature: an animated physical binder brings each real project to the front
  * axes: light/grotesk-sans/raspberry · posture: restrained · job: hire · surface: absolute · v2.0.0 */
 /* Hallmark · pre-emit critique: P4 H5 E4 S5 R4 V5 · weakest: R, the open binder exposes projects directly, retaining physical sheet selection and product demonstrations */
+/* Hallmark · polish: hero wording and nine-folder geometry retained; semantic section title, a steady desktop sheet and mobile benefit-first reading */
 /*! hero: Banner (/) · job: hire */
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -1120,4 +1121,78 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
  font-style: normal;
  font-display: swap;
  unicode-range: U+0000-024F, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+20A0-20CF, U+2100-214F, U+2190-22FF, U+25A0-25FF, U+FEFF, U+FFFD;
+}
+
+/* The portfolio continues the opening message; every folder keeps its own content. */
+:root {
+ --folder-sheet-height: clamp(45rem, calc(75rem - 34vw), 54rem);
+ --folder-study-row-height: calc(2 * var(--space-lg) + var(--rule-hair));
+ --folder-frame-borders: calc(6 * var(--rule-hair));
+}
+.home-hero { padding-bottom: var(--space-md); }
+.project-showcase { padding-top: var(--space-sm); }
+.project-panel-body { grid-template-rows: auto auto 1fr; }
+.project-panel-benefit { grid-column: 1; grid-row: 2; align-self: start; max-width: 45ch; margin-bottom: var(--space-sm); padding-top: var(--space-lg); color: var(--foreground); font-size: var(--text-md); font-weight: 500; line-height: 1.6; }
+.project-panel-preview { grid-row: 1 / 4; }
+.project-panel-summary { grid-row: 3; padding-top: 0; }
+
+@media (min-width: 60.001rem) {
+ .project-showcase[data-enhanced="true"] .project-panel { --folder-study-height: 0px; }
+ .project-showcase[data-enhanced="true"] .project-panel[data-case-study="true"] { --folder-study-height: var(--folder-study-row-height); }
+ .project-showcase[data-enhanced="true"] .project-panel-body { min-height: calc(var(--folder-sheet-height) - var(--folder-frame-borders) - var(--folder-study-height)); }
+ .project-showcase[data-enhanced="true"] .project-panel-preview { align-self: start; }
+ .project-showcase[data-enhanced="true"] .project-case-study > summary { min-height: calc(2 * var(--space-lg)); padding-block: var(--space-xs); }
+}
+@media (max-width: 60rem) {
+ .project-panel-body { grid-template-rows: auto auto auto 1fr; }
+ .project-panel-heading { margin-bottom: var(--space-xs); }
+ .project-panel-benefit { max-width: 65ch; padding-top: 0; margin-bottom: var(--space-md); }
+ .project-panel-preview { grid-row: 3; }
+ .project-panel-summary { grid-row: 4; padding-top: var(--space-md); }
+}
+
+/* Paper finish: quiet rear edges, contact shadows and curved active-tab shoulders. */
+:root {
+ --folder-edge-back: color-mix(in srgb, var(--foreground) 44%, var(--background));
+ --folder-edge-tab: color-mix(in srgb, var(--foreground) 62%, var(--background));
+ --folder-edge-front: color-mix(in srgb, var(--foreground) 80%, var(--background));
+ --folder-edge-cover: color-mix(in srgb, var(--foreground) 36%, var(--background));
+ --folder-shadow-contact: color-mix(in srgb, var(--foreground) 10%, transparent);
+ --folder-shadow-ambient: color-mix(in srgb, var(--foreground) 7%, transparent);
+ --folder-paper-highlight: color-mix(in srgb, var(--background) 70%, transparent);
+ --folder-shoulder: clamp(3px, 0.4167vw, 6px);
+}
+.project-showcase[data-enhanced="true"] .project-binder::before { border-color: var(--folder-edge-cover); }
+.project-showcase[data-enhanced="true"] .folder-sheet {
+ border-color: var(--folder-edge-back);
+ box-shadow: inset 0 1px 0 var(--folder-paper-highlight), 0 2px 3px -1px var(--folder-shadow-contact);
+}
+.project-showcase[data-enhanced="true"] .showcase-frame {
+ border-color: var(--folder-edge-front);
+ box-shadow: 0 2px 3px -1px var(--folder-shadow-contact), 0 10px 22px -12px var(--folder-shadow-ambient);
+}
+.project-showcase[data-enhanced="true"] .project-tabs button { border-color: var(--folder-edge-tab); }
+.project-showcase[data-enhanced="true"] .project-tabs button[aria-selected="true"] { border-color: var(--folder-edge-front); }
+.project-showcase[data-enhanced="true"] .project-tabs button[aria-selected="true"]::before,
+.project-showcase[data-enhanced="true"] .project-tabs button[aria-selected="true"]::after {
+ content: "";
+ position: absolute;
+ bottom: calc(var(--folder-tab-overlap) - var(--rule-hair));
+ width: var(--folder-shoulder);
+ height: var(--folder-shoulder);
+ pointer-events: none;
+}
+.project-showcase[data-enhanced="true"] .project-tabs button[aria-selected="true"]::before {
+ left: calc(var(--rule-hair) - var(--folder-shoulder));
+ border-right: var(--rule-hair) solid var(--folder-edge-front);
+ border-bottom: var(--rule-hair) solid var(--folder-edge-front);
+ border-bottom-right-radius: var(--folder-shoulder);
+ box-shadow: 2px 2px 0 1px var(--showcase-paper);
+}
+.project-showcase[data-enhanced="true"] .project-tabs button[aria-selected="true"]::after {
+ right: calc(var(--rule-hair) - var(--folder-shoulder));
+ border-left: var(--rule-hair) solid var(--folder-edge-front);
+ border-bottom: var(--rule-hair) solid var(--folder-edge-front);
+ border-bottom-left-radius: var(--folder-shoulder);
+ box-shadow: -2px 2px 0 1px var(--showcase-paper);
 }

@@ -1,25 +1,368 @@
 {
-  "scanned": "2026-10-26",
+  "scanned": "2026-10-28",
   "findings": {
-    "fonts": "SF Pro Display and Neue Montreal, src/app/globals.css and src/app/tokens.css",
-    "palette": "Existing Stone neutral palette",
-    "motion": "Decorative reveals and logo marquee replaced by static content; necessary control transitions respect reduced motion",
-    "spacing": "Capped 1360px container and responsive shared spacing",
-    "framework": "Next.js 15.3.8 App Router"
+    "system": "design.md:5, existing Stone palette and local fonts",
+    "framework": "package.json:1, Next.js 15 App Router",
+    "material": "src/app/page.tsx:1 and public/projects: real work, SelfCamp public map captured with Hallmark",
+    "baseline": "0 FAIL on five original routes; repeated SelfCamp and Pattùs and landscape first screen",
+    "stylePass": "design.md, globals.css, footer.tsx; existing approved physical folder and real material retained"
   },
   "preserve": [
-    "Webbing logo",
-    "lake photograph",
-    "real project captures",
-    "portrait",
-    "existing claims and destinations",
-    "contact API and analytics"
+    "Webbing logo and local fonts",
+    "actual project destinations and facts",
+    "all six contact fields, API and analytics",
+    "unchanged project screenshots; supplied new founder photo framed on his face"
   ],
   "introduce": [
-    "explicit homepage offer",
-    "readable service and portfolio layouts",
-    "progressive mobile menu",
-    "visible keyboard focus",
-    "responsive contact layout"
-  ]
+    "one primary page",
+    "SelfCamp map and direct project links above the fold",
+    "native project anchors",
+    "permanent legacy route redirects",
+    "nine-project folder selector with fully visible phone folder grid",
+    "small circular founder avatar; outlined approach and contact sections",
+    "user-requested raspberry accents and exact #f4f1ef surfaces",
+    "Graphomouv replaces discontinued PopLiving, with supplied video; quote is read-only context"
+  ],
+  "stylePass": {
+    "preserve": [
+      "accepted folder animation",
+      "single-page structure and nine projects",
+      "exact #f4f1ef supporting paper",
+      "all content and destinations"
+    ],
+    "touch": [
+      "src/app/globals.css",
+      "src/components/layout/footer.tsx",
+      "design.md",
+      ".hallmark metadata"
+    ],
+    "introduce": [
+      "warm ink",
+      "brighter accessible raspberry",
+      "Neue Montreal body face",
+      "unified physical button edge",
+      "warm light footer"
+    ]
+  },
+  "responsiveMotionPass": {
+    "reference": "Planifi observed at 375,768,1440: physical tabs remain on phones; Webbing adapts them as readable tactile scroll tabs for nine project names.",
+    "preserve": [
+      "accepted desktop cover",
+      "real projects and media",
+      "one page, deep links, contact wiring"
+    ],
+    "touch": [
+      "globals.css",
+      "project-showcase.tsx",
+      "project-preview.tsx",
+      "contact-section.tsx",
+      "layout/header.tsx"
+    ],
+    "introduce": [
+      "responsive tactile folder strip",
+      "shorter mobile paper pull",
+      "hero/contact entrance using one shared arrival primitive",
+      "animated mobile menu",
+      "portrait video stage"
+    ]
+  },
+  "palettePass": {
+    "source": "https://www.planifi.ch/",
+    "date": "2026-10-28",
+    "measured": "live computed styles on .lp2-home and its buttons, papers, typography and footer",
+    "touch": [
+      "src/app/globals.css",
+      "src/components/layout/footer.tsx",
+      "design.md"
+    ],
+    "palette": {
+      "white": "#ffffff",
+      "ink": "#171313",
+      "body": "#463e3b",
+      "muted": "#5e5653",
+      "paper": "#f4f1ef",
+      "rule": "#e4deda",
+      "primary": "#e11d48",
+      "hover": "#b8143a"
+    },
+    "distribution": "white outlined hero actions and active folder; rose-red underlines/contact action; dark footer"
+  },
+  "fluidResizePass": {
+    "reason": "User expects progressive full responsiveness, with no horizontal project strip.",
+    "touch": [
+      "src/app/globals.css",
+      "src/components/project-showcase.tsx",
+      "design.md"
+    ],
+    "changes": [
+      "monotone fluid heading sizes",
+      "fluid gutters and padding",
+      "all nine tabs visible; three columns under769px",
+      "selection retained during resize",
+      "cover adapts across all widths",
+      "active animations canceled on resize"
+    ],
+    "verification": "20 live-resize widths1920–320, all nine projects at375/800/1440, keyboard, mobile cover, reduced-motion and no-JS passed"
+  },
+  "singleRowPass": {
+    "request": "Keep nine folder tabs on one horizontal row on phones, like Planifi; adapt their sizes.",
+    "touch": [
+      "src/app/globals.css",
+      "src/components/project-showcase.tsx",
+      "design.md"
+    ],
+    "preserve": [
+      "all nine full accessible project names",
+      "project order and real screens",
+      "selected state and keyboard access",
+      "folder animations and reduced motion",
+      "palette and contact wiring"
+    ],
+    "change": "replace three-row phone grid with a single scaled nine-column row; adapt tab labels, height, spacing and physical sheet alignment"
+  },
+  "folderGroupsPass": {
+    "request": "Red folder accents and Planifi-style Applications web / Sites web braces, always responsive.",
+    "touch": [
+      "src/app/globals.css",
+      "src/components/project-showcase.tsx",
+      "src/data/portfolio.ts",
+      "design.md"
+    ],
+    "grouping": "four applications with SelfCamp first; five websites with Pattùs first; stable project hashes and destinations",
+    "changes": [
+      "red selected tab and cover tab",
+      "light rose application papers and red paper edge",
+      "responsive SVG braces and category labels",
+      "type-derived Sites web alias",
+      "one row retained at every width"
+    ]
+  },
+  "handwrittenAnnotationsPass": {
+    "request": "Animate braces and arrows and match Planifi handwriting and colours.",
+    "source": "https://www.planifi.ch/; live computed Caveat600, ink first category / rose-red second category",
+    "touch": [
+      "src/components/project-showcase.tsx",
+      "src/app/globals.css",
+      "public/fonts/Caveat-SemiBold.woff2",
+      "public/fonts/Caveat-OFL.txt",
+      "design.md",
+      ".hallmark metadata"
+    ],
+    "preserve": [
+      "one row of all nine folders on phones",
+      "SelfCamp first, Pattùs first website",
+      "real project media and links",
+      "contact wiring and deep links"
+    ],
+    "changes": [
+      "locally hosted Caveat600 for category annotations only",
+      "neutral papers and white active folder; ink applications, rose-red websites",
+      "staged pen drawing on opening, replay on reopening",
+      "transform-based arrow-end following; resize and reduced-motion cancellation"
+    ],
+    "verification": "Build, ESLint, responsive motion at10 widths320–1440, reduced motion, no-JS, local font, path coverage and Hallmark render passed; desktop/phone visually inspected."
+  },
+  "folderTabFinish": {
+    "request": "Planifi tabs look better; refine the current tabs.",
+    "reference": "Planifi live binder tab rules: inset shoulders, 2px sheet overlap, bold labels and slight inactive hover lift.",
+    "touch": [
+      "src/app/globals.css",
+      "design.md",
+      ".hallmark metadata"
+    ],
+    "changes": [
+      "shared fluid inset for tabs and category notes",
+      "2px overlap removes separating seam",
+      "bold labels and softer inactive ink",
+      "3px fine-pointer hover with reduced-motion fallback"
+    ],
+    "preserve": [
+      "nine folders in one row at every width",
+      "approved palette, images and annotations",
+      "selection, keyboard and contact wiring"
+    ],
+    "validation": "Production build;13 resize transitions, all nine touch selections at320/375/390, keyboard and reduced motion; annotation checks at10 widths; Hallmark0 FAIL/0 REFLEX/0 WARN; desktop/phone captures inspected."
+  },
+  "selfcampDemo": {
+    "request": "Implement the approved SelfCamp map → real area fiche → paper reservation animation, responsive, preview before push.",
+    "touch": [
+      "src/components/selfcamp-demo.tsx",
+      "src/components/project-preview.tsx",
+      "src/components/project-showcase.tsx",
+      "src/app/globals.css",
+      "public/projects/selfcamp-camping-du-lac.png",
+      "design.md",
+      ".hallmark metadata"
+    ],
+    "material": {
+      "map": "existing real SelfCamp screenshot",
+      "fiche": "public Camping du Lac popup captured from https://www.selfcamp.ch/map",
+      "ticket": "illustrative HTML receipt; no prices, dates, customer or transaction data",
+      "colours": "SelfCamp olive #84994f and forest #3a4d2a, with the existing paper/handwriting system"
+    },
+    "motion": "7.8 seconds, one automatic play after uncovering and viewport arrival; native transform/opacity animations; pause/resume, replay and retained progress across hidden projects/views.",
+    "responsive": "square mobile map and repositioned layers; existing single-row nine-folder navigation preserved",
+    "validation": "Production build/ESLint; real timing, manual and visibility/selection pause, replay,12 widths320–1920, dialog, reduced motion, no-JS passed."
+  },
+  "openPortfolioLoopPass": {
+    "request": "Remove scroll cover, use project colours for selected names, loop SelfCamp without replay, remove all enlarge controls.",
+    "touch": [
+      "src/components/project-showcase.tsx",
+      "src/components/project-preview.tsx",
+      "src/components/selfcamp-demo.tsx",
+      "src/app/globals.css",
+      "design.md",
+      ".hallmark metadata"
+    ],
+    "changes": [
+      "cover DOM and scroll-progress effect removed",
+      "selected tab and heading get measured brand colours",
+      "category drawing triggered once by viewport entry",
+      "10-second native SelfCamp loop with hold/fade; no replay state",
+      "all preview enlarge controls/dialogs and duplicate modal images removed"
+    ],
+    "preserve": [
+      "single nine-column row on phones",
+      "real source captures and Graphomouv native video",
+      "pause/resume and reduced-motion/no-JS fallback",
+      "contact contract and project destinations"
+    ],
+    "palette": ".hallmark/project-palette.json",
+    "validation": "Production build, ESLint and diff check passed. Real second loop observed; manual and hidden-project pause/resume passed. Nine selected tab/title colours match, each above4.5:1 on white. Twelve widths320–1920 retain one nine-column row, contained labels and44px targets with no overflow. No cover, enlarge actions/dialogs or replay control. Keyboard, reduced motion and no-JS passed. Hallmark rendered0 FAIL/0 open REFLEX/0 WARN. Desktop/phone captures inspected."
+  },
+  "selfcampCadence": {
+    "request": "Remove Pause and make motion more fluid, alternating fast actions and slow reading/settling like Planifi.",
+    "touch": [
+      "src/components/selfcamp-demo.tsx",
+      "src/app/globals.css",
+      "design.md",
+      ".hallmark metadata"
+    ],
+    "changes": [
+      "remove visible playback control, icons and manual-paused state",
+      "authored9s timeline with540ms fiche arrival,495ms ticket travel and225ms settle",
+      "270ms stamp then separate630ms handwritten farewell",
+      "long still reading beats and smooth staggered reset",
+      "separate entry/soft easing tokens"
+    ],
+    "preserve": [
+      "automatic offscreen/project/browser-tab pause",
+      "reduced motion and no-JS static content",
+      "single-row responsive folders and selected brand colours",
+      "real captures and contact/project wiring"
+    ],
+    "validation": "Production build, ESLint and diff check passed. Actual second loop and hidden-project automatic pause/resume verified; no SelfCamp playback controls. Twelve widths320–1920 preserve one nine-column row, contained labels, brand contrast>=4.5:1, no overflow. Keyboard, reduced-motion static composition and no-JS passed. Hallmark rendered0 FAIL/0 open REFLEX/0 WARN. Desktop/phone recordings prepared for visual review."
+  },
+  "earlierSelfcampTicket": {
+    "request": "Ticket feels too delayed.",
+    "touch": [
+      "src/components/selfcamp-demo.tsx",
+      "design.md",
+      ".hallmark metadata"
+    ],
+    "change": "Ticket starts at2.7s instead of3.87s; stamp starts3.69s, farewell4.23s. Entry/settle easing and9s cycle preserved."
+  },
+  "proportionalSelfcamp": {
+    "request": "Responsive: all illustration elements should shrink together.",
+    "touch": [
+      "src/app/globals.css",
+      "src/components/selfcamp-demo.tsx",
+      "design.md",
+      ".hallmark metadata"
+    ],
+    "changes": [
+      "one8:5 map composition at every width",
+      "35.5% fiche and36.6% ticket at all sizes",
+      "container-relative ticket text, spacing, stamp/icon, paper edge, shadows and ring",
+      "container-relative native animation travel",
+      "remove former oversized phone composition"
+    ],
+    "preserve": [
+      "16px main copy and44px touch targets",
+      "one nine-tab folder row",
+      "earlier ticket timing,9s loop and no controls",
+      "brand colours, real screens and contact wiring"
+    ],
+    "validation": "Production build, ESLint and diff check passed.18 resize steps320–1920 retain the same map ratio, fiche/ticket proportions, internal type and scene padding. Native movement sampled at the same point scales to the same normalized distance at1440/834/390/320px. No overflow; main project copy remains16px and interactive targets>=44px. All nine touch selections at320, reduced motion and no-JS passed. Hallmark rendered0 FAIL/0 open REFLEX/0 WARN. Desktop/tablet/phone captures inspected."
+  },
+  "allProjectDemos": {
+    "request": "Apply approved SelfCamp-style animation and proportional responsiveness to all remaining projects.",
+    "touch": [
+      "src/components/use-demo-motion.ts",
+      "src/components/portfolio-demo.tsx",
+      "src/components/selfcamp-demo.tsx",
+      "src/components/project-preview.tsx",
+      "src/components/project-showcase.tsx",
+      "src/app/globals.css",
+      "design.md"
+    ],
+    "preserve": [
+      "SelfCamp exact timeline and early ticket",
+      "one row of nine folders",
+      "selected brand colours, real screens and links",
+      "16px main copy and44px targets",
+      "contact wiring and no push before review"
+    ],
+    "changes": [
+      "shared native animation/visibility hook",
+      "eight project-specific paper stories",
+      "OpenWind actual forecast inset",
+      "Graphomouv supplied video muted active-visible loop with reduced-motion poster",
+      "same proportional scene across phone/tablet/desktop"
+    ],
+    "validation": "Production build, ESLint and diff check passed.108 layouts (9 projects x12 widths320–1920), proportional paper/type/scene,44px tabs,16px body copy and no overflow. All9 native timelines verified with real loaded media,9s loops and automatic viewport/project/browser visibility pausing. Alternate views, keyboard,320px touch, reduced-motion cancellation/static poster, and9 no-JS disclosures passed. Desktop and phone captures and actual motion recordings visually inspected. No commit or push."
+  },
+  "binderPolish": {
+    "scanned": "2026-11-02",
+    "reference": "Planifi folder selector; read-only comparison in hero-comparison artifacts",
+    "findings": {
+      "layout": "src/components/project-showcase.tsx:253 and src/app/globals.css:1126",
+      "system": "design.md; locked current design",
+      "material": "src/data/portfolio.ts; unchanged project identities and facts"
+    },
+    "preserve": [
+      "Hero copy, palette, fonts, nine columns and existing motion",
+      "Project links, studies, contact wiring and no-JS access"
+    ],
+    "introduce": [
+      "Accessible-only section title and tighter adjoining gaps",
+      "Shared minimum desktop sheet height with naturally expanding studies",
+      "Benefit before preview on mobile"
+    ],
+    "review": "in-thread, desktop/phone captures and 252 responsive checks",
+    "publication": "local only"
+  },
+  "motionHandoff": {
+    "date": "2026-11-02",
+    "scope": "Sheet completion releases prepared demonstration playback",
+    "preserve": [
+      "Current design and nine tabs on one line",
+      "Retained playback clocks, shared pause and reduced motion",
+      "Project copy, links, materials and contact wiring"
+    ],
+    "implementation": [
+      "Revision-scoped native animation completion",
+      "Initial pose prepared before paint",
+      "CSS seconds/milliseconds duration parsing"
+    ],
+    "validation": "Production build, TypeScript/ESLint; Chrome and WebKit36 handoffs, interruptions, pause, visibility, reduced motion, responsive and no-JS checks; no contact requests",
+    "hallmark": "Same18 inherited Floor findings and2 Reflex; no new Floor finding",
+    "publication": "local only; no commit, push or deployment"
+  },
+  "paperFinish": {
+    "date": "2026-11-02",
+    "scope": "Binder paper finish; CSS only",
+    "changes": [
+      "Softer rear-sheet contact shadows",
+      "Stronger active-sheet edge, lighter secondary outlines",
+      "Inverse rounded active-tab shoulders from3px to6px"
+    ],
+    "preserve": [
+      "All existing paper fills and project accents",
+      "Typography, copy, media and motion",
+      "Nine tabs in one row, dimensions and focus treatment"
+    ],
+    "validation": "Production build/TypeScript/ESLint; in-app browser nine selections across320/390/1440px, Home/End keyboard, desktop/phone visual inspection; Hallmark render5 screenshots, same18 inherited Floor and2 Reflex, no new Floor finding",
+    "publication": "local only; no contact test, commit, push or deployment"
+  }
 }

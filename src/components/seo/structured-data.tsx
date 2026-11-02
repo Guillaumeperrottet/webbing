@@ -1,4 +1,5 @@
 import Script from "next/script";
+import { siteDescription } from "@/data/site-meta";
 
 export function OrganizationSchema() {
   const schema = {
@@ -6,16 +7,15 @@ export function OrganizationSchema() {
     "@type": "Organization",
     name: "Webbing",
     alternateName: "Webbing Informatique",
-    url: "https://webbing.ch",
+    url: "https://www.webbing.ch",
     logo: {
       "@type": "ImageObject",
-      url: "https://webbing.ch/logo-square.png",
+      url: "https://www.webbing.ch/logo-square.png",
       width: "512",
       height: "512",
     },
-    image: "https://webbing.ch/logo-square.png",
-    description:
-      "Créateur de solutions web sur mesure pour les entreprises suisses. Développement d'applications et de sites modernes : Wisp, SelfCamp, PlanniKeeper, OpenWind.",
+    image: "https://www.webbing.ch/logo-square.png",
+    description: siteDescription,
     address: {
       "@type": "PostalAddress",
       streetAddress: "Rue de Battentin 1",
@@ -60,10 +60,10 @@ export function LocalBusinessSchema() {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: "Webbing",
-    image: "https://webbing.ch/logo-square.png",
-    logo: "https://webbing.ch/logo-square.png",
-    "@id": "https://webbing.ch",
-    url: "https://webbing.ch",
+    image: "https://www.webbing.ch/logo-square.png",
+    logo: "https://www.webbing.ch/logo-square.png",
+    "@id": "https://www.webbing.ch",
+    url: "https://www.webbing.ch",
     telephone: "+41793414074",
     address: {
       "@type": "PostalAddress",

@@ -9,45 +9,42 @@ import {
   LocalBusinessSchema,
 } from "@/components/seo/structured-data";
 import { Analytics } from "@vercel/analytics/react";
+import { shareImageAlt, siteDescription, siteTitle } from "@/data/site-meta";
 
 export const metadata: Metadata = {
   title: {
-    default: "Webbing - Applications web et sites internet sur mesure",
+    default: siteTitle,
     template: "%s | Webbing",
   },
-  description:
-    "Webbing crée des applications web et sites internet sur mesure pour les entreprises suisses. Wisp, SelfCamp, PlanniKeeper, OpenWind. Développement web moderne à Bulle, Fribourg.",
-  keywords:
-    "applications web Suisse, développement web Fribourg, agence digitale Bulle, Wisp, SelfCamp, PlanniKeeper, OpenWind, applications sur mesure, Next.js, TypeScript",
+  description: siteDescription,
   authors: [{ name: "Guillaume Perrottet", url: "https://webbing.ch" }],
   creator: "Webbing",
   publisher: "Webbing",
-  metadataBase: new URL("https://webbing.ch"),
+  metadataBase: new URL("https://www.webbing.ch"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Webbing - Applications web et sites internet sur mesure",
-    description:
-      "Créateur de solutions digitales sur mesure. Wisp, SelfCamp, PlanniKeeper, OpenWind.",
-    url: "https://webbing.ch",
+    title: siteTitle,
+    description: siteDescription,
+    url: "https://www.webbing.ch/",
     siteName: "Webbing",
     locale: "fr_CH",
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Webbing - Applications web et sites internet sur mesure",
+        alt: shareImageAlt,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Webbing - Applications web et sites internet sur mesure",
-    description: "Créateur de solutions digitales sur mesure en Suisse",
-    images: ["/og-image.jpg"],
+    title: siteTitle,
+    description: siteDescription,
+    images: [{ url: "/opengraph-image", alt: shareImageAlt }],
   },
   robots: {
     index: true,
@@ -88,10 +85,11 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="font-sans antialiased">
+        <a href="#main" className="skip-link">Aller au contenu</a>
         <OrganizationSchema />
         <LocalBusinessSchema />
         <Header />
-        <main>{children}</main>
+        <main id="main">{children}</main>
         <Footer />
         <Analytics />
       </body>

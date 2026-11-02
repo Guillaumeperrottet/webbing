@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-28",
+  "use": "selected project tab and visible project heading; white paper preserved",
+  "projects": {
+    "selfcamp": {
+      "colour": "#53662f",
+      "source": "SelfCamp #84994f olive, deepened for small text contrast on white"
+    },
+    "openwind": {
+      "colour": "lab(35.164 -9.57692 -34.4068)",
+      "source": "live Tous les guides action"
+    },
+    "wisp": {
+      "colour": "#2563eb",
+      "source": "live Obtenir un lien action"
+    },
+    "plannikeeper": {
+      "colour": "#995a14",
+      "source": "live Commencer / Créer mon espace actions"
+    },
+    "pattus-hotel": {
+      "colour": "#25395d",
+      "source": "live Réserver action and headings"
+    },
+    "alpha-hotel": {
+      "colour": "#0d2b52",
+      "source": "live booking actions and headings"
+    },
+    "coachingbymarie": {
+      "colour": "#a54932",
+      "source": "live active Accueil navigation colour"
+    },
+    "graphomouv": {
+      "colour": "#607a4a",
+      "source": "live Entrer dans l’univers action"
+    },
+    "dipiaza": {
+      "colour": "lab(48.4493 77.4328 61.5452)",
+      "source": "live Découvrir notre menu / Itinéraire actions"
+    }
+  },
+  "liveSources": [
+    {
+      "id": "openwind",
+      "url": "https://www.openwind.ch/"
+    },
+    {
+      "id": "wisp",
+      "url": "https://wisp.ch/"
+    },
+    {
+      "id": "plannikeeper",
+      "url": "https://www.plannikeeper.ch/"
+    },
+    {
+      "id": "pattus-hotel",
+      "url": "https://www.pattushotel.ch/fr"
+    },
+    {
+      "id": "alpha-hotel",
+      "url": "https://www.alpha-hotel.ch/"
+    },
+    {
+      "id": "coachingbymarie",
+      "url": "https://www.coachingbymarie.ch/"
+    },
+    {
+      "id": "graphomouv",
+      "url": "https://graphomouv.app/"
+    },
+    {
+      "id": "dipiaza",
+      "url": "https://www.dipiaza.ch/"
+    }
+  ]
+}

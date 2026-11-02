@@ -1,0 +1,9 @@
+shamefullyHoist: true
+
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
+
+# Next.js 15 pins PostCSS; keep the compatible 8.x security fix.
+overrides:
+  next>postcss: ^8.5.23

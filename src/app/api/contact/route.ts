@@ -5,20 +5,33 @@ import { z } from "zod";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const contactSchema = z.object({
-  firstName: z.string().trim().min(1),
-  lastName: z.string().trim().min(1),
+const contactFields = {
   email: z.string().trim().email(),
   company: z.string().trim().optional(),
-  subject: z.string().trim().min(1),
   message: z.string().trim().min(1),
   service: z.string().trim().optional(),
-});
+};
+
+const contactSchema = z.union([
+  z.object({
+    ...contactFields,
+    name: z.string().trim().min(1),
+  }).transform((contact) => ({ ...contact, subject: "Votre projet Webbing" })),
+  z.object({
+    ...contactFields,
+    firstName: z.string().trim().min(1),
+    lastName: z.string().trim().min(1),
+    subject: z.string().trim().min(1),
+  }).transform(({ firstName, lastName, ...contact }) => ({
+    ...contact,
+    name: `${firstName} ${lastName}`,
+  })),
+]);
 
 export async function POST(request: NextRequest) {
   try {
     const body = contactSchema.parse(await request.json());
-    const { firstName, lastName, email, message, service, company, subject } =
+    const { name, email, message, service, company, subject } =
       body;
 
     // Envoi de l'email via Resend
@@ -26,9 +39,9 @@ export async function POST(request: NextRequest) {
       from: "contact@webbing.ch",
       to: "gp@webbing.ch",
       subject: `Nouvelle prise de contact : ${subject}`,
-      reply_to: email,
+      replyTo: email,
       text: [
-        `Nom: ${firstName} ${lastName}`,
+        `Nom: ${name}`,
         `Email: ${email}`,
         company ? `Entreprise: ${company}` : null,
         service ? `Service: ${service}` : null,
@@ -44,11 +57,14 @@ export async function POST(request: NextRequest) {
       throw new Error(data.error.message);
     }
 
-    // Track server-side event
-    await track("Contact Email Sent", {
-      service: service || "not_specified",
-      hasCompany: !!company,
-    });
+    try {
+      await track("Contact Email Sent", {
+        service: service || "not_specified",
+        hasCompany: !!company,
+      });
+    } catch {
+      console.warn("Le suivi du contact n’a pas pu être enregistré.");
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

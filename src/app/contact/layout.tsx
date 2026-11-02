@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Contact | Parlons de votre projet",
   description:
-    "Contactez Webbing pour discuter de votre projet d'application web ou de site internet. Email, téléphone, ou formulaire de contact. Nous sommes basés à Bulle, Suisse.",
+    "Contactez-nous pour discuter de votre projet d'application web ou de site internet. Email, téléphone, ou formulaire de contact. Nous sommes basés à Bulle, Suisse.",
   keywords:
     "contact Webbing, développement web Suisse, agence web Bulle, consultation digitale, développeur Fribourg",
   alternates: {

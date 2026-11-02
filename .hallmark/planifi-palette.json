@@ -1,0 +1,21 @@
+{
+  "source": "https://www.planifi.ch/",
+  "date": "2026-10-28",
+  "measured": "live computed styles on .lp2-home and its buttons, papers, typography and footer",
+  "touch": [
+    "src/app/globals.css",
+    "src/components/layout/footer.tsx",
+    "design.md"
+  ],
+  "palette": {
+    "white": "#ffffff",
+    "ink": "#171313",
+    "body": "#463e3b",
+    "muted": "#5e5653",
+    "paper": "#f4f1ef",
+    "rule": "#e4deda",
+    "primary": "#e11d48",
+    "hover": "#b8143a"
+  },
+  "distribution": "white outlined hero actions and active folder; rose-red underlines/contact action; dark footer"
+}

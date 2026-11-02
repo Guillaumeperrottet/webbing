@@ -7,3 +7,13 @@ allowBuilds:
 # Next.js 15 pins PostCSS; keep the compatible 8.x security fix.
 overrides:
   next>postcss: ^8.5.23
+  # Keep the corrected matcher across the existing lint dependency tree.
+  # The patch below restores its legacy callable/default exports only.
+  minimatch: 11.0.4
+
+minimumReleaseAgeExclude:
+  # Exact security-fix version, not a wildcard release-age exemption.
+  - minimatch@11.0.4
+
+patchedDependencies:
+  minimatch@11.0.4: patches/minimatch@11.0.4.patch

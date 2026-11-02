@@ -1,0 +1,24 @@
+diff --git a/dist/commonjs/index.js b/dist/commonjs/index.js
+index eb1c915f43b2debf5faa7ac3a73c262a161c7a4f..5961629712a0f4d2c23bdfa3c1a8b793624d6b45 100644
+--- a/dist/commonjs/index.js
++++ b/dist/commonjs/index.js
+@@ -1547,4 +1547,7 @@ Object.defineProperty(exports, "unescape", { enumerable: true, get: function ()
+ exports.minimatch.Minimatch = Minimatch;
+ exports.minimatch.escape = escape_js_1.escape;
+ exports.minimatch.unescape = unescape_js_1.unescape;
++// Preserve the callable CommonJS API used by ESLint 9 and its existing plugins.
++// All matching and exported helpers still use the patched upstream implementation.
++module.exports = Object.assign(exports.minimatch, exports);
+ //# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/dist/esm/index.js b/dist/esm/index.js
+index 1dc27e67064fcbf1f3dce34aa3ea1a134b7be168..a695d2fec99365a0e02841cd49b70f282408a6e5 100644
+--- a/dist/esm/index.js
++++ b/dist/esm/index.js
+@@ -1536,4 +1536,6 @@ export { unescape } from './unescape.js';
+ minimatch.Minimatch = Minimatch;
+ minimatch.escape = escape;
+ minimatch.unescape = unescape;
++// Keep legacy default imports callable alongside the current named exports.
++export default minimatch;
+ //# sourceMappingURL=index.js.map

@@ -22,7 +22,7 @@
 /* Hallmark · dropped https://wisp.ch/, https://www.alpha-hotel.ch/, https://www.openwind.ch/, https://www.plannikeeper.ch/ · only the old literal footer bindings were retired; the same destinations are rendered by shared ProjectLink from portfolio data, verified in the browser */
 /* Hallmark · dropped solutions, setSwapped, onMouseEnter, onMouseLeave, scrollToProject, onKeyDown, service.name, Self check-in, CTA Click, Project Click · the redundant service scroll and project carousel were retired; actual project links and analytics use the shared ProjectLink and screen changes use explicit buttons */
 /* Hallmark · dropped form 1 · contact moved to the homepage and its default native method changed from GET to POST; all six IDs, field types, required flags, JSON payload and real API are retained and tested */
-/* Hallmark · dropped 2025, 2024, UFT.gif · the condensed portfolio removes the standalone SelfCamp year and redundant partner image; the UFT text link and website years inside the inline disclosure remain */
+/* Hallmark · dropped 2025, 2024, UFT.gif · the condensed portfolio removes the standalone Selfcamp year and redundant partner image; the UFT text link and website years inside the inline disclosure remain */
 /* Hallmark · dropped sites et applications web sur mesure, votre activité, votre solution web., applications web, sites internet, dernières réalisations, navigation, applications, sites web, à propos, contactez-nous, nos coordonnées, nos autres applications web, vos projets, une application en tête ?, un projet de site internet ?, guillaume perrottet · approved consolidation removes repeated headings, adds one explicit offer and one shared contact section; the founder is named beside his real portrait */
 /* Hallmark · dropped contact, contact-details-title · the former footer heading and contact-details aside are consolidated into the homepage contact section with direct email and phone */
 /* SF Pro Display */
@@ -831,7 +831,7 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
  .project-showcase[data-enhanced="true"] .project-tabs button:not([aria-selected="true"]):hover { translate: none; }
 }
 
-/* SelfCamp: real map and area capture, followed by an illustrative paper reservation. */
+/* Selfcamp: real map and area capture, followed by an illustrative paper reservation. */
 :root {
  --selfcamp-olive: #84994f;
  --selfcamp-ink: #3a4d2a;
@@ -883,7 +883,7 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
  .selfcamp-map-ring { display: none; }
 }
 
-/* Directly open portfolio, project-specific selected names, and a gentle SelfCamp loop. */
+/* Directly open portfolio, project-specific selected names, and a gentle Selfcamp loop. */
 :root {
  --project-selfcamp: #53662f;
  --project-openwind: lab(35.164 -9.57692 -34.4068);
@@ -907,10 +907,10 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
  .project-binder[data-notes-visible="true"] .folder-group path { animation: none; }
 }
 
-/* SelfCamp cadence: brisk paper arrivals, soft settling and longer reading beats. */
+/* Selfcamp cadence: brisk paper arrivals, soft settling and longer reading beats. */
 :root { --dur-selfcamp: 9000ms; --ease-selfcamp-soft: cubic-bezier(0.45, 0, 0.2, 1); }
 
-/* Scale the complete SelfCamp illustration together, without a separate oversized phone layout. */
+/* Scale the complete Selfcamp illustration together, without a separate oversized phone layout. */
 :root {
  --selfcamp-scene-foot: 8.75cqw;
  --selfcamp-card-width: 35.5%;
@@ -1195,4 +1195,88 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
  border-bottom: var(--rule-hair) solid var(--folder-edge-front);
  border-bottom-left-radius: var(--folder-shoulder);
  box-shadow: -2px 2px 0 1px var(--showcase-paper);
+}
+
+/* Embedded film follows its source ratio without a player surround or letterboxing. */
+.preview-video[data-embedded-film="true"] { aspect-ratio: 16 / 9; background: none; }
+/* The Selfcamp guest journey keeps its readable portrait composition on mobile. */
+@media (max-width: 639px) {
+  .preview-video[data-responsive-film="true"] { aspect-ratio: 3 / 4; }
+}
+
+/* One gentle arrival on the real Selfcamp capture, then a still reading pose. */
+:root {
+ --dur-selfcamp-home: 3200ms;
+ --selfcamp-home-focus-glow: color-mix(in srgb, var(--project-selfcamp) 18%, transparent);
+}
+.preview-image.preview-home-arrival { aspect-ratio: 3004 / 1922; }
+.selfcamp-home-preview { --dur-selfcamp: var(--dur-selfcamp-home); width: 100%; height: 100%; container-type: inline-size; }
+.selfcamp-home-motion { position: relative; width: 100%; height: 100%; transform-origin: 57% 81%; }
+.preview-image .selfcamp-home-motion img { animation: none; }
+.selfcamp-home-search-focus { position: absolute; left: 35.15%; top: 77.42%; width: 43.68%; height: 6.87%; border: var(--rule-hair) solid var(--project-selfcamp); border-radius: 1.35cqw; box-shadow: 0 0 0 3px var(--selfcamp-home-focus-glow); opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+ .selfcamp-home-search-focus { display: none; }
+}
+
+/* Depth is confined to the real landscape; the captured interface stays fixed. */
+:root { --dur-selfcamp-home: 3600ms; }
+.selfcamp-home-preview { position: relative; isolation: isolate; }
+.preview-image .selfcamp-home-capture { animation: none; }
+.selfcamp-home-landscape, .selfcamp-home-interface { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
+.selfcamp-home-landscape { z-index: 0; transform-origin: 57% 81%; }
+.selfcamp-home-interface { z-index: 1; }
+.selfcamp-home-preview[data-depth-ready="true"] > .selfcamp-home-capture { opacity: 0; }
+.selfcamp-home-preview[data-depth-ready="true"] > canvas { opacity: 1; }
+.selfcamp-home-search-focus { z-index: 2; border: 0; border-radius: 0; box-shadow: none; }
+.selfcamp-home-search-focus rect { fill: none; stroke: var(--project-selfcamp); stroke-width: 1.25; vector-effect: non-scaling-stroke; }
+@media (prefers-reduced-motion: reduce) {
+ .selfcamp-home-preview > canvas { display: none; }
+ .selfcamp-home-preview[data-depth-ready="true"] > .selfcamp-home-capture { opacity: 1; }
+}
+
+/* A real establishment connects the welcome search to the guest demonstration. */
+:root {
+ --selfcamp-discovery-shadow: color-mix(in srgb, var(--foreground) 16%, transparent);
+ --selfcamp-discovery-rule: color-mix(in srgb, var(--foreground) 14%, var(--background));
+}
+.selfcamp-home-search-scene { position: absolute; inset: 0; }
+.selfcamp-home-preview[data-depth-ready="true"] .selfcamp-home-capture { opacity: 0; }
+.selfcamp-home-preview[data-depth-ready="true"] canvas { opacity: 1; }
+.selfcamp-search-query, .selfcamp-search-result { position: absolute; z-index: 3; left: 35.15%; width: 43.68%; background: var(--background); color: var(--foreground); opacity: 0; }
+.selfcamp-search-query { top: 77.42%; height: 6.87%; display: flex; align-items: center; gap: 0.8cqw; padding-inline: 1.2cqw; border: var(--rule-hair) solid var(--selfcamp-discovery-rule); border-radius: 1.35cqw; font-size: clamp(10px, 1.65cqw, 13px); line-height: 1; }
+.selfcamp-search-query svg { flex-shrink: 0; width: 1.8cqw; height: 1.8cqw; color: var(--muted-foreground); }
+.selfcamp-search-result { bottom: 24%; display: flex; align-items: center; gap: 1.4cqw; padding: 1.4cqw; border-radius: var(--radius); border: var(--rule-hair) solid var(--selfcamp-discovery-rule); box-shadow: 0 6px 20px var(--selfcamp-discovery-shadow); }
+.preview-image .selfcamp-search-result img { width: 6.5cqw; height: 6.5cqw; flex-shrink: 0; object-fit: cover; border-radius: calc(var(--radius) / 2); animation: none; }
+.selfcamp-search-result strong, .selfcamp-search-result span { display: block; }
+.selfcamp-search-result strong { font-size: clamp(12px, 2cqw, 16px); line-height: 1.25; }
+.selfcamp-search-result span { margin-top: 3px; font-size: clamp(10px, 1.65cqw, 13px); color: var(--muted-foreground); line-height: 1.25; }
+.selfcamp-public-preview { position: absolute; inset: 0; z-index: 4; display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); background: var(--background); color: var(--foreground); opacity: 0; pointer-events: none; }
+.preview-image .selfcamp-establishment-photo { width: 100%; height: 100%; min-height: 0; object-fit: cover; object-position: 55% 65%; animation: none; }
+.selfcamp-establishment-body { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1.8cqw; padding: 4cqw; min-width: 0; }
+.selfcamp-establishment-body h4 { margin: 0; font-size: clamp(18px, 4cqw, 32px); line-height: 1.1; font-weight: 700; overflow-wrap: break-word; min-width: 0; }
+.selfcamp-establishment-location { font-size: clamp(12px, 2cqw, 16px); line-height: 1.3; color: var(--muted-foreground); }
+.selfcamp-establishment-description { font-size: clamp(13px, 2.2cqw, 17px); line-height: 1.45; }
+.selfcamp-establishment-body .selfcamp-reserve { min-height: 44px; padding: var(--space-xs) var(--space-lg); border: var(--rule-hair) solid var(--project-selfcamp); border-radius: var(--radius); background: var(--project-selfcamp); color: var(--background); font-size: clamp(14px, 2.2cqw, 17px); line-height: 1.2; cursor: pointer; }
+.selfcamp-reserve:hover { background: var(--foreground); border-color: var(--foreground); }
+.selfcamp-establishment-body .selfcamp-public-link { font-size: clamp(12px, 1.9cqw, 15px); line-height: 1.3; color: var(--foreground); text-underline-offset: 3px; text-decoration: underline; }
+.selfcamp-public-link:hover { color: var(--project-selfcamp); }
+.selfcamp-reserve:focus-visible, .selfcamp-public-link:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+.selfcamp-home-preview[data-open="true"] .selfcamp-home-search-scene { opacity: 0 !important; visibility: hidden; }
+.selfcamp-home-preview[data-open="true"] .selfcamp-public-preview { opacity: 1 !important; transform: none !important; pointer-events: auto; }
+.selfcamp-discovery-fallback { position: absolute; z-index: 5; bottom: 0; right: 0; padding: var(--space-xs); font-size: 12px; background: var(--background); color: var(--foreground); }
+@media (max-width: 639px) {
+ .selfcamp-search-query, .selfcamp-search-result { left: 16%; width: 74%; }
+ .selfcamp-search-query { height: 28px; top: auto; bottom: 8%; border-radius: 6px; padding-inline: var(--space-xs); gap: 6px; font-size: 12px; }
+ .selfcamp-search-query svg { width: 12px; height: 12px; }
+ .selfcamp-search-result { bottom: calc(8% + 36px); padding: var(--space-xs); gap: var(--space-xs); }
+ .preview-image .selfcamp-search-result img { width: 36px; height: 36px; }
+ .selfcamp-public-preview { grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr); }
+ .selfcamp-establishment-body { gap: 6px; padding: var(--space-sm); }
+ .selfcamp-establishment-body h4 { font-size: 18px; }
+ .selfcamp-establishment-description { display: none; }
+ .selfcamp-establishment-body .selfcamp-reserve { padding: var(--space-xs) var(--space-md); }
+}
+@media (prefers-reduced-motion: reduce) {
+ .selfcamp-home-search-scene canvas { display: none; }
+ .selfcamp-home-preview[data-depth-ready="true"] .selfcamp-home-capture { opacity: 1; }
 }

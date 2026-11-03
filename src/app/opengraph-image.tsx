@@ -11,7 +11,7 @@ const ink = "#171313";
 const muted = "#5e5653";
 const paper = "#f4f1ef";
 const rose = "#e11d48";
-const folders = ["SelfCamp", "OpenWind", "Wisp", "PlanniKeeper", "Pattùs", "Alpha Hotel", "Coachingbymarie", "Graphomouv", "Dipiaza"];
+const folders = ["Selfcamp", "OpenWind", "Wisp", "PlanniKeeper", "Pattùs", "Alpha Hotel", "Coachingbymarie", "Graphomouv", "Dipiaza"];
 
 async function asset(path: string, mime: string) {
   return `data:${mime};base64,${(await readFile(join(process.cwd(), "public", path))).toString("base64")}`;
@@ -48,13 +48,13 @@ export default async function OpenGraphImage() {
         {Array.from({ length: 8 }, (_, index) => 8 - index).map((depth) => <div key={depth} style={{ position: "absolute", left: 8, top: 85 - depth * 3.5, width: 569, height: 290, display: "flex", border: `1px solid ${ink}`, borderRadius: 10, background: depth % 2 ? "#eeebe9" : "#e6e3e1" }} />)}
         {folders.slice(1).map((name, index) => <div key={name} style={{ position: "absolute", left: 8 + (index + 1) * 63, top: 52 - (index + 1) * 3.5, width: 64, height: 37, display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${ink}`, borderBottom: "none", borderTopLeftRadius: 7, borderTopRightRadius: 7, background: "#eeebe9", fontSize: name.length > 12 ? 7 : name.length > 9 ? 8 : 9 }}>{name}</div>)}
         <div style={{ position: "absolute", left: 8, top: 85, width: 569, height: 290, display: "flex", border: `1.5px solid ${ink}`, borderBottom: `5px solid ${ink}`, borderRadius: 10, background: "white" }} />
-        <div style={{ position: "absolute", left: 8, top: 52, width: 64, height: 35, display: "flex", alignItems: "center", justifyContent: "center", border: `1.5px solid ${ink}`, borderBottom: "none", borderTopLeftRadius: 7, borderTopRightRadius: 7, background: "white", fontSize: 9 }}>SelfCamp</div>
+        <div style={{ position: "absolute", left: 8, top: 52, width: 64, height: 35, display: "flex", alignItems: "center", justifyContent: "center", border: `1.5px solid ${ink}`, borderBottom: "none", borderTopLeftRadius: 7, borderTopRightRadius: 7, background: "white", fontSize: 9 }}>Selfcamp</div>
         <div style={{ position: "absolute", left: 26, top: 107, width: 533, height: 221, display: "flex", overflow: "hidden", border: "1px solid #e4deda", borderRadius: 6 }}>
           <img src={map} alt="" width={533} height={333} style={{ position: "absolute", top: -30, left: 0, objectFit: "cover" }} />
           <img src={fiche} alt="" width={132} height={167} style={{ position: "absolute", right: 12, top: 16, borderRadius: 4 }} />
         </div>
         <div style={{ position: "absolute", left: 28, top: 344, display: "flex", alignItems: "center", gap: 13, fontSize: 18 }}>
-          <span style={{ color: "#3a4d2a", fontWeight: 700 }}>SelfCamp</span><span style={{ color: muted, fontSize: 14 }}>Carte, réservation et paiement.</span>
+          <span style={{ color: "#3a4d2a", fontWeight: 700 }}>Selfcamp</span><span style={{ color: muted, fontSize: 14 }}>Carte, réservation et paiement.</span>
         </div>
       </div>
     </div>,

@@ -64,7 +64,7 @@ export function SelfcampDemo({ active }: { active: boolean }) {
 
   return (
     <div ref={root} className="selfcamp-demo" data-demo="selfcamp" data-js="true" data-started={started} data-running={running}>
-      <p className="visually-hidden">Démonstration SelfCamp : repérer une aire sur la carte, consulter la fiche du Camping du Lac à Gumefens, puis réserver en ligne. Le ticket illustre la confirmation d’une réservation.</p>
+      <p className="visually-hidden">Démonstration Selfcamp : repérer une aire sur la carte, consulter la fiche du Camping du Lac à Gumefens, puis réserver en ligne. Le ticket illustre la confirmation d’une réservation.</p>
       <div className="selfcamp-scene" aria-hidden="true">
         <div className="selfcamp-map-window">
           <div className="selfcamp-map-motion">

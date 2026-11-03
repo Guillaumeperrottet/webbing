@@ -56,14 +56,14 @@ export const websites = [
 
 export const showcaseProjects = [
   {
-    id: "selfcamp", name: "SelfCamp", url: "https://www.selfcamp.ch/", category: "Aires de camping-car", application: true, year: "2025",
+    id: "selfcamp", name: "Selfcamp", url: "https://www.selfcamp.ch/", category: "Aires de camping-car", application: true, year: "2025",
     benefit: "Créer des aires de camping-car autonomes.",
-    description: "SelfCamp accompagne les communes et les régions dans la création d’aires de camping-car, de leur aménagement à leur promotion. Une solution pour organiser l’accueil des vanlifers, gérer l’enregistrement et les taxes de séjour, et valoriser les commerces locaux.",
+    description: "Selfcamp accompagne les communes et les régions dans la création d’aires de camping-car, de leur aménagement à leur promotion. Une solution pour organiser l’accueil des vanlifers, gérer l’enregistrement et les taxes de séjour, et valoriser les commerces locaux.",
     features: ["Aires autonomes", "Enregistrement QR", "Taxes de séjour"],
     // Positioning: https://www.selfcamp.ch/about, read on 2026-11-02.
     screens: [
-      { label: "Carte des aires", src: "/projects/selfcamp-map.jpg", alt: "La carte SelfCamp et ses aires de camping-car en Suisse", width: 1440, height: 900 },
-      { label: "Accueil", src: "/selfcamp_accueil.png", alt: "SelfCamp, recherche d’une aire de camping-car", width: 3004, height: 1922 },
+      { label: "Accueil", src: "/selfcamp_accueil.png", alt: "Selfcamp, recherche d’une aire de camping-car", width: 3004, height: 1922 },
+      { label: "Parcours client", src: "/projects/selfcamp-client-journey-v11-poster.jpg", videoSrc: "/projects/selfcamp-client-journey-v11.mp4", mobileVideoSrc: "/projects/selfcamp-client-journey-mobile-v11.mp4", mobilePosterSrc: "/projects/selfcamp-client-journey-mobile-v11-poster.jpg", bookingStartAt: 6, bookingPosterSrc: "/projects/selfcamp-booking-dates-poster.jpg", mobileBookingPosterSrc: "/projects/selfcamp-booking-dates-mobile-poster.jpg", autoPlay: true, alt: "Le parcours de réservation Selfcamp : QR code, formulaire, paiement, accès et carte d’hôte. Données de démonstration.", width: 1920, height: 1080 },
     ],
   },
   ...applications.map((app) => ({

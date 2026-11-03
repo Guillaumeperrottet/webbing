@@ -37,7 +37,7 @@ Layouts créés pour chaque page avec métadonnées spécifiques :
 - Applications web Suisse
 - Développement web Fribourg / Bulle
 - Applications sur mesure
-- Wisp, SelfCamp, PlanniKeeper, OpenWind
+- Wisp, Selfcamp, PlanniKeeper, OpenWind
 
 ### Secondaires
 
@@ -69,7 +69,7 @@ Layouts créés pour chaque page avec métadonnées spécifiques :
 
 3. **Contenu**
    - Blog pour contenus SEO
-   - Pages pour chaque application (Wisp, SelfCamp, PlanniKeeper, OpenWind)
+   - Pages pour chaque application (Wisp, Selfcamp, PlanniKeeper, OpenWind)
    - Études de cas clients
 
 4. **Technique**

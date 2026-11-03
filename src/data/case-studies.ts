@@ -27,16 +27,15 @@ export const caseStudies: readonly ProjectCaseStudy[] = [
       },
       {
         label: "Une solution complète",
-        text: "SelfCamp accompagne l’aménagement des aires : délimitation des places, signalétique, enregistrement par QR code et promotion, avec une solution de vidange sur place ou dans des campings partenaires.",
+        text: "Selfcamp accompagne l’aménagement des aires : délimitation des places, signalétique, enregistrement par QR code et promotion, avec une solution de vidange sur place ou dans des campings partenaires.",
       },
     ],
-    note: "La démonstration utilise la fiche du Camping du Lac, à Gumefens. Son ticket animé illustre une confirmation de réservation.",
-    proof: { label: "Découvrir l’approche SelfCamp", href: "https://www.selfcamp.ch/about" },
+    note: "Le film présente le parcours de réservation Selfcamp. Les informations de séjour et de paiement sont des données de démonstration.",
+    proof: { label: "Découvrir l’approche Selfcamp", href: "https://www.selfcamp.ch/about" },
     // Sources: https://www.selfcamp.ch/ (Webbing credit, search and online payments),
     // https://www.selfcamp.ch/about (positioning and services re-read 2026-11-02);
-    // SelfCamp's on-site services are not attributed to Webbing's development role.
-    // The map and Gumefens fiche are
-    // the actual supplied/captured images already used in SelfcampDemo.
+    // Selfcamp's on-site services are not attributed to Webbing's development role.
+    // The supplied guest-journey film uses fictional demonstration data.
     // The documented UFT collaboration remains in the existing project summary.
   },
   {

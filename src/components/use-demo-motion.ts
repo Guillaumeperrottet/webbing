@@ -7,7 +7,7 @@ export type MotionFrame = Keyframe & { curve?: "soft" };
 export type DemoSequence = readonly { selector: string; frames: MotionFrame[] }[];
 
 // One native clock per scene: hidden projects retain their position without doing work.
-export function useDemoMotion(root: RefObject<HTMLDivElement | null>, active: boolean, sequence: DemoSequence, durationMs?: number) {
+export function useDemoMotion(root: RefObject<HTMLDivElement | null>, active: boolean, sequence: DemoSequence, durationMs?: number, iterations = Infinity) {
   const playback = useDemoPlayback();
   const paused = playback?.paused ?? false;
   const settled = playback?.settled ?? true;
@@ -17,6 +17,7 @@ export function useDemoMotion(root: RefObject<HTMLDivElement | null>, active: bo
   const [reduced, setReduced] = useState(true);
   const [prepared, setPrepared] = useState(false);
   const [started, setStarted] = useState(false);
+  const [completed, setCompleted] = useState(false);
 
   useEffect(() => {
     const node = root.current;
@@ -41,7 +42,7 @@ export function useDemoMotion(root: RefObject<HTMLDivElement | null>, active: bo
   useLayoutEffect(() => { if (active && !reduced) setPrepared(true); }, [active, reduced]);
   const canRun = active && visible && pageVisible && !reduced && !paused && settled;
   useLayoutEffect(() => { if (canRun) setStarted(true); }, [canRun]);
-  const running = canRun && started;
+  const running = canRun && started && !completed;
 
   useLayoutEffect(() => {
     const node = root.current;
@@ -49,7 +50,8 @@ export function useDemoMotion(root: RefObject<HTMLDivElement | null>, active: bo
     const style = getComputedStyle(node);
     const easing = { enter: style.getPropertyValue("--ease-out").trim(), soft: style.getPropertyValue("--ease-selfcamp-soft").trim() };
     const duration = style.getPropertyValue("--dur-selfcamp").trim();
-    const options = { duration: durationMs ?? parseFloat(duration) * (duration.endsWith("ms") ? 1 : 1000), fill: "both" as const, iterations: Infinity };
+    const options = { duration: durationMs ?? parseFloat(duration) * (duration.endsWith("ms") ? 1 : 1000), fill: "both" as const, iterations };
+    setCompleted(false);
     const created = sequence.flatMap(({ selector, frames }) => {
       return [...node.querySelectorAll(selector)].map((target) => {
         const animation = target.animate(frames.map(({ curve, ...frame }) => ({ ...frame, easing: curve === "soft" ? easing.soft : easing.enter })), options);
@@ -59,15 +61,24 @@ export function useDemoMotion(root: RefObject<HTMLDivElement | null>, active: bo
       });
     });
     animations.current = created;
+    const finish = () => setCompleted(true);
+    created.forEach((animation) => animation.addEventListener("finish", finish));
     return () => {
-      created.forEach((animation) => animation.cancel());
+      created.forEach((animation) => {
+        animation.removeEventListener("finish", finish);
+        animation.cancel();
+      });
       animations.current = [];
     };
-  }, [root, sequence, prepared, reduced, durationMs]);
+  }, [root, sequence, prepared, reduced, durationMs, iterations]);
 
   useLayoutEffect(() => {
-    animations.current.forEach((animation) => { if (running) animation.play(); else animation.pause(); });
+    animations.current.forEach((animation) => {
+      // Finished one-shot scenes keep their resting pose when visibility changes.
+      if (animation.playState === "finished") return;
+      if (running) animation.play(); else animation.pause();
+    });
   }, [running, prepared, reduced]);
 
-  return { started: started && !reduced, running, reduced };
+  return { started: started && !reduced, running, reduced, completed };
 }

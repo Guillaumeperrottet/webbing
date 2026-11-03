@@ -102,7 +102,7 @@ function FolderGroup({ id, label, first, count, selected, enhanced }: { id: stri
 }
 
 function FolderLabel({ id, name }: { id: string; name: string }) {
-  if (id === "selfcamp") return <>Self<wbr />Camp</>;
+  if (id === "selfcamp") return <>{name.slice(0, 4)}<wbr />{name.slice(4)}</>;
   if (id === "openwind") return <>Open<wbr />Wind</>;
   if (id === "coachingbymarie") return <>Coach<wbr />ing<wbr />by<wbr />marie</>;
   if (id === "plannikeeper") return <>Planni<wbr />Keeper</>;

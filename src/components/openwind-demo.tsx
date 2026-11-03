@@ -1,101 +1,108 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { BookOpen, Github } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
 import { type PreviewScreen } from "@/components/project-preview";
 import { type DemoSequence, type MotionFrame, useDemoMotion } from "@/components/use-demo-motion";
 
-// A weather illustration over the supplied map, independent of its captured forecast values.
-const gust = (start: number): MotionFrame[] => [
-  { opacity: 0, transform: "translateX(-28cqw)", offset: 0 },
-  { opacity: 0, transform: "translateX(-28cqw)", offset: start },
-  { opacity: 0.9, transform: "translateX(-8cqw)", offset: start + 0.04 },
-  { opacity: 0, transform: "translateX(74cqw)", offset: start + 0.19 },
-  { opacity: 0, transform: "translateX(-28cqw)", offset: start + 0.195 },
-  { opacity: 0, transform: "translateX(-28cqw)", offset: start + 0.23 },
-  { opacity: 0.75, transform: "translateX(-8cqw)", offset: start + 0.27 },
-  { opacity: 0, transform: "translateX(74cqw)", offset: start + 0.44 },
-  { opacity: 0, transform: "translateX(74cqw)", offset: 1 },
+const DURATION = 20400;
+const scenes = [
+  { id: "observe", title: "Le vent maintenant.", file: "observations", start: 0, end: 5200, desktop: [937, 811], mobile: [343, 391] },
+  { id: "forecast", title: "Et pour la suite ?", file: "forecast", start: 5200, end: 10400, desktop: [937, 549], mobile: [343, 561] },
+  { id: "read", title: "Comprendre les conditions.", file: "article", start: 10400, end: 16800, desktop: [896, 976], mobile: [335, 895] },
+] as const;
+
+// Genuine dated captures: observation and model forecasts stay clearly distinct.
+const visibleBetween = (start: number, end: number): MotionFrame[] => start === 0 ? [
+  { opacity: 1, offset: 0 },
+  { opacity: 1, offset: (end - 320) / DURATION },
+  { opacity: 0, offset: end / DURATION },
+  { opacity: 0, offset: (DURATION - 320) / DURATION },
+  { opacity: 1, offset: 1 },
+] : [
+  { opacity: 0, offset: 0 },
+  { opacity: 0, offset: start / DURATION },
+  { opacity: 1, offset: (start + 320) / DURATION },
+  { opacity: 1, offset: (end - 320) / DURATION },
+  { opacity: 0, offset: end / DURATION },
+  { opacity: 0, offset: 1 },
 ];
+
+const panels = [...scenes, { id: "open", start: 16800, end: DURATION - 320 }];
+const camera = (selector: string, begin: number, end: number, initial: string, focused: string) => ({ selector, frames: [
+  { transform: initial, offset: 0 },
+  { transform: initial, offset: begin / DURATION, curve: "soft" },
+  { transform: focused, offset: end / DURATION },
+  { transform: focused, offset: 0.9 },
+  { transform: initial, offset: 0.96 },
+  { transform: initial, offset: 1 },
+] as MotionFrame[] });
 
 const sequence: DemoSequence = [
-  ...[0.03, 0.09, 0.15].map((start, index) => ({ selector: `.openwind-gust--${index + 1}`, frames: gust(start) })),
-  { selector: ".openwind-cloud--near", frames: [
-    { opacity: 0, transform: "translateX(-4cqw)", offset: 0 },
-    { opacity: 1, transform: "translateX(0)", offset: 0.08 },
-    { opacity: 1, transform: "translateX(5cqw)", offset: 0.22 },
-    { opacity: 0, transform: "translateX(40cqw) rotate(5deg)", offset: 0.5 },
-    { opacity: 0, transform: "translateX(40cqw) rotate(5deg)", offset: 1 },
+  ...panels.flatMap(({ id, start, end }) => [
+    { selector: `.openwind-frame--${id}`, frames: visibleBetween(start, end) },
+    { selector: `.openwind-frame--${id} .openwind-story-title`, frames: visibleBetween(start, end).map((frame) => ({ ...frame, transform: frame.opacity === 1 ? "translateY(0)" : "translateY(14px)" })) },
+  ]),
+  { selector: ".openwind-story-location", frames: [
+    { opacity: 1, offset: 0 }, { opacity: 1, offset: 10080 / DURATION },
+    { opacity: 0, offset: 10400 / DURATION }, { opacity: 0, offset: (DURATION - 320) / DURATION }, { opacity: 1, offset: 1 },
   ] },
-  { selector: ".openwind-cloud--far", frames: [
-    { opacity: 0, transform: "translateX(-18cqw)", offset: 0 },
-    { opacity: 0.9, transform: "translateX(0)", offset: 0.12 },
-    { opacity: 0.9, transform: "translateX(15cqw)", offset: 0.3 },
-    { opacity: 0, transform: "translateX(75cqw)", offset: 0.58 },
-    { opacity: 0, transform: "translateX(75cqw)", offset: 1 },
+  camera(".openwind-frame--observe .openwind-story-capture", 1000, 2200, "translateY(var(--openwind-observe-crop)) scale(1)", "translateY(var(--openwind-observe-crop)) scale(1.025)"),
+  camera(".openwind-frame--forecast .openwind-story-capture", 7100, 8000, "translateY(var(--openwind-forecast-start))", "translateY(var(--openwind-forecast-end))"),
+  { selector: ".openwind-article-intro", frames: [
+    { opacity: 1, offset: 0 }, { opacity: 1, offset: 14100 / DURATION }, { opacity: 0, offset: 14500 / DURATION },
+    { opacity: 0, offset: 0.9 }, { opacity: 1, offset: 0.96 }, { opacity: 1, offset: 1 },
   ] },
-  { selector: ".openwind-sock-fabric", frames: [
-    { transform: "rotate(24deg) scaleX(0.85)", offset: 0 },
-    { transform: "rotate(-7deg) scaleX(1)", offset: 0.1 },
-    { transform: "rotate(5deg) scaleX(0.96)", offset: 0.16 },
-    { transform: "rotate(-9deg) scaleX(1.03)", offset: 0.22 },
-    { transform: "rotate(4deg) scaleX(0.97)", offset: 0.28 },
-    { transform: "rotate(-6deg) scaleX(1.02)", offset: 0.34 },
-    { transform: "rotate(3deg) scaleX(0.98)", offset: 0.4 },
-    { transform: "rotate(-3deg) scaleX(1)", offset: 0.46 },
-    { transform: "rotate(12deg) scaleX(0.94)", offset: 0.58, curve: "soft" },
-    { transform: "rotate(18deg) scaleX(0.91)", offset: 0.73, curve: "soft" },
-    { transform: "rotate(14deg) scaleX(0.93)", offset: 0.85, curve: "soft" },
-    { transform: "rotate(24deg) scaleX(0.85)", offset: 1 },
-  ] },
-  { selector: ".openwind-sun", frames: [
-    { opacity: 0, transform: "translateY(3cqw) scale(0.8) rotate(-18deg)", offset: 0 },
-    { opacity: 0, transform: "translateY(3cqw) scale(0.8) rotate(-18deg)", offset: 0.36 },
-    { opacity: 1, transform: "translateY(0) scale(1) rotate(0deg)", offset: 0.56, curve: "soft" },
-    { opacity: 1, transform: "translateY(-0.5cqw) scale(1) rotate(12deg)", offset: 0.86, curve: "soft" },
-    { opacity: 0, transform: "translateY(0) scale(0.94) rotate(16deg)", offset: 0.99 },
-    { opacity: 0, transform: "translateY(3cqw) scale(0.8) rotate(-18deg)", offset: 1 },
+  { selector: ".openwind-article-photo-layer", frames: [
+    { opacity: 0, transform: "translateY(12px)", offset: 0 },
+    { opacity: 0, transform: "translateY(12px)", offset: 14100 / DURATION, curve: "soft" },
+    { opacity: 1, transform: "translateY(0)", offset: 14500 / DURATION },
+    { opacity: 1, transform: "translateY(0)", offset: 16800 / DURATION },
+    { opacity: 0, transform: "translateY(12px)", offset: 0.9 },
+    { opacity: 0, transform: "translateY(12px)", offset: 1 },
   ] },
 ];
 
-function Cloud({ className }: { className: string }) {
-  return <svg className={`openwind-cloud ${className}`} viewBox="0 0 180 96" fill="none">
-    <path d="M39 78C21 78 10 67 10 53C10 40 20 29 34 28C38 13 50 6 64 6C82 6 95 17 99 33C104 30 110 29 115 29C129 29 140 38 143 50C160 49 171 58 171 69C171 81 160 88 147 88H42" />
-  </svg>;
-}
-
-export function OpenwindDemo({ screen, active }: { screen: PreviewScreen; active: boolean }) {
+export function OpenwindDemo({ active }: { screen: PreviewScreen; active: boolean }) {
   const root = useRef<HTMLDivElement>(null);
-  const { started, running } = useDemoMotion(root, active, sequence, 12000);
+  const [loaded, setLoaded] = useState<ReadonlySet<string>>(() => new Set());
+  const ready = useCallback((key: string) => setLoaded((previous) => previous.has(key) ? previous : new Set([...previous, key])), []);
+  const { started, running } = useDemoMotion(root, active && loaded.size === 4, sequence, DURATION);
 
-  return <div ref={root} className="portfolio-demo openwind-demo" data-demo="openwind" data-started={started} data-running={running}>
-    <p className="visually-hidden">La véritable carte OpenWind, accompagnée d’une animation d’ambiance : des rafales poussent les nuages et font flotter une manche à air, puis le soleil apparaît. Cette illustration ne représente pas une évolution des prévisions affichées.</p>
-    <div className="openwind-scene" aria-hidden="true">
-      <div className="portfolio-screen-window">
-        <Image src={screen.src} alt="" width={screen.width} height={screen.height} sizes="(max-width: 960px) 100vw, 800px" />
-        <div className="openwind-weather">
-          <svg className="openwind-sun" viewBox="0 0 120 120" fill="none">
-            <circle className="openwind-sun-halo" cx="60" cy="60" r="57" />
-            <circle cx="60" cy="60" r="25" />
-            <path d="M60 12V22M60 98V108M12 60H22M98 60H108M26 26L33 33M87 87L94 94M26 94L33 87M87 33L94 26" />
-          </svg>
-          <Cloud className="openwind-cloud--far" />
-          <Cloud className="openwind-cloud--near" />
-          {[1, 2, 3].map((index) => <svg key={index} className={`openwind-gust openwind-gust--${index}`} viewBox="0 0 280 70" fill="none">
-            <path d="M4 30H222C251 30 258 6 242 5C232 4 230 12 234 16M35 47H264M4 60H156C174 60 182 69 195 64" />
-          </svg>)}
-          <svg className="openwind-windsock" viewBox="0 0 180 150" fill="none">
-            <path className="openwind-sock-pole" d="M24 140V20M12 140H38" />
-            <g className="openwind-sock-fabric">
-              <path className="openwind-sock-white" d="M26 17L161 35V51L26 67Z" />
-              <path className="openwind-sock-blue" d="M26 17L54 21V64L26 67ZM82 25L109 28V57L82 60ZM136 32L161 35V51L136 54Z" />
-              <path className="openwind-sock-outline" d="M26 17L161 35V51L26 67Z" />
-              <ellipse className="openwind-sock-mouth" cx="26" cy="42" rx="7" ry="25" />
-            </g>
-          </svg>
+  return <div ref={root} className="portfolio-demo openwind-story" data-demo="openwind" data-started={started} data-running={running} data-ready={loaded.size === 4}>
+    <p className="visually-hidden">OpenWind : les mesures d’une balise de vent à Morlon, les prévisions du même spot, un article pour comprendre la bise, le foehn et le joran, puis le projet open source et communautaire. Captures réelles du 3 novembre 2026, sans données en direct dans cet aperçu.</p>
+    <div className="openwind-story-stage" aria-hidden="true">
+      <p className="openwind-story-location">Morlon, Les Laviaux</p>
+      {scenes.map((scene) => <div key={scene.id} className={`openwind-story-frame openwind-frame--${scene.id}`}>
+        <p className="openwind-story-title">{scene.title}</p>
+        <div className="openwind-story-window">
+          <picture className={scene.id === "read" ? "openwind-article-intro" : undefined}>
+            <source media="(max-width: 639px)" srcSet={`/projects/openwind/${scene.file}-mobile.jpg`} width={scene.mobile[0]} height={scene.mobile[1]} />
+            <Image className="openwind-story-capture" src={`/projects/openwind/${scene.file}-desktop.jpg`} alt="" width={scene.desktop[0]} height={scene.desktop[1]} loading="eager" unoptimized onLoad={() => ready(scene.id)} onError={() => ready(scene.id)} />
+          </picture>
+          {scene.id === "read" && <div className="openwind-article-photo-layer">
+            <div className="openwind-article-photo-crop">
+              <Image className="openwind-article-photo" src="/projects/openwind/article-desktop.jpg" alt="" width={896} height={976} loading="eager" unoptimized onLoad={() => ready("article-photo")} onError={() => ready("article-photo")} />
+            </div>
+          </div>}
+        </div>
+      </div>)}
+      <div className="openwind-story-frame openwind-frame--open">
+        <p className="openwind-story-title">Ouvert. Et partagé.</p>
+        <div className="openwind-story-community">
+          <Image className="openwind-story-logo" src="/logo_app/logo_openwind.png" alt="" width={2000} height={312} sizes="300px" loading="eager" />
+          <p>Un projet open source,<br />construit avec sa communauté.</p>
+          <Github size={28} aria-hidden="true" />
         </div>
       </div>
     </div>
-    <p className="portfolio-demo-caption">Balises et prévisions pour choisir son prochain spot.</p>
+    <div className="openwind-story-footer">
+      <p>Captures du 3 novembre 2026.</p>
+      <div>
+        <a href="https://www.openwind.ch/fr/carnet/bise-foehn-joran-vents-suisse-romande" target="_blank" rel="noopener noreferrer"><BookOpen size={14} aria-hidden="true" />Le Carnet<span className="visually-hidden"> (nouvel onglet)</span></a>
+        <a href="https://github.com/Guillaumeperrottet/openwind" target="_blank" rel="noopener noreferrer"><Github size={14} aria-hidden="true" />Code source<span className="visually-hidden"> (nouvel onglet)</span></a>
+      </div>
+    </div>
   </div>;
 }

@@ -1,10 +1,10 @@
 export const applications = [
   {
     id: "openwind", name: "OpenWind", url: "https://www.openwind.ch/", category: "Vent et sports de plein air",
-    benefit: "Comparer le vent et choisir son spot.",
-    description: "OpenWind réunit les mesures de balises, les prévisions et les webcams pour préparer une sortie de kite ou de parapente. Son planificateur compare les spots selon les dates et le sport, au sein d’un projet communautaire et open source.",
-    // Positioning: https://www.openwind.ch/fr and /en/about, read 2026-11-02.
-    image: "/openwind_planif_accueil.png", width: 3334, height: 1934,
+    benefit: "Le vent, plus clair.",
+    description: "Balises en direct, prévisions et webcams : OpenWind réunit les repères utiles pour lire le vent. Ses articles et guides aident à comprendre les conditions et à connaître les spots. Un projet open source, construit avec sa communauté.",
+    // Positioning: https://www.openwind.ch/fr, /fr/carnet and Morlon, read 2026-11-03.
+    image: "/projects/openwind/observations-desktop.jpg", width: 937, height: 811,
   },
   {
     id: "wisp", name: "Wisp", url: "https://wisp.ch/", category: "Bibliothèque et transfert de fichiers",
@@ -69,10 +69,10 @@ export const showcaseProjects = [
   ...applications.map((app) => ({
     ...app,
     application: true,
-    features: app.id === "openwind" ? ["Balises en direct", "Prévisions météo", "Planification"] : app.id === "wisp" ? ["Bibliothèque de fichiers", "Transfert par lien", "Hébergement suisse"] : ["Tâches en équipe", "Échanges par tâche", "Plans et documents"],
+    features: app.id === "openwind" ? ["Balises et prévisions", "Articles et guides", "Open source"] : app.id === "wisp" ? ["Bibliothèque de fichiers", "Transfert par lien", "Hébergement suisse"] : ["Tâches en équipe", "Échanges par tâche", "Plans et documents"],
     screens: app.id === "openwind" ? [
-      { label: "Planification", src: "/openwind_planif_accueil.png", alt: "OpenWind, carte des spots et planification d’une session", width: 3334, height: 1934 },
-      { label: "Prévisions", src: "/openwind_accueil.png", alt: "OpenWind, prévisions de vent", width: 1400, height: 900 },
+      { label: "Découvrir", src: "/projects/openwind/observations-desktop.jpg", alt: "OpenWind : balises de vent, prévisions, articles et projet open source", width: 937, height: 811 },
+      { label: "Prévisions", src: "/projects/openwind/forecast-desktop.jpg", alt: "Prévisions de modèle Open-Meteo à Morlon, capturées le 3 novembre 2026", width: 937, height: 549 },
     ] : [{ label: `Interface de ${app.name}`, src: app.image, alt: `Interface de ${app.name}`, width: app.width, height: app.height }],
   })),
   {

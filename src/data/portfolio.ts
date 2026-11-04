@@ -8,10 +8,10 @@ export const applications = [
   },
   {
     id: "wisp", name: "Wisp", url: "https://wisp.ch/", category: "Bibliothèque et transfert de fichiers",
-    benefit: "Organiser ses fichiers et les partager simplement.",
-    description: "Wisp réunit une bibliothèque organisée par dossiers et tags et le transfert de fichiers par lien, avec hébergement en Suisse. Les offres collaboratives ajoutent des espaces d’équipe et l’édition de documents Office avec Collabora.",
-    // Positioning: https://wisp.ch/ and /pricing, read in an isolated browser 2026-11-02.
-    image: "/wisp_application.png", width: 3438, height: 1926,
+    benefit: "Partager ses fichiers, simplement.",
+    description: "Envoyez vos fichiers par lien, sans compte ni adresse e-mail. Wisp propose aussi une bibliothèque privée pour les conserver et les organiser par dossiers et tags, avec hébergement en Suisse. Les offres collaboratives ajoutent les espaces d’équipe et l’édition Office avec Collabora.",
+    // Positioning: https://wisp.ch/, /pricing and /download, read 2026-11-04.
+    image: "/projects/wisp/transfer-selected-desktop.jpg", width: 432, height: 330,
   },
   {
     id: "plannikeeper", name: "PlanniKeeper", url: "https://www.plannikeeper.ch/", category: "Organisation des établissements",
@@ -73,7 +73,7 @@ export const showcaseProjects = [
     screens: app.id === "openwind" ? [
       { label: "Découvrir", src: "/projects/openwind/observations-desktop.jpg", alt: "OpenWind : balises de vent, prévisions, articles et projet open source", width: 937, height: 811 },
       { label: "Prévisions", src: "/projects/openwind/forecast-desktop.jpg", alt: "Prévisions de modèle Open-Meteo à Morlon, capturées le 3 novembre 2026", width: 937, height: 549 },
-    ] : [{ label: `Interface de ${app.name}`, src: app.image, alt: `Interface de ${app.name}`, width: app.width, height: app.height }],
+    ] : [{ label: app.id === "wisp" ? "Parcours de partage" : `Interface de ${app.name}`, src: app.image, alt: app.id === "wisp" ? "Wisp : trois fichiers d’exemple prêts à être partagés par lien" : `Interface de ${app.name}`, width: app.width, height: app.height }],
   })),
   {
     id: "pattus-hotel", name: "Pattùs Hotel", url: "https://www.pattushotel.ch/fr", category: "Hôtel & restaurant", application: false, year: "2026",

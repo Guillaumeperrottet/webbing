@@ -1354,3 +1354,55 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
   .openwind-frame--forecast .openwind-story-window > picture { height: 100%; }
   .preview-image .openwind-frame--forecast .openwind-story-capture { height: 100%; object-fit: contain; object-position: top left; }
 }
+
+/* Wisp: one project follows the actual transfer and library interfaces. */
+.wisp-story { --wisp-story-title-size: clamp(20px, 4cqw, 32px); color: var(--foreground); }
+.wisp-story-stage { position: relative; aspect-ratio: 8 / 5; overflow: clip; background: var(--background); }
+.wisp-story-chapter { position: absolute; inset: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: var(--space-sm); opacity: 0; }
+.wisp-chapter--upload { opacity: 1; }
+.wisp-story-title { min-width: 0; margin: 0; padding-bottom: calc(var(--text-sm) * 1.4 + var(--space-xs)); overflow-wrap: break-word; font-size: var(--wisp-story-title-size); font-weight: 700; line-height: 1.15; color: var(--project-wisp); }
+.wisp-story-project { position: absolute; z-index: 2; left: 0; top: calc(var(--wisp-story-title-size) * 1.15 + var(--space-xs)); margin: 0; font-size: var(--text-sm); line-height: 1.4; color: var(--muted-foreground); }
+.wisp-story-window { position: relative; min-width: 0; min-height: 0; overflow: clip; }
+.wisp-story-shot { position: absolute; inset: 0; opacity: 0; }
+.wisp-shot--selected, .wisp-shot--ready, .wisp-shot--received, .wisp-shot--root { opacity: 1; }
+.preview-image .wisp-story-shot img { display: block; width: 100%; height: 100%; object-fit: contain; animation: none; }
+.wisp-chapter--library .wisp-story-shot img { object-position: top left; }
+.wisp-story-closing { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-md); }
+.preview-image .wisp-story-closing img { width: clamp(64px, 15cqw, 100px); height: auto; animation: none; }
+.wisp-story-closing p { margin: 0; font-size: clamp(32px, 8cqw, 56px); line-height: 1.1; font-weight: 700; }
+.wisp-story-note { padding-top: var(--space-sm); margin: 0; font-size: var(--text-xs); line-height: 1.5; color: var(--muted-foreground); }
+@media (max-width: 639px) {
+ .wisp-story { --wisp-story-title-size: 19px; }
+ .wisp-story-stage { aspect-ratio: 3 / 4; }
+ .wisp-story-chapter { gap: var(--space-xs); }
+}
+@media (prefers-reduced-motion: reduce) {
+ .wisp-story-chapter { opacity: 0 !important; transform: none !important; }
+ .wisp-chapter--upload, .wisp-shot--selected { opacity: 1 !important; }
+ .wisp-shot--empty { opacity: 0 !important; }
+ .wisp-story-shot { transform: none !important; }
+}
+
+/* Action pointers share the exact contained image plane, including on resize. */
+.wisp-story-window { container-type: size; }
+.wisp-story-shot { display: flex; align-items: center; justify-content: center; }
+.wisp-chapter--library .wisp-story-shot { align-items: flex-start; justify-content: flex-start; }
+.wisp-shot-plane {
+ --wisp-shot-ratio: var(--wisp-ratio-desktop);
+ --wisp-target-x: var(--wisp-target-x-desktop);
+ --wisp-target-y: var(--wisp-target-y-desktop);
+ position: relative; flex: none; min-width: 0;
+ width: min(100cqw, calc(100cqh * var(--wisp-shot-ratio)));
+ height: min(100cqh, calc(100cqw / var(--wisp-shot-ratio)));
+}
+.wisp-shot-plane > picture { display: block; width: 100%; height: 100%; }
+.wisp-gesture-cursor, .wisp-gesture-pulse { position: absolute; z-index: 3; left: var(--wisp-target-x); top: var(--wisp-target-y); opacity: 0; pointer-events: none; }
+.wisp-gesture-cursor { width: clamp(16px, 3cqw, 22px); height: clamp(16px, 3cqw, 22px); transform-origin: 0 0; }
+.wisp-gesture-cursor > svg { display: block; width: 100%; height: 100%; fill: var(--foreground); stroke: var(--background); stroke-width: 1.5; }
+.wisp-gesture-pulse { width: 24px; height: 24px; border: 2px solid var(--project-wisp); border-radius: 50%; }
+@media (max-width: 639px) {
+ .wisp-shot-plane { --wisp-shot-ratio: var(--wisp-ratio-mobile); --wisp-target-x: var(--wisp-target-x-mobile); --wisp-target-y: var(--wisp-target-y-mobile); }
+}
+@media (prefers-reduced-motion: reduce) {
+ .wisp-gesture-cursor, .wisp-gesture-pulse { display: none !important; }
+}

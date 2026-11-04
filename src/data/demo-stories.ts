@@ -2,9 +2,9 @@
 // Keep the original media descriptions and their capture provenance below.
 export const demoStories = {
   wisp: {
-    duration: 10000,
-    caption: "Bibliothèque et transfert de fichiers, hébergés en Suisse.",
-    description: "L’interface réelle Wisp est accompagnée d’une illustration : des documents rejoignent un cloud suisse, puis un symbole de lien apparaît. Aucun transfert réel ni lien de téléchargement n’est créé.",
+    duration: 24000,
+    caption: "Partager ses fichiers et les retrouver dans sa bibliothèque.",
+    description: "Une démonstration Wisp avec Presentation.pdf, Paysage.jpg et Camping.webp. Un curseur montre les clics sur Créer le lien, Copier le lien et le dossier Projet camping. Le destinataire retrouve les mêmes fichiers. Dans la bibliothèque, Photos est saisi lettre par lettre et filtre les deux images. Le lien wisp.test est un exemple de démonstration.",
   },
   plannikeeper: {
     duration: 11000,

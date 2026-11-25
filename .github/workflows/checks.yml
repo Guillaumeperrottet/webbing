@@ -19,7 +19,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test:security
-      - run: node --conditions=react-server --import tsx --test tests/gestion-collector.test.ts
+      - run: node --conditions=react-server --import tsx --test tests/gestion-collector.test.ts tests/gestion-providers.test.ts
       - run: pnpm build
         env:
           RESEND_API_KEY: re_build_only_no_external_call

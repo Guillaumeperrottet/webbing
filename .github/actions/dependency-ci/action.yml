@@ -1,0 +1,10 @@
+name: Webbing application checks
+description: Install locked dependencies, run project tests, build and check application startup without production secrets.
+outputs:
+  head:
+    description: Tested pull request head.
+  base:
+    description: Tested target commit.
+runs:
+  using: node24
+  main: index.mjs

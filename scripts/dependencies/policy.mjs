@@ -90,7 +90,7 @@ export async function mergeUpdate(api,repository,number,{expectedHead,expectedBa
 export function githubApi(token) {
   return async(path,options={})=>{
     if(!path.startsWith('/repos/')||path.includes('..')||path.includes('#'))throw new Error('Requête GitHub invalide.');
-    const response=await fetch('https://api.github.com'+path,{method:options.method||'GET',headers:{Authorization:`Bearer ${token}`,Accept:'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'Webbing-gestion'},body:options.body?JSON.stringify(options.body):undefined,redirect:'error',signal:AbortSignal.timeout(12000)});
+    const response=await fetch('https://api.github.com'+path,{method:options.method||'GET',headers:{Authorization:`Bearer ${token}`,Accept:'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'Webbing-gestion'},body:options.body?JSON.stringify(options.body):undefined,cache:'no-store',redirect:'error',signal:AbortSignal.timeout(12000)});
     if(!response.ok)throw new Error(response.status===401?'Jeton GitHub expiré ou révoqué.':response.status===403?'Droits GitHub insuffisants ou limite de requêtes atteinte.':response.status===409||response.status===405?'La proposition ne peut pas être fusionnée dans son état actuel.':'GitHub n’a pas accepté cette opération.');
     return response.status===204?null:response.json();
   };

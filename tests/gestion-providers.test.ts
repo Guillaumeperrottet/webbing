@@ -3,7 +3,7 @@ import { createHmac } from "node:crypto";
 import { mock,test } from "node:test";
 import { deploymentState,deploymentUrl,eventDate,validVercelSignature,vercelEventSchema } from "../src/lib/gestion/vercel-events";
 import { seal,unseal } from "../src/lib/gestion/vault";
-import { readGitHubRepositories } from "../src/lib/gestion/github";
+import { readGitHubRepositories,githubActorLogin } from "../src/lib/gestion/github";
 import { readSupabaseProject } from "../src/lib/gestion/providers";
 
 test("webhook authentication covers the exact bytes and rejects missing, forged or modified bodies",()=>{
@@ -63,4 +63,11 @@ test("GitHub synchronization keeps its credential out of queries and sanitizes p
     request.mock.mockImplementation(async()=>new Response(null,{status:401}));
     await assert.rejects(()=>readGitHubRepositories('github_pat_fixture',['Guillaumeperrottet/webbing']),/expiré ou révoqué/);
   }finally{request.mock.restore();}
+});
+
+test("GitHub GraphQL bot identities normalize to the REST form without elevating user identities",()=>{
+  assert.equal(githubActorLogin({__typename:'Bot',login:'dependabot'}),'dependabot[bot]');
+  assert.equal(githubActorLogin({__typename:'Bot',login:'github-actions'}),'github-actions[bot]');
+  assert.equal(githubActorLogin({__typename:'User',login:'dependabot'}),'dependabot');
+  assert.equal(githubActorLogin(null),null);
 });

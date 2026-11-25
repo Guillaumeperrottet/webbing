@@ -40,5 +40,8 @@
         }
       ]
     }
-  ]
+  ],
+  "env": {
+    "WEBBING_OPS_ADMIN_EMAIL": "ci-admin@example.invalid"
+  }
 }

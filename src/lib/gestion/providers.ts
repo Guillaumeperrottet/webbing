@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { database, query } from "./db";
 import { seal, unseal } from "./vault";
+import { tokensEqual } from "./security";
 import { deploymentState, deploymentUrl, eventDate, vercelEventSchema } from "./vercel-events";
 
 export type Integration = { id: string; provider: "vercel" | "supabase"; name: string; config: Record<string, unknown>; last_sync_at: string | null; last_attempt_at: string | null; last_error: string | null; created_at: string };
@@ -54,7 +55,7 @@ export async function receiveVercelEvent(input: unknown, integrationId: string, 
 const refSchema = z.string().regex(/^[a-z0-9]{15,32}$/);
 const projectSchema = z.object({ id: refSchema.optional(), ref: refSchema.optional(), name: z.string().max(200), status: z.string().max(80), region: z.string().max(80).optional() });
 const servicesSchema = z.array(z.object({ name: z.string().max(60), status: z.string().max(60), healthy: z.boolean().optional() })).max(30);
-class ProviderError extends Error { constructor(public status: number) { super(status === 401 || status === 403 ? "Accès refusé : vérifier le jeton et ses permissions de lecture." : status === 429 ? "Limite de requêtes Supabase atteinte." : "Supabase est momentanément indisponible."); } }
+class ProviderError extends Error { constructor(public status: number) { super(status === 401 ? "Jeton refusé : il a expiré ou a été révoqué. Ajouter un nouveau jeton." : status === 403 ? "Accès refusé : vérifier les projets autorisés et les permissions de lecture du jeton." : status === 429 ? "Limite de requêtes Supabase atteinte." : "Supabase est momentanément indisponible."); } }
 async function supabaseRequest(token: string, path: string) {
   let response: Response;
   try { response = await fetch(`https://api.supabase.com/v1${path}`, { headers: { Authorization: `Bearer ${token}` }, cache: "no-store", redirect: "error", signal: AbortSignal.timeout(8000) }); }
@@ -68,7 +69,7 @@ export async function readSupabaseProject(token: string, ref: string) {
   if ((project.id || project.ref) !== ref) throw new Error("Supabase a retourné un projet différent du projet demandé.");
   let services: z.infer<typeof servicesSchema> = []; let servicesError: string | null = null;
   if (project.status === "ACTIVE_HEALTHY") {
-    try { services = servicesSchema.parse(await supabaseRequest(token, `/projects/${ref}/health?services=auth,db,rest,storage,realtime&timeout_ms=4000`)); }
+    try { services = servicesSchema.parse(await supabaseRequest(token, `/projects/${ref}/health?services=auth,db,rest,storage,realtime`)); }
     catch (error) { servicesError = error instanceof ProviderError ? error.message : "Les états des services ne sont pas disponibles."; }
   }
   return { project, services, servicesError };
@@ -77,7 +78,7 @@ export async function connectSupabase(name: string, token: string, refs: string[
   if (!/^sbp_fc[A-Za-z0-9_-]{20,}$/.test(token) || token.length>2048) throw new Error("Utilise un jeton Supabase à permissions limitées (préfixe sbp_fc), avec Project Settings en lecture.");
   if (!name.trim() || name.length>80 || !refs.length || refs.length>25) throw new Error("Choisis un nom et les projets à raccorder.");
   const unique = [...new Set(refs.map((ref) => refSchema.parse(ref)))];
-  const id = randomUUID();
+  let id: string = randomUUID();
   const results: {ref: string; value: Awaited<ReturnType<typeof readSupabaseProject>>}[]=[];
   for (let i=0;i<unique.length;i+=4) {
     const batch=await Promise.allSettled(unique.slice(i,i+4).map(async(ref)=>({ref,value:await readSupabaseProject(token,ref)})));
@@ -88,21 +89,36 @@ export async function connectSupabase(name: string, token: string, refs: string[
   }
   if (!results.length) throw new Error("Ce jeton n’a accès à aucun des projets sélectionnés.");
   const client=await database().connect();
+  let updated=false;
   try {
     await client.query("BEGIN");
-    await client.query("INSERT INTO ops_integrations(id,provider,name,secret_cipher,config,last_sync_at,last_attempt_at) VALUES($1,'supabase',$2,$3,$4,now(),now())",[id,name.trim(),seal(token,`${id}:supabase`),JSON.stringify({refs:results.map((r)=>r.ref)})]);
+    await client.query("SELECT pg_advisory_xact_lock(hashtextextended('webbing:supabase-connections',0))");
+    const existing=(await client.query<{id:string;secret_cipher:string;config:{refs:string[]}}>("SELECT id,secret_cipher,config FROM ops_integrations WHERE provider='supabase' AND revoked_at IS NULL ORDER BY created_at DESC FOR UPDATE")).rows;
+    const same=existing.filter(connection=>{try{return tokensEqual(unseal(connection.secret_cipher,`${connection.id}:supabase`),token);}catch{return false;}});
+    if(same.length){
+      updated=true;id=same[0].id;
+      const refs=[...new Set([...same.flatMap(c=>c.config.refs),...results.map(r=>r.ref)])];
+      await client.query("UPDATE ops_integrations SET name=$1,config=$2,last_attempt_at=now(),last_sync_at=CASE WHEN $3 THEN now() ELSE last_sync_at END,last_error=NULL WHERE id=$4",[name.trim(),JSON.stringify({refs}),refs.every(ref=>results.some(r=>r.ref===ref)),id]);
+      const duplicates=same.slice(1).map(c=>c.id);
+      if(duplicates.length){
+        await client.query("UPDATE ops_supabase_projects SET integration_id=$1 WHERE integration_id=ANY($2::uuid[])",[id,duplicates]);
+        await client.query("UPDATE ops_integrations SET revoked_at=now(),secret_cipher='' WHERE id=ANY($1::uuid[])",[duplicates]);
+      }
+    } else await client.query("INSERT INTO ops_integrations(id,provider,name,secret_cipher,config,last_sync_at,last_attempt_at) VALUES($1,'supabase',$2,$3,$4,now(),now())",[id,name.trim(),seal(token,`${id}:supabase`),JSON.stringify({refs:results.map((r)=>r.ref)})]);
     for (const r of results) await storeSupabase(client,r.ref,id,r.value);
     await client.query("INSERT INTO ops_audit(kind,detail) VALUES('supabase_connexion',$1)",[`${name.trim()} · ${results.length} projet(s)`]);
     await client.query("COMMIT");
   } catch(error) { await client.query("ROLLBACK"); throw error; } finally {client.release();}
-  return { connected: results.length, excluded: unique.length-results.length };
+  return { connected: results.length, excluded: unique.length-results.length, excludedRefs:unique.filter(ref=>!results.some(r=>r.ref===ref)), updated };
 }
 async function storeSupabase(client: Pick<import("pg").PoolClient,"query">,ref: string,id: string,value: Awaited<ReturnType<typeof readSupabaseProject>>) {
   await client.query(`INSERT INTO ops_supabase_projects(ref,name,region,status,services,services_error,integration_id,checked_at,attempted_at,last_error)
     VALUES($1,$2,$3,$4,$5,$6,$7,now(),now(),NULL) ON CONFLICT(ref) DO UPDATE SET name=excluded.name,region=excluded.region,status=excluded.status,services=excluded.services,services_error=excluded.services_error,integration_id=excluded.integration_id,checked_at=now(),attempted_at=now(),last_error=NULL`,[ref,value.project.name,value.project.region || null,value.project.status,JSON.stringify(value.services),value.servicesError,id]);
 }
 export async function syncSupabase() {
-  const connections = (await query<{id:string;secret_cipher:string;config:{refs:string[]}}>("SELECT id,secret_cipher,config FROM ops_integrations WHERE provider='supabase' AND revoked_at IS NULL ORDER BY created_at")).rows;
+  const connections = (await query<{id:string;secret_cipher:string;refs:string[]}>(`SELECT i.id,i.secret_cipher,array_agg(p.ref ORDER BY p.ref) AS refs
+    FROM ops_integrations i JOIN ops_supabase_projects p ON p.integration_id=i.id
+    WHERE i.provider='supabase' AND i.revoked_at IS NULL GROUP BY i.id ORDER BY i.created_at`)).rows;
   let checked=0;
   for (const connection of connections) {
     let failures=0; let failureMessage: string | null=null;
@@ -114,8 +130,8 @@ export async function syncSupabase() {
       await query("UPDATE ops_supabase_projects SET attempted_at=now(),last_error=$1 WHERE integration_id=$2",[message,connection.id]);
       continue;
     }
-    for (let i=0;i<connection.config.refs.length;i+=4) {
-      await Promise.all(connection.config.refs.slice(i,i+4).map(async(ref)=>{
+    for (let i=0;i<connection.refs.length;i+=4) {
+      await Promise.all(connection.refs.slice(i,i+4).map(async(ref)=>{
         try { await storeSupabase(database(),ref,connection.id,await readSupabaseProject(token,ref)); checked++; }
         catch(error){ failures++;failureMessage=error instanceof Error?error.message:"Vérification impossible.";await query("UPDATE ops_supabase_projects SET attempted_at=now(),last_error=$1 WHERE ref=$2 AND integration_id=$3",[failureMessage,ref,connection.id]); }
       }));

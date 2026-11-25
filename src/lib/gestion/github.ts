@@ -16,33 +16,36 @@ export function githubActorLogin(actor:{login:string;__typename:string}|null){re
 const statusSchema=z.object({__typename:z.literal('StatusContext'),context:z.string(),description:z.string().nullable(),state:z.string(),creator:actorSchema.nullable(),targetUrl:z.string().nullable()});
 const prSchema=z.object({number:z.number().int().positive(),title:z.string(),url:z.string().url(),headRefOid:sha,baseRefName:z.string(),mergeable:z.string(),isDraft:z.boolean(),updatedAt:z.string(),author:actorSchema.nullable(),files:z.object({nodes:z.array(z.object({path:z.string()})),totalCount:z.number()}),commits:z.object({nodes:z.array(z.object({commit:z.object({status:z.object({contexts:z.array(statusSchema)}).nullable()})}))})});
 const repoSchema=z.object({nameWithOwner:z.string(),defaultBranchRef:z.object({name:z.string(),target:z.object({oid:sha})}),ci:z.object({oid:z.string()}).nullable(),pullRequests:z.object({nodes:z.array(prSchema),pageInfo:z.object({hasNextPage:z.boolean()})})});
-const fields=`
- nameWithOwner defaultBranchRef{name target{oid}}
- ci:object(expression:"HEAD:.github/webbing-ci.json"){oid}
- pullRequests(first:30,states:OPEN,orderBy:{field:UPDATED_AT,direction:DESC}){
-  pageInfo{hasNextPage}
-  nodes{number title url headRefOid baseRefName mergeable isDraft updatedAt author{login __typename}
-   files(first:100){totalCount nodes{path}}
-   commits(last:1){nodes{commit{status{contexts{__typename context description state creator{login __typename} targetUrl}}}}}
+export async function readGitHubRepositories(token:string,repositories:string[]):Promise<Record<string,unknown>>{
+ const api=githubApi(token),result:Record<string,unknown>={};
+ for(let offset=0;offset<repositories.length;offset+=4)await Promise.all(repositories.slice(offset,offset+4).map(async(repository,index)=>{
+  const root=`/repos/${repository}`,meta=await api(root);
+  if(meta.full_name!==repository)throw new Error('GitHub a retourné un dépôt différent de celui demandé.');
+  const [branch,open,ci]=await Promise.all([
+   api(`${root}/git/ref/heads/${encodeURIComponent(meta.default_branch)}`),
+   api(`${root}/pulls?state=open&sort=updated&direction=desc&per_page=30`),
+   api(`${root}/contents/.github/webbing-ci.json`).catch(error=>{if(error instanceof Error&&'status' in error&&error.status===404)return null;throw error;}),
+  ]);
+  const base=branch.object.sha,nodes=[];
+  const bots=open.filter((pr:{user:{login:string;type:string}})=>pr.user?.login==='dependabot[bot]'&&pr.user?.type==='Bot');
+  for(let i=0;i<bots.length;i+=4){
+   const batch=await Promise.all(bots.slice(i,i+4).map(async(pr:{number:number;title:string;html_url:string;head:{sha:string};base:{ref:string};draft:boolean;updated_at:string})=>{
+    const [files,statuses]=await Promise.all([api(`${root}/pulls/${pr.number}/files?per_page=100`),api(`${root}/commits/${pr.head.sha}/statuses?per_page=100`)]);
+    const verdict=gatewayReadiness(statuses,base),detail=verdict.ok?await api(`${root}/pulls/${pr.number}`):null;
+    return {number:pr.number,title:pr.title,url:pr.html_url,headRefOid:pr.head.sha,baseRefName:pr.base.ref,mergeable:detail?.mergeable===true?'MERGEABLE':detail?.mergeable===false?'CONFLICTING':'UNKNOWN',isDraft:pr.draft,updatedAt:pr.updated_at,author:{login:'dependabot',__typename:'Bot'},files:{nodes:files.map((f:{filename:string})=>({path:f.filename})),totalCount:files.length>=100?101:files.length},commits:{nodes:[{commit:{status:{contexts:statuses.map((s:{context:string;description:string|null;state:string;creator:{login:string;type:string}|null;target_url:string|null})=>({__typename:'StatusContext',context:s.context,description:s.description??null,state:s.state.toUpperCase(),creator:s.creator?{login:s.creator.login,__typename:s.creator.type==='Bot'?'Bot':'User'}:null,targetUrl:s.target_url??null}))}}}]}};
+   }));nodes.push(...batch);
   }
- }
-`;
-export async function readGitHubRepositories(token:string,repositories:string[]){
- const selections=repositories.map((name,i)=>{const [owner,repo]=name.split('/');return `r${i}:repository(owner:${JSON.stringify(owner)},name:${JSON.stringify(repo)}){${fields}}`;}).join(' ');
- const response=await fetch('https://api.github.com/graphql',{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json','User-Agent':'Webbing-gestion'},body:JSON.stringify({query:`{${selections}}`}),cache:'no-store',redirect:'error',signal:AbortSignal.timeout(15000)});
- if(!response.ok)throw new Error(response.status===401?'Jeton GitHub expiré ou révoqué.':'GitHub n’est pas disponible pour la synchronisation.');
- const result=await response.json() as {data?:Record<string,unknown>;errors?:unknown[]};
- if(result.errors?.length||!result.data)throw new Error('Le jeton GitHub ne permet pas de lire les dépôts ou leurs statuts. Vérifier les droits de lecture Contents, Pull requests et Commit statuses.');
- return result.data;
+  result[`r${offset+index}`]={nameWithOwner:meta.full_name,defaultBranchRef:{name:meta.default_branch,target:{oid:base}},ci:ci?{oid:ci.sha}:null,pullRequests:{nodes,pageInfo:{hasNextPage:open.length>=30}}};
+ }));
+ return result;
 }
 export async function connectGitHub(name:string,token:string,names:string[]){
  if(!/^github_pat_[A-Za-z0-9_]{30,}$/.test(token)||token.length>512)throw new Error('Utilise un jeton GitHub à permissions limitées commençant par github_pat_.');
  const known=(await query<Repository>('SELECT * FROM ops_repositories')).rows;
  const selected=[...new Set(names)];if(!name.trim()||name.length>80||!selected.length||selected.some(n=>!known.some(r=>r.full_name===n)))throw new Error('Choisis un nom et les dépôts à raccorder.');
  const api=githubApi(token);const accessible:string[]=[];
- for(let i=0;i<selected.length;i+=4){const batch=await Promise.allSettled(selected.slice(i,i+4).map(async repository=>{const value=await api(`/repos/${repository}`);if(value.full_name!==repository)throw new Error('Identité du dépôt différente.');return repository;}));for(const result of batch){if(result.status==='fulfilled')accessible.push(result.value);else if(result.reason instanceof Error&&/expiré|révoqué/.test(result.reason.message))throw result.reason;}}
+ for(let i=0;i<selected.length;i+=4){const batch=await Promise.allSettled(selected.slice(i,i+4).map(async repository=>{const value=await api(`/repos/${repository}`);if(value.full_name!==repository)throw new Error('Identité du dépôt différente.');await Promise.all([['Pull requests',`/repos/${repository}/pulls?state=open&per_page=1`],['Commit statuses',`/repos/${repository}/commits/${encodeURIComponent(value.default_branch)}/statuses?per_page=1`],['Actions',`/repos/${repository}/actions/runs?per_page=1`]].map(async([permission,path])=>{try{await api(path);}catch(error){if(error instanceof Error&&'status' in error&&error.status===403)throw new Error(`Droits GitHub insuffisants : autoriser ${permission} en lecture pour ${repository.split('/')[1]}.`);throw error;}}));return repository;}));for(const result of batch){if(result.status==='fulfilled')accessible.push(result.value);else if(result.reason instanceof Error&&/expiré|révoqué/.test(result.reason.message))throw result.reason;}}
  if(!accessible.length)throw new Error('Ce jeton GitHub n’a accès à aucun des dépôts sélectionnés.');
- await readGitHubRepositories(token,accessible);
  const client=await database().connect();let id:string=randomUUID();
  try{await client.query('BEGIN');await client.query("SELECT pg_advisory_xact_lock(hashtextextended('webbing:github-connections',0))");
  const existing=(await client.query<{id:string;secret_cipher:string;config:{repos:string[]}}>("SELECT id,secret_cipher,config FROM ops_integrations WHERE provider='github' AND revoked_at IS NULL ORDER BY created_at DESC FOR UPDATE")).rows;
@@ -66,9 +69,10 @@ export async function syncGitHub(){
     const repo=parsed.data,base=repo.defaultBranchRef.target.oid;await reconcileApprovals(api,repository);const pulls=repo.pullRequests.nodes.filter(pr=>pr.author?.__typename==='Bot'&&githubActorLogin(pr.author)==='dependabot[bot]'&&pr.baseRefName===repo.defaultBranchRef.name);
     for(let i=0;i<pulls.length;i+=4)await Promise.all(pulls.slice(i,i+4).map(async pr=>{
      const previous=(await query<{head_sha:string;update_type:string;dependencies:unknown}>('SELECT head_sha,update_type,dependencies FROM ops_dependency_updates WHERE repository=$1 AND number=$2',[repository,pr.number])).rows[0];
-     const metadata=previous&&previous.head_sha===pr.headRefOid&&previous.update_type!=='unknown'?metadataSchema.parse({type:previous.update_type,dependencies:previous.dependencies}):metadataSchema.parse(dependencyMetadata(await api(`/repos/${repository}/pulls/${pr.number}/commits?per_page=100`)));
+     const metadata=previous&&previous.head_sha===pr.headRefOid&&previous.update_type?metadataSchema.parse({type:previous.update_type,dependencies:previous.dependencies}):metadataSchema.parse(dependencyMetadata(await api(`/repos/${repository}/pulls/${pr.number}/commits?per_page=100`)));
      const statuses=(pr.commits.nodes[0]?.commit.status?.contexts||[]).map(s=>({...s,creator:s.creator?{login:githubActorLogin(s.creator)!}:null,state:s.state.toLowerCase()}));
-     const checks=statuses.map((s,index)=>({id:index+1,name:s.context,status:s.state==='pending'?'in_progress':'completed',conclusion:s.state==='success'?'success':s.state==='pending'?null:'failure',url:s.targetUrl}));
+     const latestStatuses=new Map<string,(typeof statuses)[number]>();for(const status of statuses)if(!latestStatuses.has(status.context))latestStatuses.set(status.context,status);
+     const checks=[...latestStatuses.values()].map((s,index)=>({id:index+1,name:s.context,status:s.state==='pending'?'in_progress':'completed',conclusion:s.state==='success'?'success':s.state==='pending'?null:'failure',url:s.targetUrl}));
      const decision=gatewayReadiness(statuses,base),files=pr.files.nodes.map(f=>({filename:f.path}));
      const eligible=allowedDependencyFiles(files)&&pr.files.totalCount<=100&&!pr.isDraft;
      const ready=eligible&&decision.ok&&pr.mergeable==='MERGEABLE';

@@ -53,7 +53,7 @@ test("GitHub synchronization keeps its credential out of queries and sanitizes p
   const requests:string[]=[];
   const request=mock.method(globalThis,'fetch',async(input:unknown,options?:RequestInit)=>{
     requests.push(String(input));assert.equal(String(input),'https://api.github.com/graphql');assert.equal(options?.method,'POST');assert.equal(options?.redirect,'error');
-    const body=JSON.parse(String(options?.body));assert.match(body.query,/Guillaumeperrottet/);assert.ok(!body.query.includes('github_pat_fixture'));
+    const body=JSON.parse(String(options?.body));assert.match(body.query,/Guillaumeperrottet/);assert.doesNotMatch(body.query,/CheckRun|statusCheckRollup/);assert.ok(!body.query.includes('github_pat_fixture'));
     return Response.json({data:{r0:{nameWithOwner:'Guillaumeperrottet/webbing'}}});
   });
   try{

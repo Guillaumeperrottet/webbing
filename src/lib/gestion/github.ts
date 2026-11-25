@@ -4,26 +4,35 @@ import {z} from "zod";
 import {database,query} from "./db";
 import {seal,unseal} from "./vault";
 import {tokensEqual} from "./security";
-import {githubApi,dependencyMetadata,evaluateChecks,allowedDependencyFiles,mergeUpdate} from "../../../scripts/dependencies/policy.mjs";
+import {githubApi,dependencyMetadata,allowedDependencyFiles,gatewayReadiness,dispatchApproval} from "../../../scripts/dependencies/policy.mjs";
 
 export type Repository={full_name:string;default_branch:string;setup_pr_url:string|null;setup_state:string;ci_configured:boolean;auto_merge_enabled:boolean;integration_id:string|null;last_sync_at:string|null;last_error:string|null};
-export type DependencyUpdate={repository:string;number:number;title:string;url:string;head_sha:string;base_sha:string;update_type:string;dependencies:{name:string;type:string;version:string|null}[];checks:{name:string;status:string;conclusion:string|null;url:string|null}[];ready:boolean;auto_eligible:boolean;reason:string;checked_at:string;updated_at:string};
-export async function dependencyData(){const [repos,updates]=await Promise.all([query<Repository>('SELECT * FROM ops_repositories ORDER BY full_name'),query<DependencyUpdate>("SELECT * FROM ops_dependency_updates WHERE state='open' ORDER BY ready DESC,repository,number DESC")]);return {repositories:repos.rows,updates:updates.rows};}
+export type DependencyUpdate={repository:string;number:number;title:string;url:string;head_sha:string;base_sha:string;update_type:string;dependencies:{name:string;type:string;version:string|null}[];checks:{name:string;status:string;conclusion:string|null;url:string|null}[];ready:boolean;auto_eligible:boolean;reason:string;checked_at:string;updated_at:string;approval_status:string|null;approval_error:string|null;approval_url:string|null};
+export async function dependencyData(){const [repos,updates]=await Promise.all([query<Repository>('SELECT * FROM ops_repositories ORDER BY full_name'),query<DependencyUpdate>("SELECT u.*,a.status AS approval_status,a.error AS approval_error,a.run_url AS approval_url FROM ops_dependency_updates u LEFT JOIN LATERAL (SELECT status,error,run_url FROM ops_dependency_approvals WHERE repository=u.repository AND number=u.number AND head_sha=u.head_sha AND base_sha=u.base_sha ORDER BY requested_at DESC LIMIT 1) a ON true WHERE u.state='open' ORDER BY u.ready DESC,u.repository,u.number DESC")]);return {repositories:repos.rows,updates:updates.rows};}
 const sha=z.string().regex(/^[0-9a-f]{40}$/);
 const metadataSchema=z.object({type:z.enum(['unknown','patch','minor','major']),dependencies:z.array(z.object({name:z.string(),type:z.string(),version:z.string().nullable()}))});
 const actorSchema=z.object({login:z.string(),__typename:z.string()});
 export function githubActorLogin(actor:{login:string;__typename:string}|null){return actor?actor.__typename==='Bot'&&!actor.login.endsWith('[bot]')?`${actor.login}[bot]`:actor.login:null;}
 const statusSchema=z.object({__typename:z.literal('StatusContext'),context:z.string(),description:z.string().nullable(),state:z.string(),creator:actorSchema.nullable(),targetUrl:z.string().nullable()});
-const checkSchema=z.object({__typename:z.literal('CheckRun'),name:z.string(),status:z.string(),conclusion:z.string().nullable(),detailsUrl:z.string().nullable(),checkSuite:z.object({app:z.object({databaseId:z.number(),slug:z.string().nullable()}).nullable()})});
-const prSchema=z.object({number:z.number().int().positive(),title:z.string(),url:z.string().url(),headRefOid:sha,baseRefName:z.string(),mergeable:z.string(),isDraft:z.boolean(),updatedAt:z.string(),author:actorSchema.nullable(),files:z.object({nodes:z.array(z.object({path:z.string()})),totalCount:z.number()}),commits:z.object({nodes:z.array(z.object({commit:z.object({statusCheckRollup:z.object({contexts:z.object({nodes:z.array(z.unknown()),totalCount:z.number()})}).nullable()})}))})});
+const prSchema=z.object({number:z.number().int().positive(),title:z.string(),url:z.string().url(),headRefOid:sha,baseRefName:z.string(),mergeable:z.string(),isDraft:z.boolean(),updatedAt:z.string(),author:actorSchema.nullable(),files:z.object({nodes:z.array(z.object({path:z.string()})),totalCount:z.number()}),commits:z.object({nodes:z.array(z.object({commit:z.object({status:z.object({contexts:z.array(statusSchema)}).nullable()})}))})});
 const repoSchema=z.object({nameWithOwner:z.string(),defaultBranchRef:z.object({name:z.string(),target:z.object({oid:sha})}),ci:z.object({oid:z.string()}).nullable(),pullRequests:z.object({nodes:z.array(prSchema),pageInfo:z.object({hasNextPage:z.boolean()})})});
-const fields=`nameWithOwner defaultBranchRef{name target{oid}} ci:object(expression:"HEAD:.github/webbing-ci.json"){oid} pullRequests(first:30,states:OPEN,orderBy:{field:UPDATED_AT,direction:DESC}){pageInfo{hasNextPage} nodes{number title url headRefOid baseRefName mergeable isDraft updatedAt author{login __typename} files(first:100){totalCount nodes{path}} commits(last:1){nodes{commit{statusCheckRollup{contexts(first:100){totalCount nodes{__typename ...on CheckRun{name status conclusion detailsUrl checkSuite{app{databaseId slug}}} ...on StatusContext{context description state creator{login __typename} targetUrl}}}}}}}}}`;
+const fields=`
+ nameWithOwner defaultBranchRef{name target{oid}}
+ ci:object(expression:"HEAD:.github/webbing-ci.json"){oid}
+ pullRequests(first:30,states:OPEN,orderBy:{field:UPDATED_AT,direction:DESC}){
+  pageInfo{hasNextPage}
+  nodes{number title url headRefOid baseRefName mergeable isDraft updatedAt author{login __typename}
+   files(first:100){totalCount nodes{path}}
+   commits(last:1){nodes{commit{status{contexts{__typename context description state creator{login __typename} targetUrl}}}}}
+  }
+ }
+`;
 export async function readGitHubRepositories(token:string,repositories:string[]){
  const selections=repositories.map((name,i)=>{const [owner,repo]=name.split('/');return `r${i}:repository(owner:${JSON.stringify(owner)},name:${JSON.stringify(repo)}){${fields}}`;}).join(' ');
  const response=await fetch('https://api.github.com/graphql',{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json','User-Agent':'Webbing-gestion'},body:JSON.stringify({query:`{${selections}}`}),cache:'no-store',redirect:'error',signal:AbortSignal.timeout(15000)});
  if(!response.ok)throw new Error(response.status===401?'Jeton GitHub expiré ou révoqué.':'GitHub n’est pas disponible pour la synchronisation.');
  const result=await response.json() as {data?:Record<string,unknown>;errors?:unknown[]};
- if(result.errors?.length||!result.data)throw new Error('Le jeton GitHub ne permet pas de lire tous les contrôles. Vérifier les droits de lecture Checks, Actions et Commit statuses.');
+ if(result.errors?.length||!result.data)throw new Error('Le jeton GitHub ne permet pas de lire les dépôts ou leurs statuts. Vérifier les droits de lecture Contents, Pull requests et Commit statuses.');
  return result.data;
 }
 export async function connectGitHub(name:string,token:string,names:string[]){
@@ -31,7 +40,7 @@ export async function connectGitHub(name:string,token:string,names:string[]){
  const known=(await query<Repository>('SELECT * FROM ops_repositories')).rows;
  const selected=[...new Set(names)];if(!name.trim()||name.length>80||!selected.length||selected.some(n=>!known.some(r=>r.full_name===n)))throw new Error('Choisis un nom et les dépôts à raccorder.');
  const api=githubApi(token);const accessible:string[]=[];
- for(let i=0;i<selected.length;i+=4){const batch=await Promise.allSettled(selected.slice(i,i+4).map(async repository=>{const value=await api(`/repos/${repository}`);if(value.full_name!==repository)throw new Error('Identité du dépôt différente.');await api(`/repos/${repository}/pulls?state=open&per_page=1`);return repository;}));for(const result of batch){if(result.status==='fulfilled')accessible.push(result.value);else if(result.reason instanceof Error&&/expiré|révoqué/.test(result.reason.message))throw result.reason;}}
+ for(let i=0;i<selected.length;i+=4){const batch=await Promise.allSettled(selected.slice(i,i+4).map(async repository=>{const value=await api(`/repos/${repository}`);if(value.full_name!==repository)throw new Error('Identité du dépôt différente.');return repository;}));for(const result of batch){if(result.status==='fulfilled')accessible.push(result.value);else if(result.reason instanceof Error&&/expiré|révoqué/.test(result.reason.message))throw result.reason;}}
  if(!accessible.length)throw new Error('Ce jeton GitHub n’a accès à aucun des dépôts sélectionnés.');
  await readGitHubRepositories(token,accessible);
  const client=await database().connect();let id:string=randomUUID();
@@ -43,7 +52,7 @@ export async function connectGitHub(name:string,token:string,names:string[]){
  await client.query('UPDATE ops_repositories SET integration_id=$1,last_error=NULL WHERE full_name=ANY($2::text[])',[id,accessible]);
  await client.query("INSERT INTO ops_audit(kind,detail) VALUES('github_connexion',$1)",[`${name.trim()} · ${accessible.length} dépôt(s)`]);await client.query('COMMIT');
  }catch(error){await client.query('ROLLBACK');throw error;}finally{client.release();}
- await syncGitHub();return {connected:accessible.length,excluded:selected.length-accessible.length};
+ return {connected:accessible.length,excluded:selected.length-accessible.length};
 }
 export async function syncGitHub(){
  const connections=(await query<{id:string;secret_cipher:string;repos:string[]}>(`SELECT i.id,i.secret_cipher,array_agg(r.full_name ORDER BY r.full_name) AS repos FROM ops_integrations i JOIN ops_repositories r ON r.integration_id=i.id WHERE i.provider='github' AND i.revoked_at IS NULL GROUP BY i.id ORDER BY i.created_at`)).rows;
@@ -54,18 +63,15 @@ export async function syncGitHub(){
    for(let index=0;index<connection.repos.length;index++){
     const repository=connection.repos[index],parsed=repoSchema.safeParse(data[`r${index}`]);
     if(!parsed.success||parsed.data.nameWithOwner!==repository){await query('UPDATE ops_repositories SET last_error=$1 WHERE full_name=$2',['Le dépôt ne peut pas être lu avec cet accès.',repository]);continue;}
-    const repo=parsed.data,base=repo.defaultBranchRef.target.oid;const pulls=repo.pullRequests.nodes.filter(pr=>pr.author?.__typename==='Bot'&&githubActorLogin(pr.author)==='dependabot[bot]'&&pr.baseRefName===repo.defaultBranchRef.name);
+    const repo=parsed.data,base=repo.defaultBranchRef.target.oid;await reconcileApprovals(api,repository);const pulls=repo.pullRequests.nodes.filter(pr=>pr.author?.__typename==='Bot'&&githubActorLogin(pr.author)==='dependabot[bot]'&&pr.baseRefName===repo.defaultBranchRef.name);
     for(let i=0;i<pulls.length;i+=4)await Promise.all(pulls.slice(i,i+4).map(async pr=>{
      const previous=(await query<{head_sha:string;update_type:string;dependencies:unknown}>('SELECT head_sha,update_type,dependencies FROM ops_dependency_updates WHERE repository=$1 AND number=$2',[repository,pr.number])).rows[0];
      const metadata=previous&&previous.head_sha===pr.headRefOid&&previous.update_type!=='unknown'?metadataSchema.parse({type:previous.update_type,dependencies:previous.dependencies}):metadataSchema.parse(dependencyMetadata(await api(`/repos/${repository}/pulls/${pr.number}/commits?per_page=100`)));
-     const contexts=pr.commits.nodes[0]?.commit.statusCheckRollup?.contexts;const checks:{id:number;name:string;status:string;conclusion:string|null;app:{id:number;slug:string|null}|null;url:string|null}[]=[];const statuses:{context:string;description:string|null;state:string;creator:{login:string}|null}[]=[];
-     for(const [idx,node] of (contexts?.nodes||[]).entries()){
-      const c=checkSchema.safeParse(node);if(c.success){const v=c.data;checks.push({id:idx+1,name:v.name,status:v.status.toLowerCase(),conclusion:v.conclusion?.toLowerCase()||null,app:v.checkSuite.app?{id:v.checkSuite.app.databaseId,slug:v.checkSuite.app.slug}:null,url:v.detailsUrl});continue;}
-      const s=statusSchema.safeParse(node);if(s.success)statuses.push({...s.data,creator:s.data.creator?{login:githubActorLogin(s.data.creator)!}:null,state:s.data.state.toLowerCase()});
-     }
-     const decision=evaluateChecks(checks,statuses,base),files=pr.files.nodes.map(f=>({filename:f.path}));
+     const statuses=(pr.commits.nodes[0]?.commit.status?.contexts||[]).map(s=>({...s,creator:s.creator?{login:githubActorLogin(s.creator)!}:null,state:s.state.toLowerCase()}));
+     const checks=statuses.map((s,index)=>({id:index+1,name:s.context,status:s.state==='pending'?'in_progress':'completed',conclusion:s.state==='success'?'success':s.state==='pending'?null:'failure',url:s.targetUrl}));
+     const decision=gatewayReadiness(statuses,base),files=pr.files.nodes.map(f=>({filename:f.path}));
      const eligible=allowedDependencyFiles(files)&&pr.files.totalCount<=100&&!pr.isDraft;
-     const ready=eligible&&decision.ok&&pr.mergeable==='MERGEABLE'&&(contexts?.totalCount||0)<=100;
+     const ready=eligible&&decision.ok&&pr.mergeable==='MERGEABLE';
      const critical=files.some(f=>/\.github\/workflows\/webbing-dependency-(checks|policy)\.yml$/.test(f.filename));
      const reason=!eligible?'Examen des fichiers dans GitHub requis.':!decision.ok?decision.reason:pr.mergeable!=='MERGEABLE'?'GitHub doit confirmer la possibilité de fusion.':critical?'La configuration des contrôles nécessite une validation.':decision.reason;
      await query(`INSERT INTO ops_dependency_updates(repository,number,title,url,head_sha,base_sha,update_type,dependencies,checks,ready,auto_eligible,reason,updated_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) ON CONFLICT(repository,number) DO UPDATE SET title=excluded.title,url=excluded.url,state='open',head_sha=excluded.head_sha,base_sha=excluded.base_sha,update_type=excluded.update_type,dependencies=excluded.dependencies,checks=excluded.checks,ready=excluded.ready,auto_eligible=excluded.auto_eligible,reason=excluded.reason,updated_at=excluded.updated_at,checked_at=now()`,[repository,pr.number,pr.title,pr.url,pr.headRefOid,base,metadata.type,JSON.stringify(metadata.dependencies),JSON.stringify(checks.map(c=>({name:c.name,status:c.status,conclusion:c.conclusion,url:c.url}))),ready,['patch','minor'].includes(metadata.type)&&!critical,reason,pr.updatedAt]);
@@ -78,13 +84,32 @@ export async function syncGitHub(){
  }
  return checked;
 }
-export async function approveDependency(repository:string,number:number,expectedHead:string,expectedBase:string){
+export async function reconcileApprovals(api:ReturnType<typeof githubApi>,repository:string){
+ const requests=(await query<{id:string;number:number;head_sha:string;requested_by:string}>("SELECT id,number,head_sha,requested_by FROM ops_dependency_approvals WHERE repository=$1 AND status='requested'",[repository])).rows;
+ if(!requests.length)return;
+ const runs=await api(`/repos/${repository}/actions/workflows/webbing-dependency-policy.yml/runs?event=workflow_dispatch&per_page=100`);
+ for(const request of requests){
+  const pr=await api(`/repos/${repository}/pulls/${request.number}`);
+  if(pr.merged&&pr.head.sha===request.head_sha){
+   const changed=await query("UPDATE ops_dependency_approvals SET status='merged',merged_sha=$1,finished_at=now() WHERE id=$2 AND status='requested' RETURNING id",[pr.merge_commit_sha,request.id]);
+   if(changed.rowCount){await query("UPDATE ops_dependency_updates SET state='merged',merged_sha=$1,ready=false WHERE repository=$2 AND number=$3",[pr.merge_commit_sha,repository,request.number]);await query("INSERT INTO ops_audit(kind,detail) VALUES('dependance_validee',$1)",[`${repository} #${request.number} · ${request.head_sha.slice(0,7)} → ${pr.merge_commit_sha.slice(0,7)} · ${request.requested_by}`]);}
+   continue;
+  }
+  const run=runs.workflow_runs.find((r:{display_title:string})=>r.display_title===`Webbing validation ${request.id}`);
+  if(run)await query('UPDATE ops_dependency_approvals SET run_url=$1 WHERE id=$2',[run.html_url,request.id]);
+  if(pr.state==='closed'||pr.head.sha!==request.head_sha||(run?.status==='completed'&&run.conclusion!=='success'))await query("UPDATE ops_dependency_approvals SET status='failed',finished_at=now(),error=$1 WHERE id=$2 AND status='requested'",['GitHub a refusé la fusion ou la proposition a changé. Actualise les contrôles avant de réessayer.',request.id]);
+ }
+}
+export async function approveDependency(repository:string,number:number,expectedHead:string,expectedBase:string,requestedBy:string){
  sha.parse(expectedHead);sha.parse(expectedBase);
  const connection=(await query<{id:string;secret_cipher:string}>(`SELECT i.id,i.secret_cipher FROM ops_repositories r JOIN ops_integrations i ON i.id=r.integration_id WHERE r.full_name=$1 AND i.provider='github' AND i.revoked_at IS NULL`,[repository])).rows[0];
  if(!connection)throw new Error('Raccorder ce dépôt à GitHub avant de valider.');
- const token=unseal(connection.secret_cipher,`${connection.id}:github`);
- const result=await mergeUpdate(githubApi(token),repository,number,{expectedHead,expectedBase,automatic:false});
- await query("UPDATE ops_dependency_updates SET state='merged',merged_sha=$1,ready=false WHERE repository=$2 AND number=$3",[result.sha,repository,number]);
- await query("INSERT INTO ops_audit(kind,detail) VALUES('dependance_validee',$1)",[`${repository} #${number} · ${expectedHead.slice(0,7)} → ${result.sha.slice(0,7)}`]);
- return result;
+ const id=randomUUID();
+ const inserted=await query("INSERT INTO ops_dependency_approvals(id,repository,number,head_sha,base_sha,requested_by) VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT DO NOTHING RETURNING id",[id,repository,number,expectedHead,expectedBase,requestedBy]);
+ if(!inserted.rowCount)return {queued:true};
+ try{
+  await dispatchApproval(githubApi(unseal(connection.secret_cipher,`${connection.id}:github`)),repository,number,{expectedHead,expectedBase,approvalId:id});
+  await query("INSERT INTO ops_audit(kind,detail) VALUES('dependance_demandee',$1)",[`${repository} #${number} · ${expectedHead.slice(0,7)} · ${requestedBy}`]);
+  return {queued:true};
+ }catch(error){await query("UPDATE ops_dependency_approvals SET status='failed',finished_at=now(),error=$1 WHERE id=$2",['La validation n’a pas été transmise. Actions doit être autorisé en lecture et écriture dans le jeton GitHub.',id]);throw error;}
 }

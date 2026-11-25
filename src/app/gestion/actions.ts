@@ -1,5 +1,6 @@
 "use server";
 import { randomBytes } from "node:crypto";
+import { after } from "next/server";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/gestion/access";
 import { query } from "@/lib/gestion/db";
@@ -66,8 +67,9 @@ export async function revokeCollector(form: FormData) {
 export async function addGitHubConnection(form: FormData) {
   await requireAdmin();
   try {
-    const {connectGitHub}=await import('@/lib/gestion/github');
+    const {connectGitHub,syncGitHub}=await import('@/lib/gestion/github');
     const result=await connectGitHub(String(form.get('name')||''),String(form.get('token')||'').trim(),form.getAll('repos').map(String));
+    after(async()=>{await syncGitHub();});
     revalidatePath('/gestion');
     return {ok:true,message:`${result.connected} dépôt(s) raccordé(s).${result.excluded?` ${result.excluded} dépôt(s) restent à autoriser dans le jeton.`:''}`};
   }catch(error){const message=error instanceof Error?error.message:'';return {ok:false,message:/^(Utilise|Choisis|Ce jeton|Le jeton|Jeton GitHub|Droits GitHub|GitHub)/.test(message)?message:'Le raccordement GitHub n’a pas pu être vérifié.'};}
@@ -79,13 +81,13 @@ export async function refreshDependencies(){
   revalidatePath('/gestion');
 }
 export async function approveDependencyUpdate(form:FormData){
-  await requireAdmin();
+  const admin=await requireAdmin();
   const repository=String(form.get('repository')||''),number=Number(form.get('number'));
   if(!Number.isSafeInteger(number)||number<1)return {ok:false,message:'Proposition invalide.'};
   try{
     const {approveDependency}=await import('@/lib/gestion/github');
-    await approveDependency(repository,number,String(form.get('head')||''),String(form.get('base')||''));
-    revalidatePath('/gestion');return {ok:true,message:'Mise à jour validée et fusionnée. Le déploiement suit la configuration du projet.'};
+    await approveDependency(repository,number,String(form.get('head')||''),String(form.get('base')||''),admin.user.email);
+    revalidatePath('/gestion');return {ok:true,message:'Validation transmise à GitHub. Les contrôles seront relus avant la fusion ; son résultat apparaîtra après synchronisation.'};
   }catch(error){const message=error instanceof Error?error.message:'';return {ok:false,message:/^(La proposition|Les vérifications|Un contrôle|Cette mise|Cette proposition|GitHub|Droits GitHub|Jeton GitHub|Raccorder|La branche)/.test(message)?message:'La mise à jour n’a pas pu être validée. Actualise les contrôles avant de réessayer.'};}
 }
 export async function disconnectGitHub(form:FormData){

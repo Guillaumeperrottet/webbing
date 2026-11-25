@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Applications | Wisp, Selfcamp, PlanniKeeper, OpenWind",
+  title: "Applications | Wisp, Selfcamp, Mypapers, OpenWind",
   description:
-    "Découvrez nos applications web : Wisp pour le cloud suisse, Selfcamp pour les campings, PlanniKeeper pour l'immobilier et OpenWind pour les sports de vent.",
+    "Découvrez nos applications : Wisp pour les fichiers, Selfcamp pour les aires de camping-car, Mypapers pour les notes et projets, et OpenWind pour le vent.",
   keywords:
-    "Wisp, Selfcamp, PlanniKeeper, OpenWind, cloud suisse, gestion immobilière, camping automatisé, sports de vent, applications web Suisse",
+    "Wisp, Selfcamp, Mypapers, OpenWind, fichiers, notes, projets, établissements, camping, vent, applications web Suisse",
   alternates: {
     canonical: "/applications",
   },
   openGraph: {
     title: "Nos Applications - Webbing",
     description:
-      "Wisp, Selfcamp, PlanniKeeper et OpenWind : des solutions web concrètes, hébergées en Suisse.",
+      "Wisp, Selfcamp, Mypapers et OpenWind : des solutions concrètes pour votre activité, sur le web et sur iPhone.",
     url: "https://webbing.ch/applications",
     type: "website",
     locale: "fr_CH",

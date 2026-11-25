@@ -5,6 +5,34 @@ import { requireAdmin } from "@/lib/gestion/access";
 import { query } from "@/lib/gestion/db";
 import { probeApplications } from "@/lib/gestion/data";
 import { tokenHash } from "@/lib/gestion/security";
+import { connectSupabase, syncSupabase } from "@/lib/gestion/providers";
+
+export async function addSupabaseConnection(form: FormData) {
+  await requireAdmin();
+  try {
+    const result = await connectSupabase(String(form.get("name") || ""), String(form.get("token") || "").trim(), form.getAll("refs").map(String));
+    revalidatePath("/gestion");
+    return { ok: true, message: `${result.connected} projet(s) raccordé(s).${result.excluded ? ` ${result.excluded} projet(s) restent à raccorder avec un autre jeton.` : ""}` };
+  } catch (error) {
+    const message=error instanceof Error ? error.message : "";
+    return { ok:false,message:/^(Utilise|Choisis|Accès refusé|Ce jeton|Supabase|Limite de requêtes)/.test(message)?message:"La connexion n’a pas pu être vérifiée. Réessaie dans un instant." };
+  }
+}
+export async function refreshProviders() {
+  await requireAdmin();
+  const lock=await query("INSERT INTO ops_jobs(name,last_run) VALUES('providers',now()) ON CONFLICT(name) DO UPDATE SET last_run=now() WHERE ops_jobs.last_run < now()-interval '60 seconds' RETURNING name");
+  if(lock.rowCount) await syncSupabase();
+  revalidatePath("/gestion");
+}
+export async function disconnectProvider(form: FormData) {
+  await requireAdmin();
+  const id=String(form.get("id")||"");
+  if(!/^[0-9a-f-]{36}$/.test(id)) throw new Error("Identifiant invalide.");
+  await query(`WITH revoked AS (UPDATE ops_integrations SET revoked_at=now(),secret_cipher='' WHERE id=$1 AND provider='supabase' RETURNING id)
+    UPDATE ops_supabase_projects SET integration_id=NULL WHERE integration_id IN (SELECT id FROM revoked)`,[id]);
+  await query("INSERT INTO ops_audit(kind,detail) VALUES('connexion_supprimee','Accès de synchronisation retiré de Webbing')");
+  revalidatePath("/gestion");
+}
 
 export async function refreshHealth() {
   await requireAdmin();

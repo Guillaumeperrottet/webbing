@@ -41,3 +41,33 @@ CREATE TABLE IF NOT EXISTS ops_nas_sources (
  directory text NOT NULL, last_success text NOT NULL, expected_project text NOT NULL,
  max_age_hours integer NOT NULL DEFAULT 36
 );
+ALTER TABLE ops_applications ADD COLUMN IF NOT EXISTS current_deployment_id text;
+ALTER TABLE ops_applications ADD COLUMN IF NOT EXISTS current_deployment_at timestamptz;
+ALTER TABLE ops_applications ADD COLUMN IF NOT EXISTS rollback_pending boolean NOT NULL DEFAULT false;
+ALTER TABLE ops_applications ADD COLUMN IF NOT EXISTS provider_synced_at timestamptz;
+ALTER TABLE ops_applications ADD COLUMN IF NOT EXISTS archived_at timestamptz;
+ALTER TABLE ops_applications ADD COLUMN IF NOT EXISTS database_provider text;
+ALTER TABLE ops_applications ADD COLUMN IF NOT EXISTS backup_required boolean NOT NULL DEFAULT false;
+CREATE TABLE IF NOT EXISTS ops_integrations (
+ id uuid PRIMARY KEY DEFAULT gen_random_uuid(), provider text NOT NULL CHECK(provider IN ('vercel','supabase')),
+ name text NOT NULL, secret_cipher text NOT NULL, config jsonb NOT NULL DEFAULT '{}',
+ created_at timestamptz NOT NULL DEFAULT now(), last_sync_at timestamptz,
+ last_attempt_at timestamptz, last_error text, revoked_at timestamptz
+);
+CREATE TABLE IF NOT EXISTS ops_provider_events (
+ event_id text PRIMARY KEY, integration_id uuid NOT NULL REFERENCES ops_integrations(id),
+ event_type text NOT NULL, event_at timestamptz NOT NULL, received_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS ops_deployments (
+ deployment_id text PRIMARY KEY, application_id uuid NOT NULL REFERENCES ops_applications(id),
+ target text NOT NULL, state text NOT NULL, url text, branch text, commit_sha text,
+ created_at timestamptz NOT NULL, event_at timestamptz NOT NULL,
+ observed_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS ops_deployments_latest ON ops_deployments(application_id,created_at DESC);
+CREATE TABLE IF NOT EXISTS ops_supabase_projects (
+ ref text PRIMARY KEY, name text NOT NULL, region text, status text,
+ services jsonb NOT NULL DEFAULT '[]', services_error text,
+ integration_id uuid REFERENCES ops_integrations(id), checked_at timestamptz,
+ attempted_at timestamptz NOT NULL DEFAULT now(), last_error text
+);

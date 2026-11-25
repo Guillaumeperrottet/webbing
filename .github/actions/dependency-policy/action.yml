@@ -1,0 +1,12 @@
+name: Webbing dependency merge policy
+description: Merge verified small Dependabot updates after the current checks succeed.
+inputs:
+  token:
+    required: true
+    description: Repository-scoped GitHub token.
+  enabled:
+    default: 'false'
+    description: Explicit repository opt-in for automatic merging.
+runs:
+  using: node24
+  main: index.mjs

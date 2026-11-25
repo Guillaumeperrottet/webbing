@@ -71,3 +71,21 @@ CREATE TABLE IF NOT EXISTS ops_supabase_projects (
  integration_id uuid REFERENCES ops_integrations(id), checked_at timestamptz,
  attempted_at timestamptz NOT NULL DEFAULT now(), last_error text
 );
+ALTER TABLE ops_integrations DROP CONSTRAINT IF EXISTS ops_integrations_provider_check;
+ALTER TABLE ops_integrations ADD CONSTRAINT ops_integrations_provider_check CHECK(provider IN ('vercel','supabase','github'));
+CREATE TABLE IF NOT EXISTS ops_repositories (
+ full_name text PRIMARY KEY, default_branch text NOT NULL,
+ ci_configured boolean NOT NULL DEFAULT false, auto_merge_enabled boolean NOT NULL DEFAULT false,
+ integration_id uuid REFERENCES ops_integrations(id), last_sync_at timestamptz, last_error text
+);
+CREATE TABLE IF NOT EXISTS ops_dependency_updates (
+ repository text NOT NULL REFERENCES ops_repositories(full_name), number integer NOT NULL,
+ title text NOT NULL, url text NOT NULL, state text NOT NULL DEFAULT 'open',
+ head_sha text NOT NULL, base_sha text NOT NULL, update_type text NOT NULL DEFAULT 'unknown',
+ dependencies jsonb NOT NULL DEFAULT '[]', checks jsonb NOT NULL DEFAULT '[]',
+ ready boolean NOT NULL DEFAULT false, auto_eligible boolean NOT NULL DEFAULT false, reason text NOT NULL,
+ checked_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL,
+ merged_sha text, PRIMARY KEY(repository,number)
+);
+ALTER TABLE ops_repositories ADD COLUMN IF NOT EXISTS setup_pr_url text;
+ALTER TABLE ops_repositories ADD COLUMN IF NOT EXISTS setup_state text NOT NULL DEFAULT 'prepared';

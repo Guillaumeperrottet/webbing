@@ -62,3 +62,34 @@ export async function revokeCollector(form: FormData) {
   await query("INSERT INTO ops_audit(kind,detail) VALUES('collecteur_revoque','Accès aux rapports supprimé')");
   revalidatePath("/gestion");
 }
+
+export async function addGitHubConnection(form: FormData) {
+  await requireAdmin();
+  try {
+    const {connectGitHub}=await import('@/lib/gestion/github');
+    const result=await connectGitHub(String(form.get('name')||''),String(form.get('token')||'').trim(),form.getAll('repos').map(String));
+    revalidatePath('/gestion');
+    return {ok:true,message:`${result.connected} dépôt(s) raccordé(s).${result.excluded?` ${result.excluded} dépôt(s) restent à autoriser dans le jeton.`:''}`};
+  }catch(error){const message=error instanceof Error?error.message:'';return {ok:false,message:/^(Utilise|Choisis|Ce jeton|Le jeton|Jeton GitHub|Droits GitHub|GitHub)/.test(message)?message:'Le raccordement GitHub n’a pas pu être vérifié.'};}
+}
+export async function refreshDependencies(){
+  await requireAdmin();
+  const lock=await query("INSERT INTO ops_jobs(name,last_run) VALUES('github',now()) ON CONFLICT(name) DO UPDATE SET last_run=now() WHERE ops_jobs.last_run<now()-interval '60 seconds' RETURNING name");
+  if(lock.rowCount){const {syncGitHub}=await import('@/lib/gestion/github');await syncGitHub();}
+  revalidatePath('/gestion');
+}
+export async function approveDependencyUpdate(form:FormData){
+  await requireAdmin();
+  const repository=String(form.get('repository')||''),number=Number(form.get('number'));
+  if(!Number.isSafeInteger(number)||number<1)return {ok:false,message:'Proposition invalide.'};
+  try{
+    const {approveDependency}=await import('@/lib/gestion/github');
+    await approveDependency(repository,number,String(form.get('head')||''),String(form.get('base')||''));
+    revalidatePath('/gestion');return {ok:true,message:'Mise à jour validée et fusionnée. Le déploiement suit la configuration du projet.'};
+  }catch(error){const message=error instanceof Error?error.message:'';return {ok:false,message:/^(La proposition|Les vérifications|Un contrôle|Cette mise|Cette proposition|GitHub|Droits GitHub|Jeton GitHub|Raccorder|La branche)/.test(message)?message:'La mise à jour n’a pas pu être validée. Actualise les contrôles avant de réessayer.'};}
+}
+export async function disconnectGitHub(form:FormData){
+  await requireAdmin();const id=String(form.get('id')||'');if(!/^[0-9a-f-]{36}$/.test(id))throw new Error('Identifiant invalide.');
+  await query(`WITH removed AS (UPDATE ops_integrations SET revoked_at=now(),secret_cipher='' WHERE id=$1 AND provider='github' RETURNING id) UPDATE ops_repositories SET integration_id=NULL WHERE integration_id IN (SELECT id FROM removed)`,[id]);
+  await query("INSERT INTO ops_audit(kind,detail) VALUES('connexion_supprimee','Accès GitHub retiré de Webbing')");revalidatePath('/gestion');
+}

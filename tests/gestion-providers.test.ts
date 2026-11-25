@@ -3,6 +3,7 @@ import { createHmac } from "node:crypto";
 import { mock,test } from "node:test";
 import { deploymentState,deploymentUrl,eventDate,validVercelSignature,vercelEventSchema } from "../src/lib/gestion/vercel-events";
 import { seal,unseal } from "../src/lib/gestion/vault";
+import { readGitHubRepositories,githubActorLogin } from "../src/lib/gestion/github";
 import { readSupabaseProject } from "../src/lib/gestion/providers";
 
 test("webhook authentication covers the exact bytes and rejects missing, forged or modified bodies",()=>{
@@ -46,4 +47,27 @@ test("Supabase sync uses read-only endpoints, validates project identity and sep
     fetch.mock.mockImplementation(async(input:unknown)=>String(input).includes('/health?')?new Response(null,{status:503}):Response.json({id:ref,name:'Fixture',status:'ACTIVE_HEALTHY'}));
     const partial=await readSupabaseProject('fixture-token',ref);assert.equal(partial.project.status,'ACTIVE_HEALTHY');assert.deepEqual(partial.services,[]);assert.ok(partial.servicesError);
   } finally {fetch.mock.restore();}
+});
+
+test("GitHub synchronization keeps its credential out of queries and sanitizes provider failures",async()=>{
+  const requests:string[]=[];
+  const request=mock.method(globalThis,'fetch',async(input:unknown,options?:RequestInit)=>{
+    requests.push(String(input));assert.equal(String(input),'https://api.github.com/graphql');assert.equal(options?.method,'POST');assert.equal(options?.redirect,'error');
+    const body=JSON.parse(String(options?.body));assert.match(body.query,/Guillaumeperrottet/);assert.ok(!body.query.includes('github_pat_fixture'));
+    return Response.json({data:{r0:{nameWithOwner:'Guillaumeperrottet/webbing'}}});
+  });
+  try{
+    const data=await readGitHubRepositories('github_pat_fixture',['Guillaumeperrottet/webbing']);assert.ok(data.r0);assert.equal(requests.length,1);
+    request.mock.mockImplementation(async()=>Response.json({errors:[{message:'private server detail'}]}));
+    await assert.rejects(()=>readGitHubRepositories('github_pat_fixture',['Guillaumeperrottet/webbing']),error=>error instanceof Error&&/droits/.test(error.message)&&!error.message.includes('private server detail'));
+    request.mock.mockImplementation(async()=>new Response(null,{status:401}));
+    await assert.rejects(()=>readGitHubRepositories('github_pat_fixture',['Guillaumeperrottet/webbing']),/expiré ou révoqué/);
+  }finally{request.mock.restore();}
+});
+
+test("GitHub GraphQL bot identities normalize to the REST form without elevating user identities",()=>{
+  assert.equal(githubActorLogin({__typename:'Bot',login:'dependabot'}),'dependabot[bot]');
+  assert.equal(githubActorLogin({__typename:'Bot',login:'github-actions'}),'github-actions[bot]');
+  assert.equal(githubActorLogin({__typename:'User',login:'dependabot'}),'dependabot');
+  assert.equal(githubActorLogin(null),null);
 });

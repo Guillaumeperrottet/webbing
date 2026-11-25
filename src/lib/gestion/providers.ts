@@ -6,7 +6,7 @@ import { seal, unseal } from "./vault";
 import { tokensEqual } from "./security";
 import { deploymentState, deploymentUrl, eventDate, vercelEventSchema } from "./vercel-events";
 
-export type Integration = { id: string; provider: "vercel" | "supabase"; name: string; config: Record<string, unknown>; last_sync_at: string | null; last_attempt_at: string | null; last_error: string | null; created_at: string };
+export type Integration = { id: string; provider: "vercel" | "supabase" | "github"; name: string; config: Record<string, unknown>; last_sync_at: string | null; last_attempt_at: string | null; last_error: string | null; created_at: string };
 export async function integrations() {
   return (await query<Integration>("SELECT id,provider,name,config,last_sync_at,last_attempt_at,last_error,created_at FROM ops_integrations WHERE revoked_at IS NULL ORDER BY provider,name")).rows;
 }

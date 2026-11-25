@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash, createHmac, randomBytes } from "node:crypto";
 import { createRequire } from "node:module";
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { after, test } from "node:test";
 const require = createRequire(import.meta.url);
 require("@next/env").loadEnvConfig(process.cwd());
@@ -19,6 +19,14 @@ function totp(secret: string) {
 }
 class Client {
   cookies = new Map<string,string>();
+  async action(name:string) {
+    const manifest=JSON.parse(readFileSync(".next/server/server-reference-manifest.json","utf8"));
+    const entry=Object.entries(manifest.node as Record<string,{exportedName:string}>).find(([,v])=>v.exportedName===name);
+    assert.ok(entry, `Server action ${name} is present in the production build`);
+    const form=new FormData();form.set(`$ACTION_ID_${entry[0]}`,"");
+    form.set("repository","Guillaumeperrottet/webbing");form.set("number","0");
+    return fetch(base+"/gestion",{method:"POST",redirect:"manual",headers:{origin:base,cookie:[...this.cookies].map(([k,v])=>`${k}=${v}`).join("; ")},body:form});
+  }
   async send(path: string, body?: unknown, origin = base) {
     const response = await fetch(base + path, { method: body === undefined ? "GET" : "POST", redirect: "manual", headers: { origin, "Content-Type": "application/json", cookie: [...this.cookies].map(([k,v]) => `${k}=${v}`).join("; ") }, body: body === undefined ? undefined : JSON.stringify(body) });
     for (const value of response.headers.getSetCookie()) {
@@ -45,6 +53,10 @@ test("private access enforces invitation, two factors, per-session verification 
   const anonymous = new Client();
   const redirect = await anonymous.send("/gestion");
   assert.equal(redirect.status, 307); assert.equal(redirect.headers.get("location"), "/gestion/connexion");
+  assert.equal((await anonymous.send("/gestion?vue=dependances")).headers.get("location"),"/gestion/connexion");
+  for(const action of ["addGitHubConnection","approveDependencyUpdate","refreshDependencies","disconnectGitHub"]){
+    const response=await anonymous.action(action);assert.equal(response.status,303);assert.equal(response.headers.get("location"),"/gestion/connexion");await response.text();
+  }
   const login = await anonymous.send("/gestion/connexion"); const loginHtml = await login.text();
   assert.equal(login.status,200); assert.match(login.headers.get("x-robots-tag") || "",/noindex/);
   assert.doesNotMatch(loginHtml,/googletagmanager|G-E7P0FVYQSZ|\/insights\/script/);
@@ -61,6 +73,8 @@ test("private access enforces invitation, two factors, per-session verification 
   assert.equal((await anonymous.send("/api/gestion/activation",{token,password})).status,400,"invitation is one-use");
   assert.equal((await client.send("/gestion")).headers.get("location"),"/gestion/securite");
   assert.equal((await client.send("/api/gestion/agent")).status,401,"password alone grants no data");
+  const blockedApproval=await client.action("approveDependencyUpdate");
+  assert.equal(blockedApproval.status,303);assert.equal(blockedApproval.headers.get("location"),"/gestion/securite");await blockedApproval.text();
   const stale = new Client();
   assert.equal((await stale.send("/api/gestion/auth/sign-in/email",{email,password})).status,200);
   const enabled = await client.send("/api/gestion/auth/two-factor/enable",{password,method:"totp"});
@@ -73,6 +87,7 @@ test("private access enforces invitation, two factors, per-session verification 
   const dashboard = await client.send("/gestion"); assert.equal(dashboard.status,200);
   const html = await dashboard.text(); assert.match(html,/Vue d’ensemble/); assert.match(html,/selfkey/);
   assert.doesNotMatch(html,/googletagmanager|G-E7P0FVYQSZ|\/insights\/script/);
+  const dependencies=await client.send("/gestion?vue=dependances");assert.equal(dependencies.status,200);assert.match(await dependencies.text(),/Configuration des dépôts/);
   assert.notEqual((await stale.send("/gestion")).status,200,"old password-only session stays unverified after enrollment");
   assert.equal((await stale.send("/api/gestion/agent")).status,401);
   assert.equal((await client.send("/api/gestion/auth/two-factor/disable",{password})).status,404);

@@ -11,3 +11,5 @@
 .ops textarea{width:100%;min-height:150px;padding:12px;border:1px solid #cbcbd4;border-radius:6px;background:#f6f6f8;color:var(--ops-ink);font:0.8125rem/1.5 ui-monospace,monospace;resize:vertical}
 
 .ops-project-picker{border:1px solid var(--ops-line);border-radius:7px;padding:16px;display:grid;gap:10px;max-height:300px;overflow:auto}.ops-project-picker legend{font-size:.875rem;padding:0 6px}.ops-inline-tools{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:20px}.ops-service-state{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:4px 0;font-size:.8125rem}.ops-feedback{background:#e9f4ec;color:#28633b;padding:12px;border-radius:6px;font-size:.875rem}@media(max-width:760px){.ops-inline-tools{flex-direction:column}}
+
+.ops-update h2{margin-top:16px;overflow-wrap:anywhere}.ops-service-row{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.ops-approval{max-width:650px;padding:16px;border:1px solid var(--ops-line,#e4e4e7);border-radius:12px;background:var(--ops-bg,#fafafa)}.ops-update .ops-inline-tools{flex-wrap:wrap}

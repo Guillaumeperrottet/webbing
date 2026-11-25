@@ -4,7 +4,7 @@ import path from 'node:path';
 const root=process.env.GITHUB_WORKSPACE || process.cwd();
 const recipe=JSON.parse(readFileSync(path.join(root,'.github/webbing-ci.json'),'utf8'));
 const git=(args)=>execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim();
-const merge=git(['rev-parse','HEAD']),parents=git(['show','-s','--format=%P','HEAD']).split(' ');
+const merge=git(['rev-parse','HEAD']),parents=git(['cat-file','-p','HEAD']).split('\n').filter(line=>/^parent [0-9a-f]{40}$/.test(line)).map(line=>line.slice(7));
 const event=process.env.GITHUB_EVENT_PATH?JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH,'utf8')):{};
 const testedHead=event.pull_request?.head.sha || merge;
 const testedBase=event.pull_request?parents[0]:merge;

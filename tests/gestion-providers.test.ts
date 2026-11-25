@@ -34,7 +34,7 @@ test("Supabase sync uses read-only endpoints, validates project identity and sep
   const ref='abcdefghijklmnopqrst';const calls:string[]=[];
   const fetch=mock.method(globalThis,'fetch',async(input:unknown,options?:RequestInit)=>{
     const url=String(input);calls.push(url);assert.equal(options?.redirect,'error');assert.equal(options?.method,undefined);
-    if(url.includes('/health?'))return Response.json([{name:'auth',status:'ACTIVE_HEALTHY',healthy:true},{name:'rest',status:'UNHEALTHY',healthy:false}]);
+    if(url.includes('/health?')){assert.equal(new URL(url).searchParams.has('timeout_ms'),false);return Response.json([{name:'auth',status:'ACTIVE_HEALTHY',healthy:true},{name:'rest',status:'UNHEALTHY',healthy:false}]);}
     return Response.json({id:ref,name:'Fixture',status:'ACTIVE_HEALTHY',region:'eu-central-2'});
   });
   try {

@@ -12,10 +12,11 @@ export async function addSupabaseConnection(form: FormData) {
   try {
     const result = await connectSupabase(String(form.get("name") || ""), String(form.get("token") || "").trim(), form.getAll("refs").map(String));
     revalidatePath("/gestion");
-    return { ok: true, message: `${result.connected} projet(s) raccordé(s).${result.excluded ? ` ${result.excluded} projet(s) restent à raccorder avec un autre jeton.` : ""}` };
+    const missing=result.excludedRefs.length?(await query<{name:string}>("SELECT name FROM ops_supabase_projects WHERE ref=ANY($1::text[]) ORDER BY name",[result.excludedRefs])).rows.map(p=>p.name):[];
+    return { ok: true, message: `${result.updated?'Connexion mise à jour. ':''}${result.connected} projet(s) raccordé(s).${result.excluded ? ` Accès manquant pour ${missing.join(', ') || `${result.excluded} projet(s)`} : ajouter un jeton autorisé pour ces projets.` : ""}` };
   } catch (error) {
     const message=error instanceof Error ? error.message : "";
-    return { ok:false,message:/^(Utilise|Choisis|Accès refusé|Ce jeton|Supabase|Limite de requêtes)/.test(message)?message:"La connexion n’a pas pu être vérifiée. Réessaie dans un instant." };
+    return { ok:false,message:/^(Utilise|Choisis|Accès refusé|Jeton refusé|Ce jeton|Supabase|Limite de requêtes)/.test(message)?message:"La connexion n’a pas pu être vérifiée. Réessaie dans un instant." };
   }
 }
 export async function refreshProviders() {

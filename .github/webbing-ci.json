@@ -1,0 +1,44 @@
+{
+  "applications": [
+    {
+      "directory": ".",
+      "manager": "pnpm",
+      "tests": [
+        [
+          "pnpm",
+          "test:security"
+        ],
+        [
+          "node",
+          "--conditions=react-server",
+          "--import",
+          "tsx",
+          "--test",
+          "tests/gestion-collector.test.ts",
+          "tests/gestion-providers.test.ts"
+        ],
+        [
+          "node",
+          "--test",
+          "tests/dependency-policy.test.mjs"
+        ]
+      ],
+      "database": false,
+      "typecheck": true,
+      "lint": true,
+      "smoke": [
+        {
+          "path": "/",
+          "status": 200,
+          "html": true
+        },
+        {
+          "path": "/gestion",
+          "status": 307,
+          "location": "/gestion/connexion",
+          "follow": false
+        }
+      ]
+    }
+  ]
+}

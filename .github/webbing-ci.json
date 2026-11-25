@@ -20,7 +20,8 @@
         [
           "node",
           "--test",
-          "tests/dependency-policy.test.mjs"
+          "tests/dependency-policy.test.mjs",
+          "tests/dependency-worker.test.mjs"
         ]
       ],
       "database": false,

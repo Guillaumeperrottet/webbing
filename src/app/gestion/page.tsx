@@ -33,9 +33,10 @@ function Badge({ label, state }: { label: string; state: string }) { return <spa
 function Name({ app }: { app: Application }) { return <div className="ops-app-name"><span className="ops-app-initial" aria-hidden="true">{app.name[0].toUpperCase()}</span><div><strong>{app.name}</strong><span className="ops-muted">{app.environment === "staging" ? "Staging" : "Production"}{app.url ? ` · ${new URL(app.url).hostname}` : " · Domaine à renseigner"}</span></div></div>; }
 function AppTable({ apps }: { apps: Application[] }) { return <div className="ops-table-scroll"><table className="ops-table"><thead><tr><th>Application</th><th>Disponibilité HTTP</th><th>Dernier déploiement</th><th>Base Supabase</th><th>Dernier contrôle</th><th>Accès</th></tr></thead><tbody>{apps.map((app) => <tr key={app.id}><td><Name app={app} /></td><td><Badge {...health(app)} />{app.health_ms !== null && <span className="ops-muted">{app.health_ms} ms{app.health_code ? ` · HTTP ${app.health_code}` : ""}</span>}</td><td><ProviderBadge kind="vercel" status={app.deployment_state}/><span className="ops-muted">{app.deployment_at?date(app.deployment_at):"À synchroniser"}</span>{app.rollback_pending&&<span className="ops-muted">Retour arrière à confirmer</span>}</td><td>{app.supabase_ref?<ProviderBadge kind="supabase" status={app.supabase_state} checkedAt={app.supabase_checked_at} error={app.supabase_error} connected={!!app.supabase_integration_id}/>:<span className="ops-muted">{app.database_provider||"Non associée"}</span>}</td><td>{date(app.health_at)}</td><td><div className="ops-row-links">{app.url && <a href={app.url} target="_blank" rel="noopener noreferrer">Site<ExternalLink size={13} aria-hidden="true" /></a>}{app.admin_url && <a href={app.admin_url} target="_blank" rel="noopener noreferrer">Admin<ExternalLink size={13} aria-hidden="true" /></a>}<a href={`https://vercel.com/guillaumes-projects-faaa7c9a/${app.slug}`} target="_blank" rel="noopener noreferrer">Vercel<ExternalLink size={13} aria-hidden="true" /></a>{app.supabase_ref && <a href={`https://supabase.com/dashboard/project/${app.supabase_ref}`} target="_blank" rel="noopener noreferrer">Base<ExternalLink size={13} aria-hidden="true" /></a>}</div></td></tr>)}</tbody></table></div>; }
 
-export default async function Gestion({ searchParams }: { searchParams: Promise<{ vue?: string }> }) {
+export default async function Gestion({ searchParams }: { searchParams: Promise<{ vue?: string; filtre?: string; page?: string }> }) {
   const session = await requireAdmin();
-  const requested = (await searchParams).vue || "ensemble";
+  const params=await searchParams;
+  const requested = params.vue || "ensemble";
   const view = sections.find((s) => s[0] === requested)?.[0] || "ensemble";
   const title = sections.find((s) => s[0] === view)![1];
   const [{ apps, collectors, audit }, providerConnections, databaseProjects, deploymentHistory, dependencies] = await Promise.all([overview(),integrations(),supabaseProjects(),deployments(),dependencyData()]);
@@ -57,7 +58,7 @@ export default async function Gestion({ searchParams }: { searchParams: Promise<
         </div></section>
         <section className="ops-panel"><div className="ops-panel-heading"><h2>Tes applications</h2><Link href="/gestion?vue=applications">Tout afficher</Link></div><AppTable apps={production} /></section>
       </>}
-      {view === "dependances" && <DependencyView {...dependencies}/>}
+      {view === "dependances" && <DependencyView {...dependencies} filter={params.filtre} page={Number(params.page)}/>}
       {view === "deploiements" && <DeploymentView items={deploymentHistory}/>}
       {view === "bases" && <SupabaseView projects={databaseProjects}/>}
       {view === "applications" && <><p className="ops-notice">« Répond » signifie que l’adresse renvoie une réponse HTTP correcte. Les services internes et les tâches planifiées demandent leurs propres contrôles.</p><section className="ops-panel"><AppTable apps={apps} /></section></>}

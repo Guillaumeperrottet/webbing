@@ -32,7 +32,7 @@ for(const app of recipe.applications){
  for(const command of app.tests || [])await run(command,cwd);
  await run([manager,'run','build'],cwd);
  if(app.typecheck)await run([...exec,'tsc','--noEmit'],cwd);
- if(app.lint)await run([...exec,'eslint','.'],cwd);
+ if(app.lint)await run([manager,'run','lint'],cwd);
  const start=app.start || [manager,'run','start','--','--hostname','127.0.0.1','--port','3100'];
  const server=spawn(start[0],start.slice(1),{cwd,env,stdio:['ignore','inherit','inherit'],detached:true});
  let started=false;

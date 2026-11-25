@@ -46,7 +46,7 @@ export function evaluateChecks(checks,statuses,baseSha) {
     const key=`${check.app?.id}:${check.name}`;
     if(!latest.has(key)||Number(check.id)>Number(latest.get(key).id))latest.set(key,check);
   }
-  const runs=[...latest.values()];
+  const runs=[...latest.values()].filter(c=>!(c.name==='Webbing / Dependency policy'&&c.app?.slug==='github-actions'));
   if(!runs.some(c=>c.name===QUALITY && c.app?.slug==='github-actions' && c.status==='completed' && c.conclusion==='success'))return {ok:false,reason:'Les vérifications Webbing doivent réussir.'};
   if(runs.some(c=>c.status!=='completed'||!['success','neutral','skipped'].includes(c.conclusion)))return {ok:false,reason:'Un contrôle est en attente ou en échec.'};
   const byContext=new Map();

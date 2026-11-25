@@ -14,11 +14,10 @@ export const applications = [
     image: "/projects/wisp/transfer-selected-desktop.jpg", width: 432, height: 330,
   },
   {
-    id: "plannikeeper", name: "PlanniKeeper", url: "https://www.plannikeeper.ch/", category: "Organisation des établissements",
-    benefit: "Réunir les tâches, les échanges et l’équipe.",
-    description: "Pour les hôtels, campings, résidences et gérances, PlanniKeeper rassemble les tâches, les discussions, les photos et les documents par établissement. Chacun retrouve son travail et les informations utiles, au bureau comme sur le terrain.",
-    // Positioning: https://www.plannikeeper.ch/, public homepage read 2026-11-02.
-    image: "/plannikeeper_application.png", width: 3450, height: 1918,
+    id: "plannikeeper", name: "Mypapers", url: "https://www.mypapers.ch/", category: "Notes, projets et établissements",
+    benefit: "Écrivez librement. Gardez le fil.",
+    description: "Un espace pour les notes, tâches, projets et documents de votre équipe. Les plans relient les équipements aux interventions.",
+    image: "/mypapers_application.png", width: 1274, height: 717,
   },
 ] as const;
 

@@ -11,7 +11,7 @@ const ink = "#171313";
 const muted = "#5e5653";
 const paper = "#f4f1ef";
 const rose = "#e11d48";
-const folders = ["Selfcamp", "OpenWind", "Wisp", "PlanniKeeper", "Pattùs", "Alpha Hotel", "Coachingbymarie", "Graphomouv", "Dipiaza"];
+const folders = ["Selfcamp", "OpenWind", "Wisp", "Mypapers", "Pattùs", "Alpha Hotel", "Coachingbymarie", "Graphomouv", "Dipiaza"];
 
 async function asset(path: string, mime: string) {
   return `data:${mime};base64,${(await readFile(join(process.cwd(), "public", path))).toString("base64")}`;

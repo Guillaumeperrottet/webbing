@@ -24,6 +24,9 @@ export function Footer() {
           <p>© {new Date().getFullYear()} Webbing. Tous droits réservés.</p>
           <a href="https://github.com/Guillaumeperrottet" target="_blank" rel="noopener noreferrer" aria-label="Voir le profil GitHub de Guillaume Perrottet" className="footer-github"><Github size={18} aria-hidden="true" />Guillaume Perrottet</a>
         </div>
+        <p style={{ marginTop: 12, fontSize: 11, lineHeight: 1.6, opacity: 0.7 }}>
+          Apple, le logo Apple, iPhone et App Store sont des marques d’Apple Inc., déposées aux États-Unis et dans d’autres pays.
+        </p>
       </div>
     </footer>
   );

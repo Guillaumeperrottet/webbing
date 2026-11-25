@@ -1,0 +1,7 @@
+.promo { margin-block: 24px; }
+.promo p { font-size: 0.9375rem; line-height: 1.65; }
+.promo p span { color: var(--muted-foreground); font-size: 0.875rem; }
+.badge { display: inline-flex; padding: 10px; margin: 6px 0 0 -10px; line-height: 0; border-radius: 8px; }
+.badge img { display: block; width: auto; height: 40px; }
+.badge:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.availability { display: block; font-size: 0.75rem; color: var(--muted-foreground); }

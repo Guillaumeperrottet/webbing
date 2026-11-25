@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProjectCaseStudy } from "@/components/project-case-study";
 import { caseStudies } from "@/data/case-studies";
 import { DemoPlaybackProvider } from "@/components/demo-playback";
+import { MypapersAppStore } from "@/components/mypapers-app-store";
 
 const sectionAliases: Record<string, number> = {
   realisations: 0,
@@ -105,7 +106,7 @@ function FolderLabel({ id, name }: { id: string; name: string }) {
   if (id === "selfcamp") return <>{name.slice(0, 4)}<wbr />{name.slice(4)}</>;
   if (id === "openwind") return <>Open<wbr />Wind</>;
   if (id === "coachingbymarie") return <>Coach<wbr />ing<wbr />by<wbr />marie</>;
-  if (id === "plannikeeper") return <>Planni<wbr />Keeper</>;
+  if (id === "plannikeeper") return <>{name}</>;
   if (id === "graphomouv") return <>Grapho<wbr />mouv</>;
   return <>{name}</>;
 }
@@ -357,6 +358,7 @@ export function ProjectShowcase() {
                     </div>
                     <div className="project-panel-summary">
                       <p>{project.description}</p>
+                      {project.id === "plannikeeper" && <MypapersAppStore />}
                       <ul className="project-capabilities" aria-label={`Fonctionnalités de ${project.name}`}>
                         {project.features.map((feature) => <li key={feature}>{feature}</li>)}
                       </ul>

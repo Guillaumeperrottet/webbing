@@ -49,19 +49,21 @@ test("Supabase sync uses read-only endpoints, validates project identity and sep
   } finally {fetch.mock.restore();}
 });
 
-test("GitHub synchronization keeps its credential out of queries and sanitizes provider failures",async()=>{
-  const requests:string[]=[];
+test("GitHub sync uses read-only REST endpoints supported by scoped credentials",async()=>{
+  const repository='Guillaumeperrottet/webbing',base='b'.repeat(40),calls:string[]=[];
   const request=mock.method(globalThis,'fetch',async(input:unknown,options?:RequestInit)=>{
-    requests.push(String(input));assert.equal(String(input),'https://api.github.com/graphql');assert.equal(options?.method,'POST');assert.equal(options?.redirect,'error');
-    const body=JSON.parse(String(options?.body));assert.match(body.query,/Guillaumeperrottet/);assert.ok(!body.query.includes('github_pat_fixture'));
-    return Response.json({data:{r0:{nameWithOwner:'Guillaumeperrottet/webbing'}}});
+    const url=new URL(String(input));calls.push(url.pathname);assert.equal(url.origin,'https://api.github.com');assert.equal(options?.method,'GET');assert.equal(options?.redirect,'error');assert.ok(!url.pathname.includes('graphql')&&!url.pathname.includes('check-runs')&&!String(input).includes('github_pat_fixture'));
+    if(url.pathname.endsWith('/git/ref/heads/main'))return Response.json({object:{sha:base}});
+    if(url.pathname.includes('/contents/'))return new Response(null,{status:404});
+    if(url.pathname.endsWith('/pulls'))return Response.json([]);
+    return Response.json({full_name:repository,default_branch:'main'});
   });
   try{
-    const data=await readGitHubRepositories('github_pat_fixture',['Guillaumeperrottet/webbing']);assert.ok(data.r0);assert.equal(requests.length,1);
-    request.mock.mockImplementation(async()=>Response.json({errors:[{message:'private server detail'}]}));
-    await assert.rejects(()=>readGitHubRepositories('github_pat_fixture',['Guillaumeperrottet/webbing']),error=>error instanceof Error&&/droits/.test(error.message)&&!error.message.includes('private server detail'));
+    const data=await readGitHubRepositories('github_pat_fixture',[repository]);assert.ok(data.r0);assert.equal(calls.length,4);
+    request.mock.mockImplementation(async()=>new Response(null,{status:403}));
+    await assert.rejects(()=>readGitHubRepositories('github_pat_fixture',[repository]),/Droits GitHub/);
     request.mock.mockImplementation(async()=>new Response(null,{status:401}));
-    await assert.rejects(()=>readGitHubRepositories('github_pat_fixture',['Guillaumeperrottet/webbing']),/expiré ou révoqué/);
+    await assert.rejects(()=>readGitHubRepositories('github_pat_fixture',[repository]),/expiré ou révoqué/);
   }finally{request.mock.restore();}
 });
 

@@ -89,3 +89,13 @@ CREATE TABLE IF NOT EXISTS ops_dependency_updates (
 );
 ALTER TABLE ops_repositories ADD COLUMN IF NOT EXISTS setup_pr_url text;
 ALTER TABLE ops_repositories ADD COLUMN IF NOT EXISTS setup_state text NOT NULL DEFAULT 'prepared';
+
+CREATE TABLE IF NOT EXISTS ops_dependency_approvals (
+ id uuid PRIMARY KEY, repository text NOT NULL REFERENCES ops_repositories(full_name), number integer NOT NULL,
+ head_sha text NOT NULL, base_sha text NOT NULL, requested_by text NOT NULL,
+ status text NOT NULL DEFAULT 'requested', requested_at timestamptz NOT NULL DEFAULT now(),
+ finished_at timestamptz, run_url text, merged_sha text, error text
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ops_dependency_approvals_pending ON ops_dependency_approvals(repository,number,head_sha,base_sha) WHERE status='requested';
+
+ALTER TABLE ops_dependency_updates ADD COLUMN IF NOT EXISTS metadata_version integer NOT NULL DEFAULT 1;

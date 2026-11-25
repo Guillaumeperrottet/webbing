@@ -1,10 +1,20 @@
 /** Shared by the isolated GitHub merge job and Webbing's authenticated server. */
+export const GATE = 'Webbing / Validation';
 export const QUALITY = 'Webbing / Quality';
 export const ATTESTATION = 'Webbing / Base testée';
 export const WORKFLOW = '.github/workflows/webbing-dependency-checks.yml';
 const SHA = /^[0-9a-f]{40}$/;
 const small = new Set(['patch','minor']);
 
+function signedSingleUpdate(message,name,version){
+  const subject=message.split('\n',1)[0];
+  const match=subject.match(/^Bump (\S+) from v?(\d+\.\d+\.\d+) to v?(\d+\.\d+\.\d+)(?: in \/[A-Za-z0-9_./-]+)?$/);
+  if(!match||match[1]!==name||match[3]!==version)return null;
+  const before=match[2].split('.').map(Number),after=match[3].split('.').map(Number);
+  if([...before,...after].some(n=>!Number.isSafeInteger(n)))return null;
+  for(let i=0;i<3;i++)if(after[i]!==before[i])return after[i]>before[i]?['major','minor','patch'][i]:null;
+  return null;
+}
 export function dependencyMetadata(commits) {
   if (!Array.isArray(commits) || !commits.length || commits.length > 100) return {type:'unknown',dependencies:[]};
   const dependencies=[];
@@ -19,8 +29,9 @@ export function dependencyMetadata(commits) {
     if(!records.length)return {type:'unknown',dependencies:[]};
     for(const record of records){
       const name=record.match(/^- dependency-name:\s*(.+)$/m)?.[1];
-      const type=record.match(/^  update-type:\s*version-update:semver-(patch|minor|major)\s*$/m)?.[1];
+      let type=record.match(/^  update-type:\s*version-update:semver-(patch|minor|major)\s*$/m)?.[1];
       const version=record.match(/^  dependency-version:\s*(.+)$/m)?.[1] || null;
+      if(!type&&name&&version&&records.length===1&&!/^  update-type:/m.test(record))type=signedSingleUpdate(message,name.replace(/^['"]|['"]$/g,''),version.replace(/^['"]|['"]$/g,''));
       if(!name || !type)return {type:'unknown',dependencies:[]};
       dependencies.push({name:name.replace(/^['"]|['"]$/g,'').slice(0,200),type,version:version?.replace(/^['"]|['"]$/g,'').slice(0,100)});
     }
@@ -50,7 +61,7 @@ export function evaluateChecks(checks,statuses,baseSha) {
   if(!runs.some(c=>c.name===QUALITY && c.app?.slug==='github-actions' && c.status==='completed' && c.conclusion==='success'))return {ok:false,reason:'Les vérifications Webbing doivent réussir.'};
   if(runs.some(c=>c.status!=='completed'||!['success','neutral','skipped'].includes(c.conclusion)))return {ok:false,reason:'Un contrôle est en attente ou en échec.'};
   const byContext=new Map();
-  for(const status of statuses || [])if(!byContext.has(status.context))byContext.set(status.context,status);
+  for(const status of statuses || []){if(status.context===GATE&&status.creator?.login==='github-actions[bot]')continue;if(!byContext.has(status.context))byContext.set(status.context,status);}
   if([...byContext.values()].some(s=>s.state!=='success'))return {ok:false,reason:'Un contrôle de déploiement est en attente ou en échec.'};
   const proof=byContext.get(ATTESTATION);
   if(!proof || proof.creator?.login!=='github-actions[bot]' || proof.state!=='success' || proof.description!==`base:${baseSha}`)return {ok:false,reason:'La branche cible a changé : relancer les vérifications sur sa version actuelle.'};
@@ -91,7 +102,30 @@ export function githubApi(token) {
   return async(path,options={})=>{
     if(!path.startsWith('/repos/')||path.includes('..')||path.includes('#'))throw new Error('Requête GitHub invalide.');
     const response=await fetch('https://api.github.com'+path,{method:options.method||'GET',headers:{Authorization:`Bearer ${token}`,Accept:'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'Webbing-gestion'},body:options.body?JSON.stringify(options.body):undefined,cache:'no-store',redirect:'error',signal:AbortSignal.timeout(12000)});
-    if(!response.ok)throw new Error(response.status===401?'Jeton GitHub expiré ou révoqué.':response.status===403?'Droits GitHub insuffisants ou limite de requêtes atteinte.':response.status===409||response.status===405?'La proposition ne peut pas être fusionnée dans son état actuel.':'GitHub n’a pas accepté cette opération.');
+    if(!response.ok)throw Object.assign(new Error(response.status===401?'Jeton GitHub expiré ou révoqué.':response.status===403?'Droits GitHub insuffisants ou limite de requêtes atteinte.':response.status===409||response.status===405?'La proposition ne peut pas être fusionnée dans son état actuel.':'GitHub n’a pas accepté cette opération.'),{status:response.status});
     return response.status===204?null:response.json();
   };
+}
+
+/** Fine-grained PATs cannot call Checks. The trusted GitHub workflow publishes its decision. */
+export function gatewayReadiness(statuses,baseSha){
+  const latest=new Map();
+  for(const status of statuses||[])if(!latest.has(status.context))latest.set(status.context,status);
+  if((statuses||[]).length>=100)return {ok:false,reason:'La liste des contrôles doit être examinée dans GitHub.'};
+  const attestation=latest.get(ATTESTATION),gate=latest.get(GATE);
+  if(!attestation||attestation.creator?.login!=='github-actions[bot]'||attestation.state!=='success'||attestation.description!==`base:${baseSha}`)return {ok:false,reason:'Des contrôles sur la branche cible actuelle sont nécessaires.'};
+  if(!gate||gate.creator?.login!=='github-actions[bot]'||gate.description!==`base:${baseSha}`||gate.state!=='success')return {ok:false,reason:'La validation des contrôles par GitHub est en attente.'};
+  if([...latest.values()].some(s=>s.state!=='success'))return {ok:false,reason:'Un contrôle de déploiement est en attente ou en échec.'};
+  return {ok:true,reason:'GitHub a vérifié tous les contrôles sur la version actuelle.'};
+}
+export async function dispatchApproval(api,repository,number,{expectedHead,expectedBase,approvalId}){
+  if(!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository)||!Number.isSafeInteger(number)||number<1||!SHA.test(expectedHead)||!SHA.test(expectedBase)||!/^([0-9a-f]{8}-){1}[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(approvalId))throw new Error('Proposition invalide.');
+  const root=`/repos/${repository}`;
+  const [repo,pr]=await Promise.all([api(root),api(`${root}/pulls/${number}`)]);
+  if(!trustedDependencyPR(pr,repository,repo.default_branch))throw new Error('Cette proposition ne correspond pas à une mise à jour Dependabot du dépôt.');
+  const [base,statuses]=await Promise.all([api(`${root}/git/ref/heads/${encodeURIComponent(repo.default_branch)}`),api(`${root}/commits/${pr.head.sha}/statuses?per_page=100`)]);
+  if(pr.head.sha!==expectedHead||base.object.sha!==expectedBase)throw new Error('La proposition ou la branche cible a changé. Actualise avant de valider.');
+  const readiness=gatewayReadiness(statuses,expectedBase);if(!readiness.ok)throw new Error(readiness.reason);
+  await api(`${root}/actions/workflows/webbing-dependency-policy.yml/dispatches`,{method:'POST',body:{ref:repo.default_branch,inputs:{pull_request:String(number),approve_manual:'true',expected_head:expectedHead,expected_base:expectedBase,approval_id:approvalId}}});
+  return {queued:true};
 }

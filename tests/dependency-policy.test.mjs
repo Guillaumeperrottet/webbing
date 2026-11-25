@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {dependencyMetadata,evaluateChecks,allowedDependencyFiles,trustedDependencyPR,mergeUpdate,QUALITY,ATTESTATION} from '../scripts/dependencies/policy.mjs';
+import {dependencyMetadata,evaluateChecks,allowedDependencyFiles,trustedDependencyPR,mergeUpdate,QUALITY,ATTESTATION,GATE,gatewayReadiness,dispatchApproval} from '../scripts/dependencies/policy.mjs';
 const sha='a'.repeat(40),base='b'.repeat(40);
 const commit=(type)=>({author:{login:'dependabot[bot]',type:'Bot'},commit:{verification:{verified:true},message:`Bump dependencies\n\n---\nupdated-dependencies:\n- dependency-name: react\n  dependency-version: 19.3.1\n  update-type: version-update:semver-${type}\n...\n\nSigned-off-by: dependabot[bot]`}});
 const checks=[{id:1,name:QUALITY,app:{id:15368,slug:'github-actions'},status:'completed',conclusion:'success'}];
@@ -44,4 +44,39 @@ test('manual approval is bound to the displayed head and target; a major never a
  await assert.rejects(()=>mergeUpdate(api,'owner/repo',1,{expectedHead:'c'.repeat(40),expectedBase:base}),/changé/);
  assert.equal(writes,0);
  assert.equal((await mergeUpdate(api,'owner/repo',1,{expectedHead:sha,expectedBase:base})).sha,'d'.repeat(40));assert.equal(writes,1);
+});
+
+test('the limited-token gateway requires a trusted current decision and ignores its own pending status only inside the trusted worker',()=>{
+ const gate={context:GATE,state:'success',description:`base:${base}`,creator:{login:'github-actions[bot]'}};
+ assert.equal(gatewayReadiness(statuses,base).ok,false);
+ assert.equal(gatewayReadiness([...statuses,gate],base).ok,true);
+ assert.equal(gatewayReadiness([...statuses,{...gate,creator:{login:'someone'}}],base).ok,false);
+ assert.equal(gatewayReadiness([...statuses,gate],'c'.repeat(40)).ok,false);
+ assert.equal(gatewayReadiness([...statuses,gate,{context:'Vercel',state:'failure'}],base).ok,false);
+ assert.equal(evaluateChecks(checks,[...statuses,{...gate,state:'pending'}],base).ok,true);
+});
+test('Webbing dispatches a bound approval without the Checks API or a direct merge',async()=>{
+ const approvalId='12345678-1234-4234-8234-123456789abc';let writes=0;
+ const pr={state:'open',draft:false,user:{login:'dependabot[bot]',type:'Bot'},head:{sha,ref:'dependabot/npm/next',repo:{full_name:'owner/repo'}},base:{ref:'main',repo:{full_name:'owner/repo'}}};
+ const api=async(path,options)=>{
+  assert.ok(!path.includes('/check-runs')&&!path.endsWith('/merge'));
+  if(options?.method){writes++;assert.equal(path,'/repos/owner/repo/actions/workflows/webbing-dependency-policy.yml/dispatches');assert.equal(options.body.ref,'main');assert.deepEqual(options.body.inputs,{pull_request:'7',approve_manual:'true',expected_head:sha,expected_base:base,approval_id:approvalId});return null;}
+  if(path==='/repos/owner/repo')return {default_branch:'main'};
+  if(path.endsWith('/pulls/7'))return pr;
+  if(path.includes('/git/ref/'))return {object:{sha:base}};
+  if(path.includes('/statuses?'))return [...statuses,{context:GATE,state:'success',description:`base:${base}`,creator:{login:'github-actions[bot]'}}];
+  throw new Error(path);
+ };
+ await assert.rejects(()=>dispatchApproval(api,'owner/repo',7,{expectedHead:'c'.repeat(40),expectedBase:base,approvalId}),/changé/);assert.equal(writes,0);
+ assert.deepEqual(await dispatchApproval(api,'owner/repo',7,{expectedHead:sha,expectedBase:base,approvalId}),{queued:true});assert.equal(writes,1);
+});
+
+test('security updates without an update-type use only the matching stable versions in their signed subject',()=>{
+ const security=(before,after)=>{const value=commit('patch');value.commit.message=value.commit.message.replace('Bump dependencies',`Bump react from ${before} to ${after}`).replace('  update-type: version-update:semver-patch\n','').replace('dependency-version: 19.3.1',`dependency-version: ${after}`);return value;};
+ assert.equal(dependencyMetadata([security('19.3.0','19.3.1')]).type,'patch');
+ assert.equal(dependencyMetadata([security('19.2.9','19.3.1')]).type,'minor');
+ assert.equal(dependencyMetadata([security('18.3.1','19.3.1')]).type,'major');
+ assert.equal(dependencyMetadata([security('19.3.1','19.2.9')]).type,'unknown');
+ assert.equal(dependencyMetadata([security('19.3.0-rc.1','19.3.1')]).type,'unknown');
+ const mismatch=security('19.3.0','19.3.1');mismatch.commit.message=mismatch.commit.message.replace('dependency-version: 19.3.1','dependency-version: 20.0.0');assert.equal(dependencyMetadata([mismatch]).type,'unknown');
 });

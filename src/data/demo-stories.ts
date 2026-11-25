@@ -6,10 +6,10 @@ export const demoStories = {
     caption: "Partager ses fichiers et les retrouver dans sa bibliothèque.",
     description: "Une démonstration Wisp avec Presentation.pdf, Paysage.jpg et Camping.webp. Un curseur montre les clics sur Créer le lien, Copier le lien et le dossier Projet camping. Le destinataire retrouve les mêmes fichiers. Dans la bibliothèque, Photos est saisi lettre par lettre et filtre les deux images. Le lien wisp.test est un exemple de démonstration.",
   },
-  plannikeeper: {
-    duration: 11000,
-    caption: "Les tâches et les échanges, liés au bon établissement.",
-    description: "Deux captures de la démonstration publique PlanniKeeper montrent le passage de Moi à Équipe. Les tâches sont les exemples publiés par le produit. Aucune intervention n’est cochée ni modifiée.",
+  mypapers: {
+    duration: 28000,
+    caption: "Notes, documents et interventions gardent leur contexte.",
+    description: "Captures de la démonstration publique Mypapers du 25 novembre 2026. À La Clairière, le plan situe la porte d’entrée ; ses documents incluent la notice de réglage. La tâche Régler la fermeture de la porte indique le responsable, l’échéance et la checklist. La vérification figure dans l’agenda. Les notes de préparation et l’annonce de réouverture restent liées au même projet. Mypapers est aussi disponible sur iPhone avec le même compte. Les données sont celles de la démo publique, sans modification ni intervention réelle.",
   },
   "pattus-hotel": {
     duration: 13000,
@@ -43,8 +43,9 @@ export type PortfolioDemoId = StoryDemoId | "openwind";
 
 // Primary sources checked on 2026-10-30; use real captures and photographs, never fabricated app screens.
 // Wisp: https://wisp.ch/ — public transfer, file storage and sharing in Switzerland.
-// PlanniKeeper: https://www.plannikeeper.ch/ — public demo, Moi / Équipe states.
-// /projects/usage/planni-{personal,team}.jpg: the actual public demonstration window.
+// Mypapers: https://www.mypapers.ch/#parcours, read/captured 2026-11-25.
+// /projects/mypapers/: native public-demo captures, using its existing narrow-container styles for mobile.
+// App icon: https://www.mypapers.ch/icons/mypapers-192.png. App Store: id6836844314 (Switzerland).
 // Pattùs: https://www.pattushotel.ch/fr/chambres — Standard room photograph.
 // /projects/usage/pattus-standard-photo.jpg: screenshot of that photograph element.
 // /projects/usage/pattus-suite-lake-original.jpg: original public Suite vue lac photo,

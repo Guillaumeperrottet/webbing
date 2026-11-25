@@ -14,10 +14,11 @@ export const applications = [
     image: "/projects/wisp/transfer-selected-desktop.jpg", width: 432, height: 330,
   },
   {
-    id: "plannikeeper", name: "Mypapers", url: "https://www.mypapers.ch/", category: "Notes, projets et établissements",
+    id: "mypapers", name: "Mypapers", url: "https://www.mypapers.ch/", category: "Notes, projets et établissements",
     benefit: "Écrivez librement. Gardez le fil.",
-    description: "Un espace pour les notes, tâches, projets et documents de votre équipe. Les plans relient les équipements aux interventions.",
-    image: "/mypapers_application.png", width: 1274, height: 717,
+    description: "Vos notes, projets, tâches et documents dans un même espace. Retrouvez le suivi des équipements sur un plan, planifiez les interventions et préparez vos publications dans l’agenda. Sur le web et sur iPhone, votre équipe garde le fil avec le même compte.",
+    // Positioning: https://www.mypapers.ch/#parcours and App Store id6836844314, read 2026-11-25.
+    image: "/projects/mypapers/plan-desktop.jpg", width: 1156, height: 608,
   },
 ] as const;
 
@@ -68,11 +69,11 @@ export const showcaseProjects = [
   ...applications.map((app) => ({
     ...app,
     application: true,
-    features: app.id === "openwind" ? ["Balises et prévisions", "Articles et guides", "Open source"] : app.id === "wisp" ? ["Bibliothèque de fichiers", "Transfert par lien", "Hébergement suisse"] : ["Tâches en équipe", "Échanges par tâche", "Plans et documents"],
+    features: app.id === "openwind" ? ["Balises et prévisions", "Articles et guides", "App iPhone et iPad", "Open source"] : app.id === "wisp" ? ["Bibliothèque de fichiers", "Transfert par lien", "Hébergement suisse"] : ["Notes et projets", "Tâches et plans", "Agenda et communication", "App iPhone"],
     screens: app.id === "openwind" ? [
       { label: "Découvrir", src: "/projects/openwind/observations-desktop.jpg", alt: "OpenWind : balises de vent, prévisions, articles et projet open source", width: 937, height: 811 },
       { label: "Prévisions", src: "/projects/openwind/forecast-desktop.jpg", alt: "Prévisions de modèle Open-Meteo à Morlon, capturées le 3 novembre 2026", width: 937, height: 549 },
-    ] : [{ label: app.id === "wisp" ? "Parcours de partage" : `Interface de ${app.name}`, src: app.image, alt: app.id === "wisp" ? "Wisp : trois fichiers d’exemple prêts à être partagés par lien" : `Interface de ${app.name}`, width: app.width, height: app.height }],
+    ] : [{ label: app.id === "wisp" ? "Parcours de partage" : "Découvrir Mypapers", src: app.image, alt: app.id === "wisp" ? "Wisp : trois fichiers d’exemple prêts à être partagés par lien" : "Mypapers : le plan, les documents et les tâches de La Clairière dans la démonstration publique", width: app.width, height: app.height }],
   })),
   {
     id: "pattus-hotel", name: "Pattùs Hotel", url: "https://www.pattushotel.ch/fr", category: "Hôtel & restaurant", application: false, year: "2026",

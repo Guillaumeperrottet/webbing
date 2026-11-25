@@ -19,7 +19,7 @@
 /* Hallmark · finish-review: prior subagent ship; subsequent fluid-resize correction visually inspected in-thread and verified through20 live viewport sizes, retaining palette and real project material */
 /* Hallmark · composition update: company introduction restored by request; project tab panels replace separate catalogue blocks; native disclosures preserve no-script access */
 /* Hallmark · dropped /applications, /projets, /about, /contact, {service.url}, {app.url}, {app.partnerUrl!}, {selfcamp.url}, {selfcamp.partnerUrl!}, {href}, {project.url} · approved single-page consolidation replaces catalogue navigation with native anchors and HTTP 308 compatibility routes; project URLs now come from portfolio data */
-/* Hallmark · dropped https://wisp.ch/, https://www.alpha-hotel.ch/, https://www.openwind.ch/, https://www.plannikeeper.ch/ · only the old literal footer bindings were retired; the same destinations are rendered by shared ProjectLink from portfolio data, verified in the browser */
+/* Hallmark · dropped https://wisp.ch/, https://www.alpha-hotel.ch/, https://www.openwind.ch/, https://www.mypapers.ch/ · only the old literal footer bindings were retired; the same destinations are rendered by shared ProjectLink from portfolio data, verified in the browser */
 /* Hallmark · dropped solutions, setSwapped, onMouseEnter, onMouseLeave, scrollToProject, onKeyDown, service.name, Self check-in, CTA Click, Project Click · the redundant service scroll and project carousel were retired; actual project links and analytics use the shared ProjectLink and screen changes use explicit buttons */
 /* Hallmark · dropped form 1 · contact moved to the homepage and its default native method changed from GET to POST; all six IDs, field types, required flags, JSON payload and real API are retained and tested */
 /* Hallmark · dropped 2025, 2024, UFT.gif · the condensed portfolio removes the standalone Selfcamp year and redundant partner image; the UFT text link and website years inside the inline disclosure remain */
@@ -888,7 +888,7 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
  --project-selfcamp: #53662f;
  --project-openwind: lab(35.164 -9.57692 -34.4068);
  --project-wisp: #2563eb;
- --project-plannikeeper: #995a14;
+ --project-mypapers: #1b4332;
  --project-pattus-hotel: #25395d;
  --project-alpha-hotel: #0d2b52;
  --project-coachingbymarie: #a54932;
@@ -992,8 +992,8 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
 .wisp-share-link { position: absolute; right: 8%; bottom: 5%; display: grid; place-items: center; width: 12%; aspect-ratio: 1; padding: 2cqw; border: var(--rule-hair) solid currentColor; border-radius: 50%; background: var(--background); transform: rotate(-8deg); box-shadow: 0 0.7cqw 1.5cqw #17131318; }
 .wisp-share-link svg { width: 100%; height: 100%; }
 
-/* PlanniKeeper: actual public Moi / Équipe views, with the additional task in context. */
-.project-demo-plannikeeper .project-demo-scene { aspect-ratio: 5 / 3; }
+/* Mypapers: actual public Moi / Équipe views, with the additional task in context. */
+.project-demo-mypapers .project-demo-scene { aspect-ratio: 5 / 3; }
 .planner-demo-window { position: absolute; inset: 0; overflow: clip; border: var(--rule-hair) solid var(--brand-rule); border-radius: var(--radius); background: var(--background); }
 .planner-demo-camera { position: absolute; top: 0; left: 0; width: 100%; aspect-ratio: 1120 / 672; }
 .preview-demo .planner-demo-camera > img { position: absolute; inset: 0 auto auto 0; width: 100%; height: auto; animation: none; }
@@ -1043,7 +1043,7 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
 
 /* Mobile crops keep the actual filters, task titles and both Tuesday courses readable. */
 @container (max-width: 480px) {
- .project-demo-plannikeeper .project-demo-scene { aspect-ratio: 3 / 4; }
+ .project-demo-mypapers .project-demo-scene { aspect-ratio: 3 / 4; }
  .planner-demo-camera { width: 330%; left: -67%; top: -14cqw; }
  .planner-context-focus { right: auto; width: 29%; }
  .project-demo-coachingbymarie .project-demo-scene { aspect-ratio: 1; }
@@ -1406,3 +1406,32 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
 @media (prefers-reduced-motion: reduce) {
  .wisp-gesture-cursor, .wisp-gesture-pulse { display: none !important; }
 }
+
+/* Mypapers: genuine public-demo states follow one place, its work and its preparation. */
+.mypapers-story { --mypapers-title-size: clamp(20px, 4cqw, 32px); color: var(--foreground); }
+.mypapers-story-stage { position: relative; aspect-ratio: 8 / 5; overflow: clip; background: var(--background); }
+.mypapers-story-context { position: absolute; z-index: 2; top: calc(var(--mypapers-title-size) * 1.15 + var(--space-xs)); left: 0; margin: 0; font-size: var(--text-sm); line-height: 1.4; color: var(--muted-foreground); }
+.mypapers-story-chapter { position: absolute; inset: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: var(--space-sm); opacity: 0; }
+.mypapers-chapter--plan { opacity: 1; }
+.mypapers-story-title { min-width: 0; margin: 0; padding-bottom: calc(var(--text-sm) * 1.4 + var(--space-xs)); overflow-wrap: break-word; font-size: var(--mypapers-title-size); font-weight: 700; line-height: 1.15; color: var(--project-mypapers); }
+.mypapers-story-window { display: grid; min-width: 0; min-height: 0; overflow: clip; }
+.mypapers-story-window > picture { display: block; min-width: 0; min-height: 0; height: 100%; }
+.preview-image .mypapers-story-window img { display: block; width: 100%; height: 100%; object-fit: contain; animation: none; }
+.mypapers-story-closing { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-sm); }
+.preview-image .mypapers-story-closing img { width: clamp(64px, 14cqw, 96px); height: auto; border-radius: var(--radius); animation: none; }
+.mypapers-story-closing p { margin: 0; font-size: clamp(32px, 7cqw, 52px); line-height: 1.1; font-weight: 700; }
+.mypapers-story-closing span { font-size: var(--text-sm); color: var(--muted-foreground); }
+.mypapers-story-note { margin: 0; padding-top: var(--space-sm); font-size: var(--text-xs); line-height: 1.5; color: var(--muted-foreground); }
+@media (max-width: 639px) {
+ .mypapers-story { --mypapers-title-size: 19px; }
+ .mypapers-story-stage { aspect-ratio: 3 / 4; }
+ .mypapers-story-chapter { gap: var(--space-xs); }
+}
+@media (prefers-reduced-motion: reduce) {
+ .mypapers-story-chapter { opacity: 0 !important; transform: none !important; }
+ .mypapers-chapter--plan { opacity: 1 !important; }
+ .mypapers-story-context { opacity: 1 !important; }
+ .mypapers-story-title { transform: none !important; }
+}
+
+.footer-app-store-notice { margin-top: var(--space-sm); font-size: var(--text-xs); line-height: 1.6; color: var(--footer-muted); }

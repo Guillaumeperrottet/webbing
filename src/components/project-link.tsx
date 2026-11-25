@@ -21,8 +21,8 @@ export function ContactLink({ section, project, href = "#contact", onClick, ...p
   }} />;
 }
 
-export function ProjectLink({ href, name, category, application = false, children, className = "project-link" }: { href: string; name: string; category: string; application?: boolean; children: ReactNode; className?: string }) {
-  return <a href={href} target="_blank" rel="noopener noreferrer" className={className} aria-label={`${typeof children === "string" ? children : name} (nouvel onglet)`} onClick={() => track(application ? "Application Click" : "Project Click", application ? { app: name, category } : { project: name, category })}>{children}<ArrowUpRight aria-hidden="true" size={18} /></a>;
+export function ProjectLink({ href, name, category, application = false, children, className = "project-link", ariaLabel, showArrow = true }: { href: string; name: string; category: string; application?: boolean; children: ReactNode; className?: string; ariaLabel?: string; showArrow?: boolean }) {
+  return <a href={href} target="_blank" rel="noopener noreferrer" className={className} aria-label={ariaLabel ?? `${typeof children === "string" ? children : name} (nouvel onglet)`} onClick={() => track(application ? "Application Click" : "Project Click", application ? { app: name, category } : { project: name, category })}>{children}{showArrow && <ArrowUpRight aria-hidden="true" size={18} />}</a>;
 }
 
 export function ProjectContactLink({ section = "projets", project, children = "Échangeons sur votre projet" }: { section?: string; project?: string; children?: ReactNode }) {

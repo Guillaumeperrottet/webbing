@@ -35,8 +35,8 @@ const sequence: DemoSequence = [
 ];
 
 export function PlannerDemo({ active }: { active: boolean }) {
-  const motion = useProjectDemo("plannikeeper", active, sequence);
-  return <DemoFrame id="plannikeeper" motion={motion}>
+  const motion = useProjectDemo("mypapers", active, sequence);
+  return <DemoFrame id="mypapers" motion={motion}>
     <div className="planner-demo-window">
       <div className="planner-demo-camera">
         <Image src="/projects/usage/planni-personal.jpg" alt="" width={1120} height={580} sizes="(max-width: 640px) 330vw, (max-width: 960px) 100vw, 800px" quality={90} />

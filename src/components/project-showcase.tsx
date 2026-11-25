@@ -8,11 +8,12 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProjectCaseStudy } from "@/components/project-case-study";
 import { caseStudies } from "@/data/case-studies";
 import { DemoPlaybackProvider } from "@/components/demo-playback";
-import { MypapersAppStore } from "@/components/mypapers-app-store";
+import { AppStoreBadge } from "@/components/mypapers-app-store";
 
 const sectionAliases: Record<string, number> = {
   realisations: 0,
   applications: 0,
+  plannikeeper: showcaseProjects.findIndex((project) => project.id === "mypapers"),
   "sites-web": showcaseProjects.findIndex((project) => !project.application),
 };
 
@@ -106,7 +107,7 @@ function FolderLabel({ id, name }: { id: string; name: string }) {
   if (id === "selfcamp") return <>{name.slice(0, 4)}<wbr />{name.slice(4)}</>;
   if (id === "openwind") return <>Open<wbr />Wind</>;
   if (id === "coachingbymarie") return <>Coach<wbr />ing<wbr />by<wbr />marie</>;
-  if (id === "plannikeeper") return <>{name}</>;
+  if (id === "mypapers") return <>Mypapers</>;
   if (id === "graphomouv") return <>Grapho<wbr />mouv</>;
   return <>{name}</>;
 }
@@ -358,10 +359,10 @@ export function ProjectShowcase() {
                     </div>
                     <div className="project-panel-summary">
                       <p>{project.description}</p>
-                      {project.id === "plannikeeper" && <MypapersAppStore />}
                       <ul className="project-capabilities" aria-label={`Fonctionnalités de ${project.name}`}>
                         {project.features.map((feature) => <li key={feature}>{feature}</li>)}
                       </ul>
+                      {(project.id === "openwind" || project.id === "mypapers") && <p className="showcase-partner"><AppStoreBadge app={project.id} /></p>}
                       {project.id === "selfcamp" && <p className="showcase-partner">En collaboration avec <a href="https://fribourg.ch/fr/uft-ftv/" target="_blank" rel="noopener noreferrer">l’Union fribourgeoise du Tourisme</a>.</p>}
                       {"year" in project && <p className="project-year">Réalisation {project.year}</p>}
                       <ProjectContactLink section="realisation" project={project.name}>Parlons de votre besoin</ProjectContactLink>

@@ -6,6 +6,15 @@ export const WORKFLOW = '.github/workflows/webbing-dependency-checks.yml';
 const SHA = /^[0-9a-f]{40}$/;
 const small = new Set(['patch','minor']);
 
+function signedSingleUpdate(message,name,version){
+  const subject=message.split('\n',1)[0];
+  const match=subject.match(/^Bump (\S+) from v?(\d+\.\d+\.\d+) to v?(\d+\.\d+\.\d+)(?: in \/[A-Za-z0-9_./-]+)?$/);
+  if(!match||match[1]!==name||match[3]!==version)return null;
+  const before=match[2].split('.').map(Number),after=match[3].split('.').map(Number);
+  if([...before,...after].some(n=>!Number.isSafeInteger(n)))return null;
+  for(let i=0;i<3;i++)if(after[i]!==before[i])return after[i]>before[i]?['major','minor','patch'][i]:null;
+  return null;
+}
 export function dependencyMetadata(commits) {
   if (!Array.isArray(commits) || !commits.length || commits.length > 100) return {type:'unknown',dependencies:[]};
   const dependencies=[];
@@ -20,8 +29,9 @@ export function dependencyMetadata(commits) {
     if(!records.length)return {type:'unknown',dependencies:[]};
     for(const record of records){
       const name=record.match(/^- dependency-name:\s*(.+)$/m)?.[1];
-      const type=record.match(/^  update-type:\s*version-update:semver-(patch|minor|major)\s*$/m)?.[1];
+      let type=record.match(/^  update-type:\s*version-update:semver-(patch|minor|major)\s*$/m)?.[1];
       const version=record.match(/^  dependency-version:\s*(.+)$/m)?.[1] || null;
+      if(!type&&name&&version&&records.length===1&&!/^  update-type:/m.test(record))type=signedSingleUpdate(message,name.replace(/^['"]|['"]$/g,''),version.replace(/^['"]|['"]$/g,''));
       if(!name || !type)return {type:'unknown',dependencies:[]};
       dependencies.push({name:name.replace(/^['"]|['"]$/g,'').slice(0,200),type,version:version?.replace(/^['"]|['"]$/g,'').slice(0,100)});
     }

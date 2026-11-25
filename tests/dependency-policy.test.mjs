@@ -70,3 +70,13 @@ test('Webbing dispatches a bound approval without the Checks API or a direct mer
  await assert.rejects(()=>dispatchApproval(api,'owner/repo',7,{expectedHead:'c'.repeat(40),expectedBase:base,approvalId}),/changé/);assert.equal(writes,0);
  assert.deepEqual(await dispatchApproval(api,'owner/repo',7,{expectedHead:sha,expectedBase:base,approvalId}),{queued:true});assert.equal(writes,1);
 });
+
+test('security updates without an update-type use only the matching stable versions in their signed subject',()=>{
+ const security=(before,after)=>{const value=commit('patch');value.commit.message=value.commit.message.replace('Bump dependencies',`Bump react from ${before} to ${after}`).replace('  update-type: version-update:semver-patch\n','').replace('dependency-version: 19.3.1',`dependency-version: ${after}`);return value;};
+ assert.equal(dependencyMetadata([security('19.3.0','19.3.1')]).type,'patch');
+ assert.equal(dependencyMetadata([security('19.2.9','19.3.1')]).type,'minor');
+ assert.equal(dependencyMetadata([security('18.3.1','19.3.1')]).type,'major');
+ assert.equal(dependencyMetadata([security('19.3.1','19.2.9')]).type,'unknown');
+ assert.equal(dependencyMetadata([security('19.3.0-rc.1','19.3.1')]).type,'unknown');
+ const mismatch=security('19.3.0','19.3.1');mismatch.commit.message=mismatch.commit.message.replace('dependency-version: 19.3.1','dependency-version: 20.0.0');assert.equal(dependencyMetadata([mismatch]).type,'unknown');
+});

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {dependencyMetadata,evaluateChecks,allowedDependencyFiles,trustedDependencyPR,mergeUpdate,QUALITY,ATTESTATION,GATE,gatewayReadiness,dispatchApproval,resolveDependencyCheck,dispatchDependencyChecks,refreshDependencyBranch} from '../scripts/dependencies/policy.mjs';
+import {dependencyMetadata,evaluateChecks,allowedDependencyFiles,trustedDependencyPR,mergeUpdate,QUALITY,ATTESTATION,GATE,gatewayReadiness,dispatchApproval,resolveDependencyCheck,dispatchDependencyChecks,refreshDependencyBranch,githubApi} from '../scripts/dependencies/policy.mjs';
 const sha='a'.repeat(40),base='b'.repeat(40);
 const commit=(type)=>({author:{login:'dependabot[bot]',type:'Bot'},commit:{verification:{verified:true},message:`Bump dependencies\n\n---\nupdated-dependencies:\n- dependency-name: react\n  dependency-version: 19.3.1\n  update-type: version-update:semver-${type}\n...\n\nSigned-off-by: dependabot[bot]`}});
 const checks=[{id:1,name:QUALITY,app:{id:15368,slug:'github-actions'},status:'completed',conclusion:'success'}];
@@ -135,4 +135,15 @@ test('the isolated resolver refreshes only the requested bot branch and rejects 
  };
  assert.deepEqual(await refreshDependencyBranch(api,'owner/repo',7,binding),{head:updated,base,branch:'main'});assert.equal(writes,1);
  current=sha;parents=[{sha},{sha:'e'.repeat(40)}];await assert.rejects(()=>refreshDependencyBranch(api,'owner/repo',7,binding),/changé pendant/);
+});
+
+test('the HTTP client accepts GitHub commit comparisons while rejecting path traversal',async t=>{
+ let reads=0;
+ const fetch=t.mock.method(globalThis,'fetch',async url=>{reads++;assert.equal(String(url),`https://api.github.com/repos/owner/repo/compare/${base}...${sha}`);return Response.json({merge_base_commit:{sha:base}});});
+ const api=githubApi('fixture-only');
+ try{
+  assert.equal((await api(`/repos/owner/repo/compare/${base}...${sha}`)).merge_base_commit.sha,base);
+  for(const path of ['/repos/owner/repo/../../secrets',`/repos/../repo/compare/${base}...${sha}`,'https://evil.invalid/repos/owner/repo','/repos/owner/repo/contents/../file'])await assert.rejects(()=>api(path),/invalide/);
+  assert.equal(reads,1);
+ }finally{fetch.mock.restore();}
 });

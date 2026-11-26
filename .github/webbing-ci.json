@@ -23,6 +23,13 @@
           "tests/dependency-policy.test.mjs",
           "tests/dependency-worker.test.mjs",
           "tests/release-safety.test.mjs"
+        ],
+        [
+          "node",
+          "--import",
+          "tsx",
+          "--test",
+          "tests/dependency-test-state.test.ts"
         ]
       ],
       "database": false,

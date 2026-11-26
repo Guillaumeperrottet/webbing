@@ -106,3 +106,36 @@ export async function launchDependencyTests(form:FormData){
   revalidatePath('/gestion');return {ok:true,message:'Tests demandés à GitHub pour ce lot. Aucune mise à jour n’est validée par ce lancement.'};
  }catch(error){const message=error instanceof Error?error.message:'';return {ok:false,message:/^(La proposition|Cette proposition|Des tests|GitHub|Droits GitHub|Jeton GitHub|Raccorder|Attends)/.test(message)?message:'Les tests n’ont pas pu être demandés. Vérifie le workflow et le budget Actions avant de réessayer.'};}
 }
+
+function batchError(error: unknown) {
+  const message = error instanceof Error ? error.message : "";
+  return /^(Choisis|La proposition|Cette proposition|Cette préparation|Cette mise|Des tests|Un lot|La branche|GitHub|Droits GitHub|Jeton GitHub|Raccorder|Attends)/.test(message) ? message : "Le lot n’a pas pu être préparé ou lancé. Actualise les résultats et vérifie l’accès GitHub avant de réessayer.";
+}
+
+export async function prepareTestsBatch(form: FormData) {
+  const admin = await requireAdmin();
+  try {
+    const raw = String(form.get("selection") || "");
+    if (raw.length > 5000) return { ok: false as const, message: "Choisis au maximum trois dépôts." };
+    const { prepareDependencyBatch } = await import("@/lib/gestion/dependency-batches");
+    const preview = await prepareDependencyBatch(JSON.parse(raw), { email: admin.user.email, sessionId: admin.session.id });
+    return { ok: true as const, preview };
+  } catch (error) { return { ok: false as const, message: batchError(error) }; }
+}
+
+export async function confirmTestsBatch(form: FormData) {
+  const admin = await requireAdmin();
+  try {
+    const { confirmDependencyBatch } = await import("@/lib/gestion/dependency-batches");
+    await confirmDependencyBatch(String(form.get("batch") || ""), { email: admin.user.email, sessionId: admin.session.id });
+    revalidatePath("/gestion");
+    return { ok: true, message: "Lot confirmé. Le suivi indique les demandes envoyées, refusées ou en attente de confirmation. Aucune proposition n’est fusionnée." };
+  } catch (error) { return { ok: false, message: batchError(error) }; }
+}
+
+export async function refreshTestsProgress() {
+  await requireAdmin();
+  const { refreshDependencyProgress } = await import("@/lib/gestion/dependency-batches");
+  await refreshDependencyProgress();
+  revalidatePath("/gestion");
+}

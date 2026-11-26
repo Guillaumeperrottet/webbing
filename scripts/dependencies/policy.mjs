@@ -144,9 +144,10 @@ export async function resolveDependencyCheck(api,repository,number,{expectedHead
   if(pr.changed_files>100||!files.length||files.length>=100)throw new Error('Cette proposition dépasse la limite des fichiers vérifiables.');
   return {head:expectedHead,base:expectedBase,branch:repo.default_branch};
 }
-export async function dispatchDependencyChecks(api,repository,number,{expectedHead,expectedBase,requestId}){
+export async function dispatchDependencyChecks(api,repository,number,{expectedHead,expectedBase,requestId,onDispatch}){
   if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(requestId||''))throw new Error('Demande de tests invalide.');
   const resolved=await resolveDependencyCheck(api,repository,number,{expectedHead,expectedBase});
+  onDispatch?.();
   await api(`/repos/${repository}/actions/workflows/webbing-dependency-checks.yml/dispatches`,{method:'POST',body:{ref:resolved.branch,inputs:{pull_request:String(number),expected_head:expectedHead,expected_base:expectedBase,request_id:requestId}}});
   return {queued:true};
 }

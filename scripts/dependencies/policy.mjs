@@ -149,3 +149,23 @@ export async function dispatchDependencyChecks(api,repository,number,{expectedHe
   await api(`/repos/${repository}/actions/workflows/webbing-dependency-checks.yml/dispatches`,{method:'POST',body:{ref:resolved.branch,inputs:{pull_request:String(number),expected_head:expectedHead,expected_base:expectedBase,request_id:requestId}}});
   return {queued:true};
 }
+
+/** Runs only in the isolated trusted resolve job, before any application code. */
+export async function refreshDependencyBranch(api,repository,number,binding){
+  const update=await resolveDependencyCheck(api,repository,number,binding);
+  const root=`/repos/${repository}`;
+  const comparison=await api(`${root}/compare/${update.base}...${update.head}`);
+  if(comparison.merge_base_commit?.sha===update.base)return update;
+  await api(`${root}/pulls/${number}/update-branch`,{method:'PUT',body:{expected_head_sha:update.head}});
+  for(let attempt=0;attempt<6;attempt++){
+    const pr=await api(`${root}/pulls/${number}`);
+    if(pr.head.sha!==update.head){
+      const [commit,current]=await Promise.all([api(`${root}/commits/${pr.head.sha}`),api(`${root}/git/ref/heads/${encodeURIComponent(update.branch)}`)]);
+      const parents=commit.parents?.map(p=>p.sha)||[];
+      if(current.object.sha!==update.base||parents.length!==2||!parents.includes(update.head)||!parents.includes(update.base))throw new Error('La proposition ou la branche cible a changé pendant son actualisation.');
+      return {...update,head:pr.head.sha};
+    }
+    await new Promise(resolve=>setTimeout(resolve,1000));
+  }
+  throw new Error('GitHub actualise encore la proposition. Aucun test applicatif lancé : actualise Webbing avant de réessayer.');
+}

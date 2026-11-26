@@ -1,5 +1,5 @@
 name: Webbing Dependency Checks
-run-name: Webbing tests ${{ inputs.request_id }} · #${{ inputs.pull_request }}
+run-name: "Webbing tests ${{ inputs.request_id }} · #${{ inputs.pull_request }}"
 on:
   workflow_dispatch:
     inputs:
@@ -26,8 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions:
-      contents: read
-      pull-requests: read
+      contents: write
+      pull-requests: write
       statuses: write
     outputs:
       head: ${{ steps.resolve.outputs.head }}
@@ -82,6 +82,9 @@ jobs:
       - name: Locked dependencies, tests, build and startup
         id: application
         uses: Guillaumeperrottet/webbing/.github/actions/dependency-ci@SOURCE_COMMIT
+        env:
+          WEBBING_CI_HEAD: ${{ needs.resolve.outputs.head }}
+          WEBBING_CI_BASE: ${{ needs.resolve.outputs.base }}
   attest:
     name: Webbing / Manual test result
     if: always() && needs.resolve.result == 'success'

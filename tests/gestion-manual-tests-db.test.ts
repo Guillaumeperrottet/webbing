@@ -24,8 +24,15 @@ test('concurrent manual clicks start one run; completion never merges a proposal
   const result=await Promise.all([requestDependencyTests(repository,7,head,base,'qa@webbing.invalid'),requestDependencyTests(repository,7,head,base,'qa@webbing.invalid')]);
   assert.equal(result.length,2);assert.equal(dispatches,1);
   await assert.rejects(()=>requestDependencyTests(repository,8,head,base,'qa@webbing.invalid'),/déjà en cours/);assert.equal(dispatches,1);
-  await reconcileDependencyTests(async()=>({workflow_runs:[{display_title:`Webbing tests ${requestId} · #7`,status:'completed',conclusion:'success',html_url:'https://github.com/fixture/actions/runs/1'}]}),repository);
-  assert.equal((await query('SELECT status FROM ops_dependency_tests WHERE repository=$1',[repository])).rows[0].status,'success');
+  const refreshed='d'.repeat(40),runUrl='https://github.com/fixture/actions/runs/1';
+  await reconcileDependencyTests(async(path:string)=>{
+   if(path.includes('/actions/'))return {workflow_runs:[{display_title:`Webbing tests ${requestId} · #7`,status:'completed',conclusion:'success',html_url:runUrl}]};
+   if(path.endsWith('/pulls/7'))return {...pr,head:{...pr.head,sha:refreshed}};
+   if(path.includes('/statuses?'))return [{context:'Webbing / Base testée',state:'success',description:`base:${base}`,target_url:runUrl,creator:{login:'github-actions[bot]'}}];
+   throw new Error(path);
+  },repository);
+  const completed=(await query('SELECT status,head_sha FROM ops_dependency_tests WHERE repository=$1',[repository])).rows[0];
+  assert.equal(completed.status,'success');assert.equal(completed.head_sha,refreshed);
   assert.equal((await query('SELECT count(*)::int AS n FROM ops_dependency_approvals WHERE repository=$1',[repository])).rows[0].n,0);
  }finally{
   fetch.mock.restore();await query('DELETE FROM ops_dependency_tests WHERE repository=$1',[repository]);await query('DELETE FROM ops_repositories WHERE full_name=$1',[repository]);await query('DELETE FROM ops_integrations WHERE id=$1',[id]);await query('DELETE FROM ops_audit WHERE detail LIKE $1',[repository+'%']);await database().end();

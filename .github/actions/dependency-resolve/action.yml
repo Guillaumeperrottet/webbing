@@ -1,0 +1,14 @@
+name: Resolve a manually requested dependency check
+description: Verify the exact bot proposal and merge revision without checking out application code.
+inputs:
+  token:
+    required: true
+    description: Repository token for reading the proposal and posting its pending status.
+outputs:
+  head:
+    description: Verified dependency commit.
+  base:
+    description: Verified current default-branch commit.
+runs:
+  using: node24
+  main: index.mjs

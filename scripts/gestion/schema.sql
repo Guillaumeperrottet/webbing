@@ -99,3 +99,11 @@ CREATE TABLE IF NOT EXISTS ops_dependency_approvals (
 CREATE UNIQUE INDEX IF NOT EXISTS ops_dependency_approvals_pending ON ops_dependency_approvals(repository,number,head_sha,base_sha) WHERE status='requested';
 
 ALTER TABLE ops_dependency_updates ADD COLUMN IF NOT EXISTS metadata_version integer NOT NULL DEFAULT 1;
+
+CREATE TABLE IF NOT EXISTS ops_dependency_tests (
+ id uuid PRIMARY KEY, repository text NOT NULL REFERENCES ops_repositories(full_name), number integer NOT NULL,
+ head_sha text NOT NULL, base_sha text NOT NULL, requested_by text NOT NULL,
+ status text NOT NULL DEFAULT 'requested' CHECK(status IN ('requested','running','success','failed')),
+ requested_at timestamptz NOT NULL DEFAULT now(), finished_at timestamptz, run_url text, error text
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ops_dependency_tests_pending ON ops_dependency_tests(repository,number,head_sha,base_sha) WHERE status IN ('requested','running');

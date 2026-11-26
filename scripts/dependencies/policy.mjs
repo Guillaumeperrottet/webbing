@@ -80,11 +80,11 @@ export async function inspectUpdate(api,repository,number) {
   ]);
   const metadata=dependencyMetadata(commits);
   if(pr.commits>100||pr.changed_files>100||checks.total_count>100||statuses.length>=100)return {...metadata,pr,ready:false,reason:'Cette proposition dépasse la limite de vérification automatique.'};
-  if(!allowedDependencyFiles(files))return {...metadata,pr,ready:false,reason:'La proposition modifie aussi des fichiers applicatifs : examen dans GitHub requis.'};
+  const dependencyOnly=allowedDependencyFiles(files);
   const baseSha=branch.object.sha;
   const state=evaluateChecks(checks.check_runs,statuses,baseSha);
   const critical=files.some(f=>['.github/workflows/webbing-dependency-checks.yml','.github/workflows/webbing-dependency-policy.yml'].includes(f.filename));
-  return {...metadata,pr,baseSha,files:files.map(f=>({path:f.filename,additions:f.additions,deletions:f.deletions})),checks:checks.check_runs.map(c=>({name:c.name,status:c.status,conclusion:c.conclusion,url:c.details_url})),ready:state.ok&&pr.mergeable===true,autoEligible:small.has(metadata.type)&&!critical,reason:!state.ok?state.reason:pr.mergeable!==true?'GitHub doit confirmer que la proposition peut être fusionnée.':critical?'La configuration des contrôles nécessite une validation.':state.reason};
+  return {...metadata,pr,baseSha,files:files.map(f=>({path:f.filename,additions:f.additions,deletions:f.deletions})),checks:checks.check_runs.map(c=>({name:c.name,status:c.status,conclusion:c.conclusion,url:c.details_url})),ready:state.ok&&pr.mergeable===true,autoEligible:small.has(metadata.type)&&!critical&&dependencyOnly,reason:!state.ok?state.reason:pr.mergeable!==true?'GitHub doit confirmer que la proposition peut être fusionnée.':!dependencyOnly?'Adaptations de code : examiner les changements avant validation.':critical?'La configuration des contrôles nécessite une validation.':state.reason};
 }
 export async function mergeUpdate(api,repository,number,{expectedHead,expectedBase,automatic=false}) {
   const update=await inspectUpdate(api,repository,number);
@@ -127,5 +127,25 @@ export async function dispatchApproval(api,repository,number,{expectedHead,expec
   if(pr.head.sha!==expectedHead||base.object.sha!==expectedBase)throw new Error('La proposition ou la branche cible a changé. Actualise avant de valider.');
   const readiness=gatewayReadiness(statuses,expectedBase);if(!readiness.ok)throw new Error(readiness.reason);
   await api(`${root}/actions/workflows/webbing-dependency-policy.yml/dispatches`,{method:'POST',body:{ref:repo.default_branch,inputs:{pull_request:String(number),approve_manual:'true',expected_head:expectedHead,expected_base:expectedBase,approval_id:approvalId}}});
+  return {queued:true};
+}
+
+export async function resolveDependencyCheck(api,repository,number,{expectedHead,expectedBase}){
+  if(!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository)||!Number.isSafeInteger(number)||number<1||!SHA.test(expectedHead||'')||!SHA.test(expectedBase||''))throw new Error('Proposition invalide.');
+  const root=`/repos/${repository}`;
+  const [repo,pr]=await Promise.all([api(root),api(`${root}/pulls/${number}`)]);
+  if(!trustedDependencyPR(pr,repository,repo.default_branch))throw new Error('Cette proposition ne correspond pas à une mise à jour Dependabot du dépôt.');
+  const [base,files]=await Promise.all([
+    api(`${root}/git/ref/heads/${encodeURIComponent(repo.default_branch)}`),
+    api(`${root}/pulls/${number}/files?per_page=100`),
+  ]);
+  if(pr.head.sha!==expectedHead||base.object.sha!==expectedBase)throw new Error('La proposition ou la branche cible a changé. Actualise avant de lancer les tests.');
+  if(pr.changed_files>100||!files.length||files.length>=100)throw new Error('Cette proposition dépasse la limite des fichiers vérifiables.');
+  return {head:expectedHead,base:expectedBase,branch:repo.default_branch};
+}
+export async function dispatchDependencyChecks(api,repository,number,{expectedHead,expectedBase,requestId}){
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(requestId||''))throw new Error('Demande de tests invalide.');
+  const resolved=await resolveDependencyCheck(api,repository,number,{expectedHead,expectedBase});
+  await api(`/repos/${repository}/actions/workflows/webbing-dependency-checks.yml/dispatches`,{method:'POST',body:{ref:resolved.branch,inputs:{pull_request:String(number),expected_head:expectedHead,expected_base:expectedBase,request_id:requestId}}});
   return {queued:true};
 }

@@ -2,7 +2,7 @@
 import {useState,useTransition} from 'react';
 import {useRouter} from 'next/navigation';
 import {RefreshCw} from 'lucide-react';
-import {addGitHubConnection,refreshDependencies,approveDependencyUpdate} from '@/app/gestion/actions';
+import {addGitHubConnection,refreshDependencies,approveDependencyUpdate,launchDependencyTests} from '@/app/gestion/actions';
 import type {Repository,DependencyUpdate} from '@/lib/gestion/github';
 const tokenUrl='https://github.com/settings/personal-access-tokens/new?name=Webbing+Gestion&description=Suivi+et+validation+des+dependances&target_name=Guillaumeperrottet&expires_in=90&contents=read&pull_requests=read&statuses=read&actions=write';
 export function GitHubConnectionForm({repositories}:{repositories:Repository[]}){
@@ -27,4 +27,14 @@ export function ApproveDependency({update}:{update:DependencyUpdate}){
   <input type="hidden" name="repository" value={update.repository}/><input type="hidden" name="number" value={update.number}/><input type="hidden" name="head" value={update.head_sha}/><input type="hidden" name="base" value={update.base_sha}/>
   <div className="ops-inline-tools"><button className="ops-button ops-button-primary" disabled={busy}>{busy?'Vérification et fusion…':'Confirmer cette mise à jour'}</button><button type="button" className="ops-button ops-button-secondary" disabled={busy} onClick={()=>setConfirming(false)}>Annuler</button></div>
  </form>}{(feedback&&!feedback.ok||update.approval_error)&&<p role="alert" className="ops-error">{feedback?.message||update.approval_error}</p>}</div>;
+}
+export function LaunchDependencyTests({update}:{update:DependencyUpdate}){
+ const[confirming,setConfirming]=useState(false),[busy,setBusy]=useState(false),[feedback,setFeedback]=useState<{ok:boolean;message:string}|null>(null);const router=useRouter();
+ if(update.test_status==='requested'||update.test_status==='running')return <p role="status" className="ops-hint">Tests demandés pour ce lot.{update.test_url&&<a href={update.test_url} target="_blank" rel="noopener noreferrer"> Suivre les tests</a>}</p>;
+ if(feedback?.ok)return <p role="status" className="ops-feedback">{feedback.message}</p>;
+ return <div>{!confirming?<button className="ops-button ops-button-secondary" onClick={()=>setConfirming(true)}>{update.test_status==='success'?'Relancer les tests de ce lot':'Lancer les tests de ce lot'}</button>:<form className="ops-approval" action={async(form)=>{setBusy(true);try{const result=await launchDependencyTests(form);setFeedback(result);if(result.ok)router.refresh();}catch{setFeedback({ok:false,message:'La demande n’a pas abouti.'});}finally{setBusy(false);setConfirming(false);}}}>
+  <p>Lancer une exécution GitHub Actions pour <strong>{update.repository.split('/')[1]} #{update.number}</strong> ? Elle utilise le quota ou le budget GitHub disponible. Ce lancement ne valide pas la mise à jour et ne sera pas répété automatiquement.</p>
+  <input type="hidden" name="repository" value={update.repository}/><input type="hidden" name="number" value={update.number}/><input type="hidden" name="head" value={update.head_sha}/><input type="hidden" name="base" value={update.base_sha}/>
+  <div className="ops-inline-tools"><button className="ops-button ops-button-primary" disabled={busy}>{busy?'Demande en cours…':'Confirmer le lancement des tests'}</button><button type="button" className="ops-button ops-button-secondary" disabled={busy} onClick={()=>setConfirming(false)}>Annuler</button></div>
+ </form>}{update.test_status==='success'&&<p className="ops-feedback">Dernière exécution réussie.{update.test_url&&<a href={update.test_url} target="_blank" rel="noopener noreferrer"> Voir les tests</a>}</p>}{(feedback&&!feedback.ok||update.test_error)&&<p role="alert" className="ops-error">{feedback?.message||update.test_error}{update.test_url&&<a href={update.test_url} target="_blank" rel="noopener noreferrer"> Voir le journal</a>}</p>}</div>;
 }

@@ -95,9 +95,27 @@ test('manual test requests bind the bot head and current base without approving 
  const binding={expectedHead:sha,expectedBase:base,requestId:'12345678-1234-4234-8234-123456789abc'};
  assert.deepEqual(await resolveDependencyCheck(api,'owner/repo',7,binding),{head:sha,base,branch:'main'});
  await assert.rejects(()=>dispatchDependencyChecks(api,'owner/repo',7,{...binding,expectedBase:'d'.repeat(40)}),/changé/);
- files=[{filename:'src/auth.ts'}];await assert.rejects(()=>dispatchDependencyChecks(api,'owner/repo',7,binding),/code applicatif/);
- files=[{filename:'package.json'}];await assert.rejects(()=>dispatchDependencyChecks(api,'owner/repo',7,{...binding,expectedHead:'d'.repeat(40)}),/changé/);
+ files=[];await assert.rejects(()=>dispatchDependencyChecks(api,'owner/repo',7,binding),/limite/);
+ files=[{filename:'src/compatibility-fix.ts'}];await assert.rejects(()=>dispatchDependencyChecks(api,'owner/repo',7,{...binding,expectedHead:'d'.repeat(40)}),/changé/);
  pr.head.repo.full_name='someone/fork';await assert.rejects(()=>dispatchDependencyChecks(api,'owner/repo',7,binding),/Dependabot/);
  pr.head.repo.full_name='owner/repo';assert.equal(writes,0);
  assert.deepEqual(await dispatchDependencyChecks(api,'owner/repo',7,binding),{queued:true});assert.equal(writes,1);
+});
+
+test('application compatibility fixes always require explicit approval, even with minor dependency metadata',async()=>{
+ let writes=0;
+ const pr={number:1,state:'open',draft:false,user:{login:'dependabot[bot]',type:'Bot'},head:{sha,ref:'dependabot/npm/react',repo:{full_name:'owner/repo'}},base:{ref:'main',repo:{full_name:'owner/repo'}},commits:1,changed_files:2,mergeable:true};
+ const api=async(path,options)=>{
+  if(options?.method){writes++;return {merged:true,sha:'d'.repeat(40)};}
+  if(path==='/repos/owner/repo')return {default_branch:'main'};
+  if(path.endsWith('/pulls/1'))return pr;
+  if(path.includes('/commits?'))return [commit('minor')];
+  if(path.includes('/files?'))return [{filename:'package.json'},{filename:'src/compatibility-fix.ts'}];
+  if(path.includes('/check-runs?'))return {total_count:1,check_runs:checks};
+  if(path.includes('/statuses?'))return statuses;
+  if(path.includes('/git/ref/'))return {object:{sha:base}};
+  throw new Error(path);
+ };
+ await assert.rejects(()=>mergeUpdate(api,'owner/repo',1,{expectedHead:sha,expectedBase:base,automatic:true}),/validation manuelle/);assert.equal(writes,0);
+ await mergeUpdate(api,'owner/repo',1,{expectedHead:sha,expectedBase:base});assert.equal(writes,1);
 });

@@ -80,11 +80,11 @@ export async function inspectUpdate(api,repository,number) {
   ]);
   const metadata=dependencyMetadata(commits);
   if(pr.commits>100||pr.changed_files>100||checks.total_count>100||statuses.length>=100)return {...metadata,pr,ready:false,reason:'Cette proposition dépasse la limite de vérification automatique.'};
-  if(!allowedDependencyFiles(files))return {...metadata,pr,ready:false,reason:'La proposition modifie aussi des fichiers applicatifs : examen dans GitHub requis.'};
+  const dependencyOnly=allowedDependencyFiles(files);
   const baseSha=branch.object.sha;
   const state=evaluateChecks(checks.check_runs,statuses,baseSha);
   const critical=files.some(f=>['.github/workflows/webbing-dependency-checks.yml','.github/workflows/webbing-dependency-policy.yml'].includes(f.filename));
-  return {...metadata,pr,baseSha,files:files.map(f=>({path:f.filename,additions:f.additions,deletions:f.deletions})),checks:checks.check_runs.map(c=>({name:c.name,status:c.status,conclusion:c.conclusion,url:c.details_url})),ready:state.ok&&pr.mergeable===true,autoEligible:small.has(metadata.type)&&!critical,reason:!state.ok?state.reason:pr.mergeable!==true?'GitHub doit confirmer que la proposition peut être fusionnée.':critical?'La configuration des contrôles nécessite une validation.':state.reason};
+  return {...metadata,pr,baseSha,files:files.map(f=>({path:f.filename,additions:f.additions,deletions:f.deletions})),checks:checks.check_runs.map(c=>({name:c.name,status:c.status,conclusion:c.conclusion,url:c.details_url})),ready:state.ok&&pr.mergeable===true,autoEligible:small.has(metadata.type)&&!critical&&dependencyOnly,reason:!state.ok?state.reason:pr.mergeable!==true?'GitHub doit confirmer que la proposition peut être fusionnée.':!dependencyOnly?'Adaptations de code : examiner les changements avant validation.':critical?'La configuration des contrôles nécessite une validation.':state.reason};
 }
 export async function mergeUpdate(api,repository,number,{expectedHead,expectedBase,automatic=false}) {
   const update=await inspectUpdate(api,repository,number);
@@ -140,7 +140,7 @@ export async function resolveDependencyCheck(api,repository,number,{expectedHead
     api(`${root}/pulls/${number}/files?per_page=100`),
   ]);
   if(pr.head.sha!==expectedHead||base.object.sha!==expectedBase)throw new Error('La proposition ou la branche cible a changé. Actualise avant de lancer les tests.');
-  if(pr.changed_files>100||files.length>=100||!allowedDependencyFiles(files))throw new Error('Cette proposition modifie aussi du code applicatif : examen dans GitHub requis.');
+  if(pr.changed_files>100||!files.length||files.length>=100)throw new Error('Cette proposition dépasse la limite des fichiers vérifiables.');
   return {head:expectedHead,base:expectedBase,branch:repo.default_branch};
 }
 export async function dispatchDependencyChecks(api,repository,number,{expectedHead,expectedBase,requestId}){

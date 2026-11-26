@@ -4,11 +4,12 @@ import {z} from "zod";
 import {database,query} from "./db";
 import {seal,unseal} from "./vault";
 import {tokensEqual} from "./security";
+import {dependencyRunFailure,MAX_MANUAL_TESTS} from "./dependency-test-state";
 import {githubApi,dependencyMetadata,allowedDependencyFiles,gatewayReadiness,dispatchApproval,dispatchDependencyChecks} from "../../../scripts/dependencies/policy.mjs";
 
 export type Repository={full_name:string;default_branch:string;setup_pr_url:string|null;setup_state:string;ci_configured:boolean;auto_merge_enabled:boolean;integration_id:string|null;last_sync_at:string|null;last_error:string|null};
-export type DependencyUpdate={repository:string;number:number;title:string;url:string;head_sha:string;base_sha:string;update_type:string;dependencies:{name:string;type:string;version:string|null}[];checks:{name:string;status:string;conclusion:string|null;url:string|null}[];ready:boolean;auto_eligible:boolean;reason:string;checked_at:string;updated_at:string;approval_status:string|null;approval_error:string|null;approval_url:string|null;test_status:string|null;test_error:string|null;test_url:string|null};
-export async function dependencyData(){const [repos,updates]=await Promise.all([query<Repository>('SELECT * FROM ops_repositories ORDER BY full_name'),query<DependencyUpdate>("SELECT u.*,a.status AS approval_status,a.error AS approval_error,a.run_url AS approval_url,t.status AS test_status,t.error AS test_error,t.run_url AS test_url FROM ops_dependency_updates u LEFT JOIN LATERAL (SELECT status,error,run_url FROM ops_dependency_approvals WHERE repository=u.repository AND number=u.number AND head_sha=u.head_sha AND base_sha=u.base_sha ORDER BY requested_at DESC LIMIT 1) a ON true LEFT JOIN LATERAL (SELECT status,error,run_url FROM ops_dependency_tests WHERE repository=u.repository AND number=u.number AND ((head_sha=u.head_sha AND base_sha=u.base_sha) OR status IN ('requested','running')) ORDER BY requested_at DESC LIMIT 1) t ON true WHERE u.state='open' ORDER BY u.ready DESC,u.repository,u.number DESC")]);return {repositories:repos.rows,updates:updates.rows};}
+export type DependencyUpdate={repository:string;number:number;title:string;url:string;head_sha:string;base_sha:string;update_type:string;dependencies:{name:string;type:string;version:string|null}[];checks:{name:string;status:string;conclusion:string|null;url:string|null}[];ready:boolean;auto_eligible:boolean;reason:string;checked_at:string;updated_at:string;approval_status:string|null;approval_error:string|null;approval_url:string|null;test_status:string|null;test_error:string|null;test_url:string|null;test_head_sha:string|null;test_base_sha:string|null;test_failure_kind:string|null};
+export async function dependencyData(){const [repos,updates]=await Promise.all([query<Repository>('SELECT * FROM ops_repositories ORDER BY full_name'),query<DependencyUpdate>("SELECT u.*,a.status AS approval_status,a.error AS approval_error,a.run_url AS approval_url,t.status AS test_status,t.error AS test_error,t.run_url AS test_url,t.head_sha AS test_head_sha,t.base_sha AS test_base_sha,t.failure_kind AS test_failure_kind FROM ops_dependency_updates u LEFT JOIN LATERAL (SELECT status,error,run_url FROM ops_dependency_approvals WHERE repository=u.repository AND number=u.number AND head_sha=u.head_sha AND base_sha=u.base_sha ORDER BY requested_at DESC LIMIT 1) a ON true LEFT JOIN LATERAL (SELECT status,error,run_url,head_sha,base_sha,failure_kind FROM ops_dependency_tests WHERE repository=u.repository AND number=u.number ORDER BY CASE WHEN status IN ('requested','running') THEN 0 ELSE 1 END,requested_at DESC LIMIT 1) t ON true WHERE u.state='open' ORDER BY u.ready DESC,u.repository,u.number DESC")]);return {repositories:repos.rows,updates:updates.rows};}
 const METADATA_VERSION=2;
 const sha=z.string().regex(/^[0-9a-f]{40}$/);
 const metadataSchema=z.object({type:z.enum(['unknown','patch','minor','major']),dependencies:z.array(z.object({name:z.string(),type:z.string(),version:z.string().nullable()}))});
@@ -58,8 +59,8 @@ export async function connectGitHub(name:string,token:string,names:string[]){
  }catch(error){await client.query('ROLLBACK');throw error;}finally{client.release();}
  return {connected:accessible.length,excluded:selected.length-accessible.length};
 }
-export async function syncGitHub(){
- const connections=(await query<{id:string;secret_cipher:string;repos:string[]}>(`SELECT i.id,i.secret_cipher,array_agg(r.full_name ORDER BY r.full_name) AS repos FROM ops_integrations i JOIN ops_repositories r ON r.integration_id=i.id WHERE i.provider='github' AND i.revoked_at IS NULL GROUP BY i.id ORDER BY i.created_at`)).rows;
+export async function syncGitHub(options:{repositories?:string[]}={}){
+ const connections=(await query<{id:string;secret_cipher:string;repos:string[]}>(`SELECT i.id,i.secret_cipher,array_agg(r.full_name ORDER BY r.full_name) AS repos FROM ops_integrations i JOIN ops_repositories r ON r.integration_id=i.id WHERE i.provider='github' AND i.revoked_at IS NULL AND ($1::text[] IS NULL OR r.full_name=ANY($1::text[])) GROUP BY i.id ORDER BY i.created_at`,[options.repositories??null])).rows;
  let checked=0;
  for(const connection of connections){
   try{
@@ -87,6 +88,7 @@ export async function syncGitHub(){
    await query('UPDATE ops_integrations SET last_sync_at=now(),last_attempt_at=now(),last_error=NULL WHERE id=$1',[connection.id]);
   }catch(error){const message=error instanceof Error&&/^(Jeton GitHub|GitHub|Le jeton GitHub)/.test(error.message)?error.message:'Synchronisation GitHub momentanément indisponible.';await query('UPDATE ops_integrations SET last_attempt_at=now(),last_error=$1 WHERE id=$2',[message,connection.id]);await query('UPDATE ops_repositories SET last_error=$1 WHERE integration_id=$2',[message,connection.id]);}
  }
+ await settleDependencyBatches();
  return checked;
 }
 export async function reconcileApprovals(api:ReturnType<typeof githubApi>,repository:string){
@@ -125,22 +127,49 @@ export async function requestDependencyTests(repository:string,number:number,exp
  if(!connection)throw new Error('Raccorder ce dépôt à GitHub avant de lancer les tests.');
  const id=randomUUID(),client=await database().connect();
  try{
-  await client.query('BEGIN');await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['webbing:dependency-tests:'+repository]);
+  await client.query('BEGIN');await client.query("SELECT pg_advisory_xact_lock(hashtextextended('webbing:manual-test-capacity',0))");await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['webbing:dependency-tests:'+repository]);
   const pending=(await client.query<{number:number;head_sha:string;base_sha:string}>("SELECT number,head_sha,base_sha FROM ops_dependency_tests WHERE repository=$1 AND status IN ('requested','running')",[repository])).rows[0];
   if(pending){
    if(pending.number!==number||pending.head_sha!==expectedHead||pending.base_sha!==expectedBase)throw new Error('Des tests sont déjà en cours pour ce dépôt. Attends leur résultat avant de lancer un autre lot.');
    await client.query('COMMIT');return {queued:true};
   }
+  const capacity=await client.query("SELECT count(*)::int AS n FROM ops_dependency_tests WHERE status IN ('requested','running')");
+  if(capacity.rows[0].n>=MAX_MANUAL_TESTS)throw new Error('Des tests sont déjà en cours. Trois dépôts au maximum peuvent être testés à la fois.');
   const recent=await client.query("SELECT id FROM ops_dependency_tests WHERE repository=$1 AND requested_at>now()-interval '60 seconds'",[repository]);
   if(recent.rowCount)throw new Error('Attends une minute avant de demander une nouvelle exécution pour ce dépôt.');
   await client.query("INSERT INTO ops_dependency_tests(id,repository,number,head_sha,base_sha,requested_by) VALUES($1,$2,$3,$4,$5,$6)",[id,repository,number,expectedHead,expectedBase,requestedBy]);
   await client.query('COMMIT');
  }catch(error){await client.query('ROLLBACK');throw error;}finally{client.release();}
+ return sendReservedDependencyTests(id,repository,number,expectedHead,expectedBase,requestedBy,githubApi(unseal(connection.secret_cipher,`${connection.id}:github`)));
+}
+
+export async function readDependencyApi(repository:string){
+ const connection=(await query<{id:string;secret_cipher:string}>(`SELECT i.id,i.secret_cipher FROM ops_repositories r JOIN ops_integrations i ON i.id=r.integration_id WHERE r.full_name=$1 AND i.provider='github' AND i.revoked_at IS NULL`,[repository])).rows[0];
+ if(!connection)throw new Error('Raccorder ce dépôt à GitHub avant de lancer les tests.');
+ return githubApi(unseal(connection.secret_cipher,`${connection.id}:github`));
+}
+
+export async function sendReservedDependencyTests(id:string,repository:string,number:number,expectedHead:string,expectedBase:string,requestedBy:string,api:ReturnType<typeof githubApi>){
+ let sending=false;
  try{
-  await dispatchDependencyChecks(githubApi(unseal(connection.secret_cipher,`${connection.id}:github`)),repository,number,{expectedHead,expectedBase,requestId:id});
+  await dispatchDependencyChecks(api,repository,number,{expectedHead,expectedBase,requestId:id,onDispatch:()=>{sending=true;}});
   await query("INSERT INTO ops_audit(kind,detail) VALUES('tests_dependances_demandes',$1)",[`${repository} #${number} · ${expectedHead.slice(0,7)} · ${requestedBy}`]);
-  return {queued:true};
- }catch(error){await query("UPDATE ops_dependency_tests SET status='failed',finished_at=now(),error=$1 WHERE id=$2",['Les tests n’ont pas été transmis à GitHub. Vérifier l’accès Actions et la disponibilité du workflow manuel.',id]);throw error;}
+  return {queued:true,id,uncertain:false};
+ }catch(error){
+  const status=error instanceof Error&&'status' in error?Number(error.status):null;
+  const uncertain=sending&&(status===null||status>=500);
+  const message=uncertain?'GitHub n’a pas confirmé le démarrage. La demande reste en attente pour éviter une double exécution ; vérifier Actions avant toute relance.':sending?'GitHub a refusé le lancement. Vérifier l’accès Actions, le workflow et le quota.':'La proposition ou ses accès ont changé avant le lancement. Actualiser les contrôles.';
+  await query("UPDATE ops_dependency_tests SET status=$1,finished_at=CASE WHEN $2 THEN NULL ELSE now() END,error=$3,failure_kind=$4 WHERE id=$5",[uncertain?'requested':'failed',uncertain,message,uncertain?'dispatch_unknown':sending?'dispatch_refused':'preflight',id]);
+  if(uncertain)return {queued:true,id,uncertain:true};
+  throw error;
+ }
+}
+
+export async function settleDependencyBatches(){
+ await query("UPDATE ops_dependency_batches SET status='failed',finished_at=now(),error='La confirmation a été interrompue. Aucune relance automatique ; vérifier les demandes et GitHub avant de créer un nouveau lot.' WHERE status='checking' AND confirmed_at<now()-interval '15 minutes'");
+ await query(`UPDATE ops_dependency_batches b SET status=CASE WHEN EXISTS(SELECT 1 FROM ops_dependency_tests t WHERE t.batch_id=b.id AND t.status='failed') THEN 'failed' ELSE 'completed' END,finished_at=now()
+  WHERE b.status='running' AND (SELECT count(*) FROM ops_dependency_tests t WHERE t.batch_id=b.id)=jsonb_array_length(b.items)
+  AND NOT EXISTS(SELECT 1 FROM ops_dependency_tests t WHERE t.batch_id=b.id AND t.status IN ('requested','running'))`);
 }
 
 export async function reconcileDependencyTests(api:ReturnType<typeof githubApi>,repository:string){
@@ -150,7 +179,7 @@ export async function reconcileDependencyTests(api:ReturnType<typeof githubApi>,
  for(const request of requests){
   const run=runs.workflow_runs.find((r:{display_title:string})=>r.display_title===`Webbing tests ${request.id} · #${request.number}`||r.display_title===`Webbing tests ${request.id} ·`);
   if(!run){
-   if(Date.now()-new Date(request.requested_at).getTime()>30*60_000)await query("UPDATE ops_dependency_tests SET status='failed',finished_at=now(),error=$1 WHERE id=$2",['GitHub n’a pas confirmé le démarrage. Aucune relance automatique : vérifier Actions avant de réessayer.',request.id]);
+   if(Date.now()-new Date(request.requested_at).getTime()>30*60_000)await query("UPDATE ops_dependency_tests SET status='failed',finished_at=now(),failure_kind='missing_run',error=$1 WHERE id=$2",['GitHub n’a pas confirmé le démarrage. Aucune relance automatique : vérifier Actions avant de réessayer.',request.id]);
    continue;
   }
   const completed=run.status==='completed';let passed=completed&&run.conclusion==='success',testedHead=request.head_sha;
@@ -160,6 +189,14 @@ export async function reconcileDependencyTests(api:ReturnType<typeof githubApi>,
    passed=statuses.some((s:{context:string;state:string;description:string;target_url:string;creator:{login:string}})=>s.context==='Webbing / Base testée'&&s.state==='success'&&s.description===`base:${request.base_sha}`&&s.target_url===run.html_url&&s.creator?.login==='github-actions[bot]');
    if(passed)testedHead=pr.head.sha;
   }
-  await query("UPDATE ops_dependency_tests SET run_url=$1,status=$2,finished_at=CASE WHEN $3 THEN now() ELSE NULL END,error=$4,head_sha=$6 WHERE id=$5",[run.html_url,completed?passed?'success':'failed':'running',completed,completed&&!passed?'Les tests n’ont pas abouti ou la proposition a changé. Consulter le journal GitHub ; aucune relance automatique.':null,request.id,testedHead]);
+  let failure:{kind:string;message:string}|null=null;
+  if(completed&&!passed){
+   if(run.conclusion==='success')failure={kind:'revision_changed',message:'La proposition a changé après les contrôles. Actualiser et tester sa nouvelle version.'};
+   else {
+    const jobs=await api(`/repos/${repository}/actions/runs/${run.id}/jobs?per_page=100`).catch(()=>null);
+    failure=dependencyRunFailure(run.conclusion,jobs?.jobs);
+   }
+  }
+  await query("UPDATE ops_dependency_tests SET run_url=$1,status=$2,finished_at=CASE WHEN $3 THEN now() ELSE NULL END,error=$4,head_sha=$6,failure_kind=$7 WHERE id=$5",[run.html_url,completed?passed?'success':'failed':'running',completed,failure?.message??null,request.id,testedHead,failure?.kind??null]);
  }
 }

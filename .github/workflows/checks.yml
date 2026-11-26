@@ -1,19 +1,21 @@
 name: Vérifications Webbing
-on:
+"on":
   push:
-    branches: [main, codex/webbing-gestion]
-  pull_request:
+    branches:
+      - main
+      - codex/webbing-gestion
+  pull_request: null
 permissions:
   contents: read
 jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: "22"
           cache: pnpm
@@ -23,3 +25,4 @@ jobs:
       - run: pnpm build
         env:
           RESEND_API_KEY: re_build_only_no_external_call
+    if: (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || github.event.pull_request.user.login != 'dependabot[bot]'

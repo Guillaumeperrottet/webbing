@@ -15,7 +15,8 @@
           "tsx",
           "--test",
           "tests/gestion-collector.test.ts",
-          "tests/gestion-providers.test.ts"
+          "tests/gestion-providers.test.ts",
+          "tests/gestion-release-policy.test.ts"
         ],
         [
           "node",

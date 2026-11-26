@@ -1,0 +1,24 @@
+{
+  "teamId": "team_HMC6tPegXy4EJfpqbNRboiB3",
+  "scope": "guillaumes-projects-faaa7c9a",
+  "owner": "Guillaumeperrottet",
+  "projects": [
+    {"name":"alpha-hotel","id":"prj_9XMWAG6Qs6A9NCdgd3bJcGqispkE","repository":"alpha-hotel"},
+    {"name":"campus-appart","id":"prj_ZinXcITdhqKUDFULGNR0dzmbstRI","repository":"campus-appart"},
+    {"name":"campus-gerance","id":"prj_r943x4fnwKbF4bSlsZrDL13dn7A9","repository":"campus-gerance"},
+    {"name":"campus-gerance-portal","id":"prj_uaBgV8sAjbNY0DBpE0ig36MwUrDT","repository":"campus-gerance"},
+    {"name":"chaff","id":"prj_XMfNGP3QZRZ6yLMimJMBxpoY0p86","repository":"chaff"},
+    {"name":"coachingbymarie","id":"prj_NPqL4TpRld8oxG8QooRPlmcrDPGh","repository":"coachingbymarie"},
+    {"name":"dipiaza-ch","id":"prj_f1ApmU8xZl3IiCXb2C5GmZwidh2B","repository":"dipiaza-ch"},
+    {"name":"graphomouv-app","id":"prj_n94e49fWy6g2SSU5YxSlqsiUsI5e","repository":"graphomouv-app"},
+    {"name":"mypapers","id":"prj_mptLpNlPpJSyyDP9OHSfsIBgwXE0","repository":"mypapers"},
+    {"name":"openwind","id":"prj_hYO7Q1WrlrtMpFaws2ffZLYn39R3","repository":"openwind"},
+    {"name":"pattushotel","id":"prj_xBofhzyj74PbAFNBlNoNdoZOTAtv","repository":"pattushotel"},
+    {"name":"popliving-v2","id":"prj_b5CDv1CdG6fv1UsKXDnAmrQpJ7UK","repository":"popliving_v2"},
+    {"name":"publio","id":"prj_XqVdlhzlLJQPiUoRZnJV20pZcFoB","repository":"publio"},
+    {"name":"selfkey","id":"prj_DKhFMSvCIk42OIIjLoMkuxDwO2uo","repository":"selfkey"},
+    {"name":"touille","id":"prj_hp8UHLGnou4UGXpZbKIilfSvzWwQ","repository":"touille"},
+    {"name":"webbing","id":"prj_hiBtA73AQRsjgQDNx7jOXNJX5N3A","repository":"webbing"},
+    {"name":"wisp","id":"prj_txja6EuhO1cBgCfHuSZsGEDpob9d","repository":"wisp"}
+  ]
+}

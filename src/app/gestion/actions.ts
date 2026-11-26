@@ -95,3 +95,14 @@ export async function disconnectGitHub(form:FormData){
   await query(`WITH removed AS (UPDATE ops_integrations SET revoked_at=now(),secret_cipher='' WHERE id=$1 AND provider='github' RETURNING id) UPDATE ops_repositories SET integration_id=NULL WHERE integration_id IN (SELECT id FROM removed)`,[id]);
   await query("INSERT INTO ops_audit(kind,detail) VALUES('connexion_supprimee','Accès GitHub retiré de Webbing')");revalidatePath('/gestion');
 }
+
+export async function launchDependencyTests(form:FormData){
+ const admin=await requireAdmin();
+ const repository=String(form.get('repository')||''),number=Number(form.get('number'));
+ if(!Number.isSafeInteger(number)||number<1)return {ok:false,message:'Proposition invalide.'};
+ try{
+  const {requestDependencyTests}=await import('@/lib/gestion/github');
+  await requestDependencyTests(repository,number,String(form.get('head')||''),String(form.get('base')||''),admin.user.email);
+  revalidatePath('/gestion');return {ok:true,message:'Tests demandés à GitHub pour ce lot. Aucune mise à jour n’est validée par ce lancement.'};
+ }catch(error){const message=error instanceof Error?error.message:'';return {ok:false,message:/^(La proposition|Cette proposition|Des tests|GitHub|Droits GitHub|Jeton GitHub|Raccorder|Attends)/.test(message)?message:'Les tests n’ont pas pu être demandés. Vérifie le workflow et le budget Actions avant de réessayer.'};}
+}

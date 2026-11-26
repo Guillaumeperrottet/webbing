@@ -129,3 +129,23 @@ export async function dispatchApproval(api,repository,number,{expectedHead,expec
   await api(`${root}/actions/workflows/webbing-dependency-policy.yml/dispatches`,{method:'POST',body:{ref:repo.default_branch,inputs:{pull_request:String(number),approve_manual:'true',expected_head:expectedHead,expected_base:expectedBase,approval_id:approvalId}}});
   return {queued:true};
 }
+
+export async function resolveDependencyCheck(api,repository,number,{expectedHead,expectedBase}){
+  if(!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository)||!Number.isSafeInteger(number)||number<1||!SHA.test(expectedHead||'')||!SHA.test(expectedBase||''))throw new Error('Proposition invalide.');
+  const root=`/repos/${repository}`;
+  const [repo,pr]=await Promise.all([api(root),api(`${root}/pulls/${number}`)]);
+  if(!trustedDependencyPR(pr,repository,repo.default_branch))throw new Error('Cette proposition ne correspond pas à une mise à jour Dependabot du dépôt.');
+  const [base,files]=await Promise.all([
+    api(`${root}/git/ref/heads/${encodeURIComponent(repo.default_branch)}`),
+    api(`${root}/pulls/${number}/files?per_page=100`),
+  ]);
+  if(pr.head.sha!==expectedHead||base.object.sha!==expectedBase)throw new Error('La proposition ou la branche cible a changé. Actualise avant de lancer les tests.');
+  if(pr.changed_files>100||files.length>=100||!allowedDependencyFiles(files))throw new Error('Cette proposition modifie aussi du code applicatif : examen dans GitHub requis.');
+  return {head:expectedHead,base:expectedBase,branch:repo.default_branch};
+}
+export async function dispatchDependencyChecks(api,repository,number,{expectedHead,expectedBase,requestId}){
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(requestId||''))throw new Error('Demande de tests invalide.');
+  const resolved=await resolveDependencyCheck(api,repository,number,{expectedHead,expectedBase});
+  await api(`/repos/${repository}/actions/workflows/webbing-dependency-checks.yml/dispatches`,{method:'POST',body:{ref:resolved.branch,inputs:{pull_request:String(number),expected_head:expectedHead,expected_base:expectedBase,request_id:requestId}}});
+  return {queued:true};
+}

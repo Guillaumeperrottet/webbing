@@ -54,7 +54,7 @@ test("private access enforces invitation, two factors, per-session verification 
   const redirect = await anonymous.send("/gestion");
   assert.equal(redirect.status, 307); assert.equal(redirect.headers.get("location"), "/gestion/connexion");
   assert.equal((await anonymous.send("/gestion?vue=dependances")).headers.get("location"),"/gestion/connexion");
-  for(const action of ["addGitHubConnection","approveDependencyUpdate","refreshDependencies","disconnectGitHub"]){
+  for(const action of ["addGitHubConnection","approveDependencyUpdate","launchDependencyTests","refreshDependencies","disconnectGitHub"]){
     const response=await anonymous.action(action);assert.equal(response.status,303);assert.equal(response.headers.get("location"),"/gestion/connexion");await response.text();
   }
   const login = await anonymous.send("/gestion/connexion"); const loginHtml = await login.text();
@@ -75,6 +75,8 @@ test("private access enforces invitation, two factors, per-session verification 
   assert.equal((await client.send("/api/gestion/agent")).status,401,"password alone grants no data");
   const blockedApproval=await client.action("approveDependencyUpdate");
   assert.equal(blockedApproval.status,303);assert.equal(blockedApproval.headers.get("location"),"/gestion/securite");await blockedApproval.text();
+  const blockedTests=await client.action("launchDependencyTests");
+  assert.equal(blockedTests.status,303);assert.equal(blockedTests.headers.get("location"),"/gestion/securite");await blockedTests.text();
   const stale = new Client();
   assert.equal((await stale.send("/api/gestion/auth/sign-in/email",{email,password})).status,200);
   const enabled = await client.send("/api/gestion/auth/two-factor/enable",{password,method:"totp"});

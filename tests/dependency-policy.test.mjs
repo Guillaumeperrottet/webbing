@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {dependencyMetadata,evaluateChecks,allowedDependencyFiles,trustedDependencyPR,mergeUpdate,QUALITY,ATTESTATION,GATE,gatewayReadiness,dispatchApproval} from '../scripts/dependencies/policy.mjs';
+import {dependencyMetadata,evaluateChecks,allowedDependencyFiles,trustedDependencyPR,mergeUpdate,QUALITY,ATTESTATION,GATE,gatewayReadiness,dispatchApproval,resolveDependencyCheck,dispatchDependencyChecks} from '../scripts/dependencies/policy.mjs';
 const sha='a'.repeat(40),base='b'.repeat(40);
 const commit=(type)=>({author:{login:'dependabot[bot]',type:'Bot'},commit:{verification:{verified:true},message:`Bump dependencies\n\n---\nupdated-dependencies:\n- dependency-name: react\n  dependency-version: 19.3.1\n  update-type: version-update:semver-${type}\n...\n\nSigned-off-by: dependabot[bot]`}});
 const checks=[{id:1,name:QUALITY,app:{id:15368,slug:'github-actions'},status:'completed',conclusion:'success'}];
@@ -79,4 +79,25 @@ test('security updates without an update-type use only the matching stable versi
  assert.equal(dependencyMetadata([security('19.3.1','19.2.9')]).type,'unknown');
  assert.equal(dependencyMetadata([security('19.3.0-rc.1','19.3.1')]).type,'unknown');
  const mismatch=security('19.3.0','19.3.1');mismatch.commit.message=mismatch.commit.message.replace('dependency-version: 19.3.1','dependency-version: 20.0.0');assert.equal(dependencyMetadata([mismatch]).type,'unknown');
+});
+
+test('manual test requests bind the bot head and current base without approving a proposal',async()=>{
+ let writes=0,files=[{filename:'package.json'}];
+ const pr={state:'open',draft:false,user:{login:'dependabot[bot]',type:'Bot'},head:{sha,ref:'dependabot/npm/next',repo:{full_name:'owner/repo'}},base:{ref:'main',repo:{full_name:'owner/repo'}},changed_files:1};
+ const api=async(path,options)=>{
+  if(options?.method){writes++;assert.equal(path,'/repos/owner/repo/actions/workflows/webbing-dependency-checks.yml/dispatches');assert.equal(options.body.ref,'main');assert.equal(options.body.inputs.expected_head,sha);assert.equal(options.body.inputs.expected_base,base);assert.equal(options.body.inputs.approve_manual,undefined);return null;}
+  if(path==='/repos/owner/repo')return {default_branch:'main'};
+  if(path.endsWith('/pulls/7'))return pr;
+  if(path.includes('/git/ref/'))return {object:{sha:base}};
+  if(path.includes('/files?'))return files;
+  throw new Error(path);
+ };
+ const binding={expectedHead:sha,expectedBase:base,requestId:'12345678-1234-4234-8234-123456789abc'};
+ assert.deepEqual(await resolveDependencyCheck(api,'owner/repo',7,binding),{head:sha,base,branch:'main'});
+ await assert.rejects(()=>dispatchDependencyChecks(api,'owner/repo',7,{...binding,expectedBase:'d'.repeat(40)}),/changé/);
+ files=[{filename:'src/auth.ts'}];await assert.rejects(()=>dispatchDependencyChecks(api,'owner/repo',7,binding),/code applicatif/);
+ files=[{filename:'package.json'}];await assert.rejects(()=>dispatchDependencyChecks(api,'owner/repo',7,{...binding,expectedHead:'d'.repeat(40)}),/changé/);
+ pr.head.repo.full_name='someone/fork';await assert.rejects(()=>dispatchDependencyChecks(api,'owner/repo',7,binding),/Dependabot/);
+ pr.head.repo.full_name='owner/repo';assert.equal(writes,0);
+ assert.deepEqual(await dispatchDependencyChecks(api,'owner/repo',7,binding),{queued:true});assert.equal(writes,1);
 });

@@ -7,9 +7,10 @@ const recipe=JSON.parse(readFileSync(path.join(root,'.github/webbing-ci.json'),'
 const git=(args)=>execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim();
 const merge=git(['rev-parse','HEAD']),parents=git(['cat-file','-p','HEAD']).split('\n').filter(line=>/^parent [0-9a-f]{40}$/.test(line)).map(line=>line.slice(7));
 const event=process.env.GITHUB_EVENT_PATH?JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH,'utf8')):{};
-const testedHead=event.pull_request?.head.sha || merge;
-const testedBase=event.pull_request?parents[0]:merge;
-if(event.pull_request && (parents.length!==2||parents[1]!==testedHead))throw new Error('The checked out merge commit does not match this pull request.');
+const manual=process.env.GITHUB_EVENT_NAME==='workflow_dispatch';
+const testedHead=manual?event.inputs?.expected_head:event.pull_request?.head.sha || merge;
+const testedBase=manual?event.inputs?.expected_base:event.pull_request?parents[0]:merge;
+if((manual||event.pull_request) && (parents.length!==2||parents[1]!==testedHead||parents[0]!==testedBase))throw new Error('The checked out merge commit does not match this pull request and current base.');
 const inherited=Object.fromEntries(Object.entries(process.env).filter(([key])=>!/^GITHUB_|^ACTIONS_|^INPUT_|^(GH|NPM|NODE_AUTH)_TOKEN$/.test(key)));
 const database='postgresql://postgres:webbing_ci@127.0.0.1:5432/webbing_ci_test';
 const anon='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6IndlYmJpbmctY2kiLCJleHAiOjQxMDI0NDQ4MDB9.test-signature-for-isolated-ci-only';

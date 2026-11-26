@@ -1,0 +1,40 @@
+name: Webbing Dependency Policy
+run-name: ${{ github.event.inputs.approve_manual == 'true' && format('Webbing validation {0}', inputs.approval_id) || 'Webbing dependency review' }}
+on:
+  workflow_dispatch:
+    inputs:
+      pull_request:
+        description: Dependency proposal to review
+        required: true
+      approve_manual:
+        description: Explicit approval from Webbing after tests
+        type: boolean
+        default: false
+      expected_head:
+        description: Exact dependency commit approved in Webbing
+        type: string
+      expected_base:
+        description: Exact tested base commit approved in Webbing
+        type: string
+      approval_id:
+        description: Webbing approval request UUID
+        type: string
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+  statuses: write
+  actions: read
+concurrency:
+  group: webbing-dependency-merges
+  cancel-in-progress: false
+jobs:
+  policy:
+    name: Webbing / Dependency policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: Guillaumeperrottet/webbing/.github/actions/dependency-policy@SOURCE_COMMIT
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          enabled: 'false'

@@ -8,7 +8,7 @@ import {githubApi,dependencyMetadata,allowedDependencyFiles,gatewayReadiness,dis
 
 export type Repository={full_name:string;default_branch:string;setup_pr_url:string|null;setup_state:string;ci_configured:boolean;auto_merge_enabled:boolean;integration_id:string|null;last_sync_at:string|null;last_error:string|null};
 export type DependencyUpdate={repository:string;number:number;title:string;url:string;head_sha:string;base_sha:string;update_type:string;dependencies:{name:string;type:string;version:string|null}[];checks:{name:string;status:string;conclusion:string|null;url:string|null}[];ready:boolean;auto_eligible:boolean;reason:string;checked_at:string;updated_at:string;approval_status:string|null;approval_error:string|null;approval_url:string|null;test_status:string|null;test_error:string|null;test_url:string|null};
-export async function dependencyData(){const [repos,updates]=await Promise.all([query<Repository>('SELECT * FROM ops_repositories ORDER BY full_name'),query<DependencyUpdate>("SELECT u.*,a.status AS approval_status,a.error AS approval_error,a.run_url AS approval_url,t.status AS test_status,t.error AS test_error,t.run_url AS test_url FROM ops_dependency_updates u LEFT JOIN LATERAL (SELECT status,error,run_url FROM ops_dependency_approvals WHERE repository=u.repository AND number=u.number AND head_sha=u.head_sha AND base_sha=u.base_sha ORDER BY requested_at DESC LIMIT 1) a ON true LEFT JOIN LATERAL (SELECT status,error,run_url FROM ops_dependency_tests WHERE repository=u.repository AND number=u.number AND head_sha=u.head_sha AND base_sha=u.base_sha ORDER BY requested_at DESC LIMIT 1) t ON true WHERE u.state='open' ORDER BY u.ready DESC,u.repository,u.number DESC")]);return {repositories:repos.rows,updates:updates.rows};}
+export async function dependencyData(){const [repos,updates]=await Promise.all([query<Repository>('SELECT * FROM ops_repositories ORDER BY full_name'),query<DependencyUpdate>("SELECT u.*,a.status AS approval_status,a.error AS approval_error,a.run_url AS approval_url,t.status AS test_status,t.error AS test_error,t.run_url AS test_url FROM ops_dependency_updates u LEFT JOIN LATERAL (SELECT status,error,run_url FROM ops_dependency_approvals WHERE repository=u.repository AND number=u.number AND head_sha=u.head_sha AND base_sha=u.base_sha ORDER BY requested_at DESC LIMIT 1) a ON true LEFT JOIN LATERAL (SELECT status,error,run_url FROM ops_dependency_tests WHERE repository=u.repository AND number=u.number AND ((head_sha=u.head_sha AND base_sha=u.base_sha) OR status IN ('requested','running')) ORDER BY requested_at DESC LIMIT 1) t ON true WHERE u.state='open' ORDER BY u.ready DESC,u.repository,u.number DESC")]);return {repositories:repos.rows,updates:updates.rows};}
 const METADATA_VERSION=2;
 const sha=z.string().regex(/^[0-9a-f]{40}$/);
 const metadataSchema=z.object({type:z.enum(['unknown','patch','minor','major']),dependencies:z.array(z.object({name:z.string(),type:z.string(),version:z.string().nullable()}))});
@@ -144,16 +144,22 @@ export async function requestDependencyTests(repository:string,number:number,exp
 }
 
 export async function reconcileDependencyTests(api:ReturnType<typeof githubApi>,repository:string){
- const requests=(await query<{id:string;number:number;head_sha:string;requested_at:Date}>("SELECT id,number,head_sha,requested_at FROM ops_dependency_tests WHERE repository=$1 AND status IN ('requested','running')",[repository])).rows;
+ const requests=(await query<{id:string;number:number;head_sha:string;base_sha:string;requested_at:Date}>("SELECT id,number,head_sha,base_sha,requested_at FROM ops_dependency_tests WHERE repository=$1 AND status IN ('requested','running')",[repository])).rows;
  if(!requests.length)return;
  const runs=await api(`/repos/${repository}/actions/workflows/webbing-dependency-checks.yml/runs?event=workflow_dispatch&per_page=100`);
  for(const request of requests){
-  const run=runs.workflow_runs.find((r:{display_title:string})=>r.display_title===`Webbing tests ${request.id} · #${request.number}`);
+  const run=runs.workflow_runs.find((r:{display_title:string})=>r.display_title===`Webbing tests ${request.id} · #${request.number}`||r.display_title===`Webbing tests ${request.id} ·`);
   if(!run){
    if(Date.now()-new Date(request.requested_at).getTime()>30*60_000)await query("UPDATE ops_dependency_tests SET status='failed',finished_at=now(),error=$1 WHERE id=$2",['GitHub n’a pas confirmé le démarrage. Aucune relance automatique : vérifier Actions avant de réessayer.',request.id]);
    continue;
   }
-  const completed=run.status==='completed',passed=completed&&run.conclusion==='success';
-  await query("UPDATE ops_dependency_tests SET run_url=$1,status=$2,finished_at=CASE WHEN $3 THEN now() ELSE NULL END,error=$4 WHERE id=$5",[run.html_url,completed?passed?'success':'failed':'running',completed,completed&&!passed?'Les tests n’ont pas abouti. Consulter le journal GitHub ; aucune relance automatique.':null,request.id]);
+  const completed=run.status==='completed';let passed=completed&&run.conclusion==='success',testedHead=request.head_sha;
+  if(passed){
+   const pr=await api(`/repos/${repository}/pulls/${request.number}`);
+   const statuses=await api(`/repos/${repository}/commits/${pr.head.sha}/statuses?per_page=100`);
+   passed=statuses.some((s:{context:string;state:string;description:string;target_url:string;creator:{login:string}})=>s.context==='Webbing / Base testée'&&s.state==='success'&&s.description===`base:${request.base_sha}`&&s.target_url===run.html_url&&s.creator?.login==='github-actions[bot]');
+   if(passed)testedHead=pr.head.sha;
+  }
+  await query("UPDATE ops_dependency_tests SET run_url=$1,status=$2,finished_at=CASE WHEN $3 THEN now() ELSE NULL END,error=$4,head_sha=$6 WHERE id=$5",[run.html_url,completed?passed?'success':'failed':'running',completed,completed&&!passed?'Les tests n’ont pas abouti ou la proposition a changé. Consulter le journal GitHub ; aucune relance automatique.':null,request.id,testedHead]);
  }
 }

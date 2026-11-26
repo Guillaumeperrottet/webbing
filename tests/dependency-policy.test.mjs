@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {dependencyMetadata,evaluateChecks,allowedDependencyFiles,trustedDependencyPR,mergeUpdate,QUALITY,ATTESTATION,GATE,gatewayReadiness,dispatchApproval,resolveDependencyCheck,dispatchDependencyChecks} from '../scripts/dependencies/policy.mjs';
+import {dependencyMetadata,evaluateChecks,allowedDependencyFiles,trustedDependencyPR,mergeUpdate,QUALITY,ATTESTATION,GATE,gatewayReadiness,dispatchApproval,resolveDependencyCheck,dispatchDependencyChecks,refreshDependencyBranch} from '../scripts/dependencies/policy.mjs';
 const sha='a'.repeat(40),base='b'.repeat(40);
 const commit=(type)=>({author:{login:'dependabot[bot]',type:'Bot'},commit:{verification:{verified:true},message:`Bump dependencies\n\n---\nupdated-dependencies:\n- dependency-name: react\n  dependency-version: 19.3.1\n  update-type: version-update:semver-${type}\n...\n\nSigned-off-by: dependabot[bot]`}});
 const checks=[{id:1,name:QUALITY,app:{id:15368,slug:'github-actions'},status:'completed',conclusion:'success'}];
@@ -118,4 +118,21 @@ test('application compatibility fixes always require explicit approval, even wit
  };
  await assert.rejects(()=>mergeUpdate(api,'owner/repo',1,{expectedHead:sha,expectedBase:base,automatic:true}),/validation manuelle/);assert.equal(writes,0);
  await mergeUpdate(api,'owner/repo',1,{expectedHead:sha,expectedBase:base});assert.equal(writes,1);
+});
+
+test('the isolated resolver refreshes only the requested bot branch and rejects concurrent changes',async()=>{
+ const updated='c'.repeat(40);let writes=0,current=sha,parents=[{sha},{sha:base}];
+ const binding={expectedHead:sha,expectedBase:base};
+ const api=async(path,options)=>{
+  if(options?.method){assert.equal(path,'/repos/owner/repo/pulls/7/update-branch');assert.equal(options.body.expected_head_sha,sha);writes++;current=updated;return {};}
+  if(path==='/repos/owner/repo')return {default_branch:'main'};
+  if(path.endsWith('/pulls/7'))return {state:'open',draft:false,user:{login:'dependabot[bot]',type:'Bot'},head:{sha:current,ref:'dependabot/npm/react',repo:{full_name:'owner/repo'}},base:{ref:'main',repo:{full_name:'owner/repo'}},changed_files:1};
+  if(path.includes('/git/ref/'))return {object:{sha:base}};
+  if(path.includes('/files?'))return [{filename:'package.json'}];
+  if(path.includes('/compare/'))return {merge_base_commit:{sha:'d'.repeat(40)}};
+  if(path.endsWith('/commits/'+updated))return {parents};
+  throw new Error(path);
+ };
+ assert.deepEqual(await refreshDependencyBranch(api,'owner/repo',7,binding),{head:updated,base,branch:'main'});assert.equal(writes,1);
+ current=sha;parents=[{sha},{sha:'e'.repeat(40)}];await assert.rejects(()=>refreshDependencyBranch(api,'owner/repo',7,binding),/changé pendant/);
 });

@@ -54,7 +54,7 @@ test("private access enforces invitation, two factors, per-session verification 
   const redirect = await anonymous.send("/gestion");
   assert.equal(redirect.status, 307); assert.equal(redirect.headers.get("location"), "/gestion/connexion");
   assert.equal((await anonymous.send("/gestion?vue=dependances")).headers.get("location"),"/gestion/connexion");
-  for(const action of ["addGitHubConnection","approveDependencyUpdate","launchDependencyTests","refreshDependencies","disconnectGitHub","prepareTestsBatch","confirmTestsBatch","refreshTestsProgress"]){
+  for(const action of ["addGitHubConnection","approveDependencyUpdate","launchDependencyTests","refreshDependencies","disconnectGitHub","prepareTestsBatch","confirmTestsBatch","refreshTestsProgress","preparePublication","confirmPublication","refreshPublications","disconnectPublication"]){
     const response=await anonymous.action(action);assert.equal(response.status,303);assert.equal(response.headers.get("location"),"/gestion/connexion");await response.text();
   }
   const login = await anonymous.send("/gestion/connexion"); const loginHtml = await login.text();
@@ -75,7 +75,7 @@ test("private access enforces invitation, two factors, per-session verification 
   assert.equal((await client.send("/api/gestion/agent")).status,401,"password alone grants no data");
   const blockedApproval=await client.action("approveDependencyUpdate");
   assert.equal(blockedApproval.status,303);assert.equal(blockedApproval.headers.get("location"),"/gestion/securite");await blockedApproval.text();
-  for(const action of ["prepareTestsBatch","confirmTestsBatch","refreshTestsProgress"]){const response=await client.action(action);assert.equal(response.status,303);assert.equal(response.headers.get("location"),"/gestion/securite");await response.text();}
+  for(const action of ["prepareTestsBatch","confirmTestsBatch","refreshTestsProgress","preparePublication","confirmPublication","refreshPublications","disconnectPublication"]){const response=await client.action(action);assert.equal(response.status,303);assert.equal(response.headers.get("location"),"/gestion/securite");await response.text();}
   const blockedTests=await client.action("launchDependencyTests");
   assert.equal(blockedTests.status,303);assert.equal(blockedTests.headers.get("location"),"/gestion/securite");await blockedTests.text();
   const stale = new Client();
@@ -92,7 +92,7 @@ test("private access enforces invitation, two factors, per-session verification 
   assert.doesNotMatch(html,/googletagmanager|G-E7P0FVYQSZ|\/insights\/script/);
   const dependencies=await client.send("/gestion?vue=dependances");assert.equal(dependencies.status,200);assert.match(await dependencies.text(),/Configuration des dépôts/);
   assert.notEqual((await stale.send("/gestion")).status,200,"old password-only session stays unverified after enrollment");
-  for(const action of ["prepareTestsBatch","confirmTestsBatch","refreshTestsProgress"]){const response=await stale.action(action);assert.equal(response.status,303);assert.equal(response.headers.get("location"),"/gestion/verification");await response.text();}
+  for(const action of ["prepareTestsBatch","confirmTestsBatch","refreshTestsProgress","preparePublication","confirmPublication","refreshPublications","disconnectPublication"]){const response=await stale.action(action);assert.equal(response.status,303);assert.equal(response.headers.get("location"),"/gestion/verification");await response.text();}
   assert.equal((await stale.send("/api/gestion/agent")).status,401);
   assert.equal((await client.send("/api/gestion/auth/two-factor/disable",{password})).status,404);
   assert.equal((await client.send("/api/gestion/agent")).status,200);

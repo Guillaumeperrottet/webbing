@@ -62,3 +62,6 @@ ne doit pas être ajouté en bloc à GitHub pour « synchroniser » la productio
 
 Sources : [promotions Vercel](https://vercel.com/docs/deployments/promoting-a-deployment),
 [protections GitHub](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
+
+La publication avec confirmation et code TOTP est disponible dans Webbing Gestion.
+Voir [le fonctionnement et les limites](publication-webbing.md).

@@ -139,3 +139,50 @@ export async function refreshTestsProgress() {
   await refreshDependencyProgress();
   revalidatePath("/gestion");
 }
+
+export async function preparePublication(form: FormData) {
+  const admin = await requireAdmin();
+  const { releaseError } = await import("@/lib/gestion/release-state");
+  try {
+    const { prepareRelease } = await import("@/lib/gestion/releases");
+    const preview = await prepareRelease(String(form.get("project") || ""), { email: admin.user.email, sessionId: admin.session.id });
+    return { ok: true as const, preview };
+  } catch (error) { return { ok: false as const, message: releaseError(error) }; }
+}
+
+export async function confirmPublication(form: FormData) {
+  const admin = await requireAdmin();
+  const { releaseError, PublicationError } = await import("@/lib/gestion/release-state");
+  try {
+    if (form.get("reviewed") !== "yes") throw new PublicationError("Confirme la vérification des parcours importants et des changements inclus avant de publier.");
+    const { headers } = await import("next/headers");
+    const { auth } = await import("@/lib/gestion/auth");
+    const { confirmRelease } = await import("@/lib/gestion/releases");
+    const requestHeaders = await headers(), code = String(form.get("code") || "").trim();
+    await confirmRelease(String(form.get("release") || ""), { email: admin.user.email, sessionId: admin.session.id }, code, async () => {
+      try {
+        // Discard the authentication response, which contains a session token.
+        // Only the boolean result enters the publication service.
+        await auth().api.verifyTOTP({ headers: requestHeaders, body: { code, trustDevice: false } });
+        return true;
+      } catch { return false; }
+    });
+    revalidatePath("/gestion");
+    return { ok: true, message: "Confirmation traitée. Le suivi ci-dessous indique si les domaines servent effectivement cette version. En cas d’attente, actualise le suivi avant toute nouvelle demande." };
+  } catch (error) { return { ok: false, message: releaseError(error) }; }
+}
+
+export async function refreshPublications() {
+  const admin = await requireAdmin();
+  const { refreshReleaseProgress } = await import("@/lib/gestion/releases");
+  await refreshReleaseProgress(admin.user.email);
+  revalidatePath("/gestion");
+}
+
+export async function disconnectPublication(form: FormData) {
+  await requireAdmin();
+  const project = String(form.get("project") || "");
+  const { removeReleaseConnection } = await import("@/lib/gestion/releases");
+  await removeReleaseConnection(project);
+  revalidatePath("/gestion");
+}

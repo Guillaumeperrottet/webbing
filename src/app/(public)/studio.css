@@ -100,7 +100,7 @@
 .studio-grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); align-items: center; column-gap: clamp(48px, 9vw, 144px); }
 .studio-person { width: 100%; max-width: 264px; margin: 0; }
 .studio-portrait-window { position: relative; aspect-ratio: 1; overflow: clip; border-radius: var(--radius); }
-.studio-portrait-window > img { position: absolute; width: 225%; max-width: none; height: auto; left: -2%; top: -12%; }
+.studio-portrait-window > img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .studio-nose { position: absolute; left: 49%; top: 52.5%; width: var(--studio-ball-size); height: var(--studio-ball-size); transform: translate(-50%, -50%); pointer-events: none; }
 .studio-person figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-2xs) var(--space-sm); margin-top: var(--space-md); color: var(--foreground); font-size: var(--text-sm); }
 .studio-person figcaption span { color: var(--muted-foreground); }

@@ -46,7 +46,7 @@ export default function HomePage() {
       <section id="approche" className="site-section studio-section" aria-labelledby="studio-title">
         <div className="site-container studio-grid">
           <figure className="studio-person">
-            <div className="studio-portrait-window"><Image src="/guillaume-avatar.jpeg" alt="Guillaume Perrottet" width={768} height={1024} sizes="594px" /><span className="studio-nose" data-ball-anchor="studio" aria-hidden="true" /></div>
+            <div className="studio-portrait-window"><Image src="/guillaume-portrait.jpg" alt="Guillaume Perrottet" width={341} height={341} sizes="(max-width: 640px) 144px, 264px" draggable={false} /><span className="studio-nose" data-ball-anchor="studio" aria-hidden="true" /></div>
             <figcaption>Guillaume Perrottet <span>Webbing</span></figcaption>
           </figure>
           <div className="studio-copy">

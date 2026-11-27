@@ -290,3 +290,8 @@
   .project-index[data-swipe-direction="previous"] { --project-arrival-x: -28px; --project-arrival-y: 0px; }
 }
 @media (prefers-reduced-motion: reduce) { .project-screenshot picture { transition: none; } }
+
+/* The approach's original punctuation is a physical seat for the travelling ball. */
+.method-last-word { white-space: nowrap; }
+.method-period { position: relative; display: inline-block; width: var(--studio-ball-size); height: var(--studio-ball-size); margin-inline-start: 0.04em; }
+.method-static-dot { position: absolute; inset: 0; border-radius: 50%; background: currentColor; pointer-events: none; }

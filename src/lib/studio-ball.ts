@@ -2,7 +2,7 @@ export type BallPoint = { x: number; y: number };
 export type BallStop = BallPoint & { id: string };
 export type BallPose = BallPoint & { scaleX: number; scaleY: number; stage: string; velocityX: number; velocityY: number };
 export type BallRoute = 0 | 1 | 2 | 3 | 4;
-export type BallFlight = { from: BallPoint; duration: number; target: BallStop; height: number; sway: number; curl: number; waves: number; viaX: number | null; route: BallRoute; velocityX: number; velocityY: number; entry?: { fallDuration: number; bounces: readonly { height: number; duration: number }[] } };
+export type BallFlight = { from: BallPoint; duration: number; target: BallStop; height: number; sway: number; curl: number; waves: number; viaX: number | null; route: BallRoute; velocityX: number; velocityY: number; collision?: { approachDuration: number; impactAt: number; reboundDuration: number; settleDuration: number; height: number; side: number }; entry?: { fallDuration: number; bounces: readonly { height: number; duration: number }[] } };
 
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
 const mix = (from: number, to: number, progress: number) => from + (to - from) * progress;
@@ -61,6 +61,22 @@ export function createBallFlight(from: BallPoint & Partial<Pick<BallPose, "veloc
   };
 }
 
+/** Strike the approach's punctuation, recoil, then settle into its exact position. */
+export function createMethodBallFlight(from: BallPoint & Partial<Pick<BallPose, "velocityX" | "velocityY">>, target: BallStop, viewportWidth: number, route: BallRoute = 0): BallFlight {
+  const approach = createBallFlight(from, target, viewportWidth, false, route);
+  const mobile = viewportWidth <= 640;
+  const collision = { approachDuration: approach.duration, impactAt: approach.duration * 0.72, reboundDuration: mobile ? 760 : 880, settleDuration: 240, height: mobile ? 38 : 54, side: -Math.sign(target.x - from.x) * (mobile ? 14 : 18) };
+  return { ...approach, collision, duration: collision.impactAt + collision.reboundDuration + collision.settleDuration };
+}
+
+export const METHOD_DOT_FALL_DURATION = 900;
+
+/** The displaced black period accelerates downwards and fades after leaving the title. */
+export function sampleMethodDotFall(elapsed: number, direction = 1) {
+  const t = clamp(elapsed / METHOD_DOT_FALL_DURATION);
+  return { x: Math.sign(direction) * 30 * t, y: 150 * t * t, opacity: 1 - ease(clamp((t - 0.5) / 0.5)) };
+}
+
 /** Drop from outside the screen, followed by exactly two small, diminishing rebounds. */
 export function createBallEntrance(target: BallStop, viewportWidth: number): BallFlight {
   const mobile = viewportWidth <= 640;
@@ -74,6 +90,15 @@ export function createBallEntrance(target: BallStop, viewportWidth: number): Bal
 /** Rounded contacts keep position and velocity continuous, including between bounces. */
 function positionAt(flight: BallFlight, progress: number): BallPoint {
   const t = clamp(progress);
+  if (flight.collision) {
+    const c = flight.collision, time = t * flight.duration;
+    if (time < c.impactAt) return positionAt({ ...flight, collision: undefined, duration: c.approachDuration }, time / c.approachDuration);
+    const elapsed = time - c.impactAt;
+    const rebounding = elapsed < c.reboundDuration;
+    const phase = clamp(rebounding ? elapsed / c.reboundDuration : (elapsed - c.reboundDuration) / c.settleDuration);
+    const lift = Math.sin(Math.PI * phase) ** 2;
+    return { x: flight.target.x + (rebounding ? c.side : 0) * lift, y: flight.target.y - (rebounding ? c.height : 4) * lift };
+  }
   if (flight.entry) {
     let time = t * flight.duration;
     if (time < flight.entry.fallDuration) return { x: flight.target.x, y: mix(flight.from.y, flight.target.y, (time / flight.entry.fallDuration) ** 2) };
@@ -114,8 +139,8 @@ export function sampleBallFlight(flight: BallFlight, elapsed: number): BallPose 
   const before = positionAt(flight, Math.max(0, t - step));
   const after = positionAt(flight, Math.min(1, t + step));
   const interval = (Math.min(1, t + step) - Math.max(0, t - step)) * flight.duration;
-  const firstImpact = flight.entry ? flight.entry.fallDuration / flight.duration : 0.72;
-  const secondImpact = flight.entry ? (flight.entry.fallDuration + flight.entry.bounces[0].duration) / flight.duration : 0.91;
+  const firstImpact = flight.collision ? flight.collision.impactAt / flight.duration : flight.entry ? flight.entry.fallDuration / flight.duration : 0.72;
+  const secondImpact = flight.collision ? (flight.collision.impactAt + flight.collision.reboundDuration) / flight.duration : flight.entry ? (flight.entry.fallDuration + flight.entry.bounces[0].duration) / flight.duration : 0.91;
   const impact = Math.exp(-(((t - firstImpact) / 0.025) ** 2)) * 0.12 + Math.exp(-(((t - secondImpact) / 0.018) ** 2)) * 0.045;
   const stretch = Math.sin(Math.PI * t) ** 2 * 0.055;
   return { ...point, scaleX: 1 + impact - stretch / 2, scaleY: 1 - impact + stretch, stage: flight.target.id, velocityX: (after.x - before.x) / interval, velocityY: (after.y - before.y) / interval };

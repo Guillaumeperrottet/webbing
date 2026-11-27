@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { chooseBallRoute, createBallEntrance, createBallFlight, restingPose, sampleBallFlight, selectBallStop, type BallFlight, type BallPose, type BallRoute, type BallStop } from "@/lib/studio-ball";
+import { chooseBallRoute, createBallEntrance, createBallFlight, createMethodBallFlight, METHOD_DOT_FALL_DURATION, restingPose, sampleBallFlight, sampleMethodDotFall, selectBallStop, type BallFlight, type BallPose, type BallRoute, type BallStop } from "@/lib/studio-ball";
 
 export function StudioBall() {
   const ref = useRef<HTMLSpanElement>(null);
@@ -11,6 +11,7 @@ export function StudioBall() {
     const site = ball?.closest<HTMLElement>(".studio-site");
     const portfolio = site?.querySelector<HTMLElement>(".project-index");
     if (!ball || !site || !portfolio) return;
+    const methodDot = site.querySelector<HTMLElement>("[data-method-dot]");
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let dispose = () => {};
     let entrancePlayed = false;
@@ -32,6 +33,21 @@ export function StudioBall() {
       let lastPose: BallPose | null = null;
       let flight: { plan: BallFlight; start: number } | null = null;
       let previousRoute: BallRoute | null = null;
+      let dotState: "present" | "falling" | "replaced" = "present";
+      let dotFall: { start: number; direction: number } | null = null;
+      const restoreMethodDot = () => {
+        dotState = "present";
+        dotFall = null;
+        methodDot?.style.removeProperty("transform");
+        methodDot?.style.removeProperty("opacity");
+        site.dataset.methodPeriod = "present";
+      };
+      const resetMethodDotIfHidden = () => {
+        const stop = stops.find((entry) => entry.id === "method");
+        if (dotState === "present" || destination?.id === "method" || !stop) return;
+        const y = stop.y - window.scrollY;
+        if (y < headerBottom - size || y > window.innerHeight + size) restoreMethodDot();
+      };
 
       const anchor = (id: string): BallStop | null => {
         const node = site.querySelector<HTMLElement>(`[data-ball-anchor="${id}"]`);
@@ -55,11 +71,28 @@ export function StudioBall() {
         if (stopped) return;
         if (flight) {
           const elapsed = now - flight.start;
+          const collision = flight.plan.collision;
+          if (methodDot && collision && elapsed >= collision.impactAt && dotState === "present") {
+            dotState = "falling";
+            dotFall = { start: flight.start + collision.impactAt, direction: -Math.sign(collision.side) || 1 };
+            site.dataset.methodPeriod = "falling";
+          }
           const pose = sampleBallFlight(flight.plan, elapsed);
           if (elapsed >= flight.plan.duration) flight = null;
           draw(pose);
-          if (flight) frame = requestAnimationFrame(paint);
         } else if (destination) draw(restingPose(destination));
+        if (dotFall && methodDot) {
+          const elapsed = now - dotFall.start;
+          const pose = sampleMethodDotFall(elapsed, dotFall.direction);
+          methodDot.style.transform = `translate3d(${pose.x}px, ${pose.y}px, 0)`;
+          methodDot.style.opacity = String(pose.opacity);
+          if (elapsed >= METHOD_DOT_FALL_DURATION) {
+            dotFall = null;
+            dotState = "replaced";
+            site.dataset.methodPeriod = "replaced";
+          }
+        }
+        if (flight || dotFall) frame = requestAnimationFrame(paint);
       };
       const requestPaint = () => { if (!frame) frame = requestAnimationFrame(paint); };
       const launch = (target: BallStop, categoryHop: boolean) => {
@@ -73,7 +106,10 @@ export function StudioBall() {
         }
         const route = flight && target.id === destination?.id ? flight.plan.route : chooseBallRoute(previousRoute);
         previousRoute = route;
-        flight = { plan: createBallFlight(from, target, document.documentElement.clientWidth, categoryHop, route), start: now };
+        const plan = target.id === "method" && methodDot && dotState === "present"
+          ? createMethodBallFlight(from, target, document.documentElement.clientWidth, route)
+          : createBallFlight(from, target, document.documentElement.clientWidth, categoryHop, route);
+        flight = { plan, start: now };
         destination = target;
         requestPaint();
       };
@@ -83,6 +119,12 @@ export function StudioBall() {
         if (!destination || reset || !lastPose) {
           flight = null;
           destination = target;
+          if (reset && target.id === "method" && methodDot) {
+            dotFall = null;
+            dotState = "replaced";
+            methodDot.style.opacity = "0";
+            site.dataset.methodPeriod = "replaced";
+          }
           draw(restingPose(target));
         } else if (target.id !== destination.id) {
           const categoryHop = ["applications", "websites"].includes(destination.id) && ["applications", "websites"].includes(target.id);
@@ -105,6 +147,12 @@ export function StudioBall() {
         const firstMeasure = !destination;
         syncTarget(animate, reset);
         site.setAttribute("data-ball-ready", "true");
+        resetMethodDotIfHidden();
+        if (firstMeasure && destination?.id === "method" && methodDot) {
+          lastPose = restingPose({ ...destination, x: gutter, y: window.scrollY + headerBottom + 22 });
+          draw(lastPose);
+          launch(destination, false);
+        }
         if (firstMeasure && !entrancePlayed) {
           entrancePlayed = true;
           const hero = stops[0];
@@ -115,7 +163,7 @@ export function StudioBall() {
           }
         }
       };
-      const onScroll = () => syncTarget(true);
+      const onScroll = () => { syncTarget(true); resetMethodDotIfHidden(); };
       const onLayout = () => {
         if (!measureFrame) measureFrame = requestAnimationFrame(() => { measureFrame = 0; measure(); });
       };
@@ -143,6 +191,8 @@ export function StudioBall() {
         site.removeEventListener("animationend", onLayout);
         resize.disconnect();
         selection.disconnect();
+        restoreMethodDot();
+        site.removeAttribute("data-method-period");
       };
     };
     start();

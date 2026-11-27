@@ -58,7 +58,7 @@ export default function HomePage() {
 
       <section id="methode" className="site-section method-section" aria-labelledby="method-title">
         <div className="site-container">
-          <div className="section-intro"><div><p className="section-kicker"><span className="studio-ball-label">Notre approche<span className="studio-ball-stop" data-ball-anchor="method" aria-hidden="true" /></span></p><h2 id="method-title" className="section-heading">Votre métier donne le ton.</h2></div><p>Un projet à votre mesure,<br />des choix que l’on fait ensemble.</p></div>
+          <div className="section-intro"><div><p className="section-kicker">Notre approche</p><h2 id="method-title" className="section-heading">Votre métier donne le <span className="method-last-word">ton<span className="method-period" data-ball-anchor="method" aria-hidden="true"><span className="method-static-dot" data-method-dot="" /></span><span className="visually-hidden">.</span></span></h2></div><p>Un projet à votre mesure,<br />des choix que l’on fait ensemble.</p></div>
           <dl className="studio-method">
             <div><dt>Comprendre</dt><dd>Votre activité, vos clients, vos habitudes. Nous définissons le besoin avant de choisir la solution.</dd></div>
             <div><dt>Concevoir & réaliser</dt><dd>Les contenus, les parcours, les fonctions : nous construisons votre site ou votre application autour de votre usage.</dd></div>

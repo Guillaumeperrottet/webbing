@@ -1,5 +1,9 @@
 # Publier depuis Webbing Gestion
 
+Depuis le 27 novembre 2026, les [pushes personnels de Guillaume](publications-personnelles.md)
+disposent aussi d’un circuit automatique après contrôles. Le formulaire ci-dessous
+reste disponible pour les publications manuelles, notamment les dépendances.
+
 Dans **Déploiements**, choisir une application puis **Préparer la publication**.
 La préparation ne lance ni build, ni test GitHub, ni promotion. Webbing recherche
 un build de production Vercel prêt et non encore promu, provenant de la révision

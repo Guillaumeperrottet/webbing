@@ -78,7 +78,7 @@ export function ContactSection() {
               Message envoyé !
             </h2>
             <p className="page-lead mt-6">
-              Merci pour votre message. Nous vous recontacterons pour échanger
+              Merci pour votre message. Guillaume vous recontactera pour échanger
               sur votre projet.
             </p>
             <Button
@@ -105,8 +105,9 @@ export function ContactSection() {
       <div className="site-container">
        <SectionArrival className="contact-grid">
         <div className="contact-copy">
-          <h2 id="contact-title" className="section-heading">Parlons de votre projet.</h2>
-          <p>Un site pour présenter votre activité, une application pour simplifier votre travail : commençons par votre besoin.</p>
+          <p className="section-kicker"><span className="studio-ball-label">Et votre projet ?<span className="studio-ball-stop" data-ball-anchor="contact" aria-hidden="true" /></span></p>
+          <h2 id="contact-title" className="section-heading">Tout commence<br />par un échange.</h2>
+          <p>Un besoin précis ou une première idée : racontez-nous ce que vous avez en tête.</p>
           <a className="contact-email" href="mailto:gp@webbing.ch">gp@webbing.ch</a>
           <a className="contact-phone" href="tel:+41793414074">+41 79 341 40 74</a>
           <p className="contact-address"><MapPin size={18} aria-hidden="true" />Rue de Battentin 1, 1630 Bulle</p>
@@ -205,7 +206,7 @@ export function ContactSection() {
               )}
              </Button>
              <p id="contact-next-steps" className="max-w-prose text-base leading-relaxed text-muted-foreground">
-               Après votre message, nous vous recontactons pour préciser vos objectifs et le périmètre du projet, puis définir ensemble les prochaines étapes.
+               Guillaume vous recontactera pour échanger sur votre projet et définir ensemble les prochaines étapes.
              </p>
             </div>
             {submitError && (

@@ -139,7 +139,6 @@ export function WispDemo({ active }: { screen: PreviewScreen; active: boolean })
       {chapters.map((chapter) => <div key={chapter.id} className={`wisp-story-chapter wisp-chapter--${chapter.id}`}>
         <p className="wisp-story-title">{chapter.title}</p>
         {chapter.id === "close" ? <div className="wisp-story-closing">
-          <Image src="/logo_app/logo_wisp.png" alt="" width={1250} height={1250} sizes="100px" loading="eager" />
           <p>Wisp.</p>
         </div> : <div className="wisp-story-window">
           {shots.filter((shot) => shot.chapter === chapter.id).map((shot) => <div key={shot.id} className={`wisp-story-shot wisp-shot--${shot.id}`}>

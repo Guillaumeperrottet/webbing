@@ -2,10 +2,10 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Webbing - Solutions web suisses",
+    name: "Webbing - Studio web indépendant",
     short_name: "Webbing",
     description:
-      "Créateur de solutions digitales sur mesure pour les entreprises suisses",
+      "Studio web indépendant à Bulle, en Suisse romande. Sites et applications sur mesure.",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

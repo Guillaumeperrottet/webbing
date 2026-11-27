@@ -12,7 +12,8 @@ import { ContactLink } from "@/components/project-link";
 
 const navLinks = [
   { href: "/#realisations", label: "Réalisations" },
-  { href: "/#approche", label: "Approche" },
+  { href: "/#approche", label: "Le studio" },
+  { href: "/#methode", label: "Notre approche" },
 ];
 
 export function Header() {

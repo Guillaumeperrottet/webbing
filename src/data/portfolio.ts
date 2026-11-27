@@ -1,8 +1,8 @@
 export const applications = [
   {
-    id: "openwind", name: "OpenWind", url: "https://www.openwind.ch/", category: "Vent et sports de plein air",
+    id: "openwind", name: "Openwind", url: "https://www.openwind.ch/", category: "Vent et sports de plein air",
     benefit: "Le vent, plus clair.",
-    description: "Balises en direct, prévisions et webcams : OpenWind réunit les repères utiles pour lire le vent. Ses articles et guides aident à comprendre les conditions et à connaître les spots. Un projet open source, construit avec sa communauté.",
+    description: "Balises en direct, prévisions et webcams : Openwind réunit les repères utiles pour lire le vent. Ses articles et guides aident à comprendre les conditions et à connaître les spots. Un projet open source, construit avec sa communauté.",
     // Positioning: https://www.openwind.ch/fr, /fr/carnet and Morlon, read 2026-11-03.
     image: "/projects/openwind/observations-desktop.jpg", width: 937, height: 811,
   },
@@ -18,9 +18,22 @@ export const applications = [
     benefit: "Écrivez librement. Gardez le fil.",
     description: "Vos notes, projets, tâches et documents dans un même espace. Retrouvez le suivi des équipements sur un plan, planifiez les interventions et préparez vos publications dans l’agenda. Sur le web et sur iPhone, votre équipe garde le fil avec le même compte.",
     // Positioning: https://www.mypapers.ch/#parcours and App Store id6836844314, read 2026-11-25.
-    image: "/projects/mypapers/plan-desktop.jpg", width: 1156, height: 608,
+    image: "/projects/mypapers/plan-real-anonymized.jpg", width: 1463, height: 1075,
   },
 ] as const;
+
+// Attribute development explicitly while preserving collaborators’ conception credits.
+export const projectContributions = {
+  selfcamp: "Développement de l’application web de recherche et de réservation.",
+  openwind: "Développement de l’application web et de l’app iPhone et iPad.",
+  wisp: "Développement de l’application de partage et de gestion de fichiers.",
+  mypapers: "Développement de l’application web et de l’app iPhone.",
+  "pattus-hotel": "Développement du site multilingue. Conception : Pierre & Théo.",
+  "alpha-hotel": "Développement du site web.",
+  coachingbymarie: "Développement du site web.",
+  graphomouv: "Développement du site pédagogique interactif.",
+  dipiaza: "Développement du site web.",
+} as const;
 
 export const websites = [
   {
@@ -50,7 +63,7 @@ export const websites = [
     benefit: "Trouver son café et sa pause gourmande.",
     description: "Dipiaza réunit des cafés et sandwicheries en Suisse romande, avec une histoire commencée en gare de Bulle. Le site présente l’enseigne, sa carte et ses différentes adresses pour retrouver les informations pratiques de chaque établissement.",
     // Positioning: https://www.dipiaza.ch/, history and locations read 2026-11-02.
-    image: "/projects/dipiaza_projet.png",
+    image: "/projects/static/dipiaza-home-current-desktop.jpg",
   },
 ] as const;
 
@@ -71,9 +84,9 @@ export const showcaseProjects = [
     application: true,
     features: app.id === "openwind" ? ["Balises et prévisions", "Articles et guides", "App iPhone et iPad", "Open source"] : app.id === "wisp" ? ["Bibliothèque de fichiers", "Transfert par lien", "Hébergement suisse"] : ["Notes et projets", "Tâches et plans", "Agenda et communication", "App iPhone"],
     screens: app.id === "openwind" ? [
-      { label: "Découvrir", src: "/projects/openwind/observations-desktop.jpg", alt: "OpenWind : balises de vent, prévisions, articles et projet open source", width: 937, height: 811 },
+      { label: "Découvrir", src: "/projects/openwind/observations-desktop.jpg", alt: "Openwind : balises de vent, prévisions, articles et projet open source", width: 937, height: 811 },
       { label: "Prévisions", src: "/projects/openwind/forecast-desktop.jpg", alt: "Prévisions de modèle Open-Meteo à Morlon, capturées le 3 novembre 2026", width: 937, height: 549 },
-    ] : [{ label: app.id === "wisp" ? "Parcours de partage" : "Découvrir Mypapers", src: app.image, alt: app.id === "wisp" ? "Wisp : trois fichiers d’exemple prêts à être partagés par lien" : "Mypapers : le plan, les documents et les tâches de La Clairière dans la démonstration publique", width: app.width, height: app.height }],
+    ] : [{ label: app.id === "wisp" ? "Parcours de partage" : "Découvrir Mypapers", src: app.image, alt: app.id === "wisp" ? "Wisp : trois fichiers d’exemple prêts à être partagés par lien" : "Mypapers : plan du Camping du Lac et suivi d’un équipement, avec un code fictif", width: app.width, height: app.height }],
   })),
   {
     id: "pattus-hotel", name: "Pattùs Hotel", url: "https://www.pattushotel.ch/fr", category: "Hôtel & restaurant", application: false, year: "2026",

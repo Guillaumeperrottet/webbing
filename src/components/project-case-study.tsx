@@ -25,7 +25,7 @@ export function ProjectCaseStudy({ projectId, projectName, application }: { proj
         {study.note && <p className="project-case-study-credits">{study.note}</p>}
         {study.credits && <p className="project-case-study-credits">{study.credits}</p>}
         <div className="project-case-study-actions">
-          <ProjectLink href={study.proof.href} name={projectName} category="Étude de cas" application={application}>
+          <ProjectLink href={study.proof.href} name={projectName} category="Étude de cas" application={application} showArrow={false}>
             {study.proof.label}
           </ProjectLink>
           <ContactLink section="etude-de-cas" project={projectName} className="text-link">Parlons de votre projet</ContactLink>

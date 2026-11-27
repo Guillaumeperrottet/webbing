@@ -16,7 +16,7 @@ export default function HomePage() {
             <h1 id="home-title">Le web,<br />à votre <span className="hero-title-last">mesure<span className="studio-period" data-ball-anchor="hero" aria-hidden="true" /><span className="visually-hidden">.</span></span></h1>
             <div className="home-intro-copy">
               <p>Des sites et des applications sur mesure, pour votre activité.</p>
-              <p>Nous concevons et développons votre projet. De la première idée à la mise en ligne, vous échangez directement avec la personne qui le réalise.</p>
+              <p>Nous concevons et développons votre projet. De la première idée à la mise en ligne, une seule personne de contact.</p>
               <div className="hero-actions">
                 <Button size="lg" asChild><ContactLink section="hero">Parlons de votre projet</ContactLink></Button>
                 <a href="#realisations" className="text-link">Découvrir les réalisations</a>

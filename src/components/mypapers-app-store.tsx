@@ -3,7 +3,7 @@ import { ProjectLink } from "@/components/project-link";
 import styles from "./mypapers-app-store.module.css";
 
 export function AppStoreBadge({ app }: { app: "mypapers" | "openwind" }) {
-  const name = app === "mypapers" ? "Mypapers" : "OpenWind";
+  const name = app === "mypapers" ? "Mypapers" : "Openwind";
   const href = app === "mypapers"
     ? "https://apps.apple.com/ch/app/mypapers/id6836844314?l=fr-FR"
     : "https://apps.apple.com/app/id6831617323?l=fr-FR";

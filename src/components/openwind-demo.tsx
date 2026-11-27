@@ -71,7 +71,7 @@ export function OpenwindDemo({ active }: { screen: PreviewScreen; active: boolea
   const { started, running } = useDemoMotion(root, active && loaded.size === 4, sequence, DURATION);
 
   return <div ref={root} className="portfolio-demo openwind-story" data-demo="openwind" data-started={started} data-running={running} data-ready={loaded.size === 4}>
-    <p className="visually-hidden">OpenWind : les mesures d’une balise de vent à Morlon, les prévisions du même spot, un article pour comprendre la bise, le foehn et le joran, puis le projet open source et communautaire. Captures réelles du 3 novembre 2026, sans données en direct dans cet aperçu.</p>
+    <p className="visually-hidden">Openwind : les mesures d’une balise de vent à Morlon, les prévisions du même spot, un article pour comprendre la bise, le foehn et le joran, puis le projet open source et communautaire. Captures réelles du 3 novembre 2026, sans données en direct dans cet aperçu.</p>
     <div className="openwind-story-stage" aria-hidden="true">
       <p className="openwind-story-location">Morlon, Les Laviaux</p>
       {scenes.map((scene) => <div key={scene.id} className={`openwind-story-frame openwind-frame--${scene.id}`}>

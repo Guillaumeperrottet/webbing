@@ -3,29 +3,34 @@ import { Button } from "@/components/ui/button";
 import { ProjectShowcase } from "@/components/project-showcase";
 import { ContactLink, ProjectContactLink } from "@/components/project-link";
 import { ContactSection } from "@/components/contact-section";
-import { SectionArrival } from "@/components/section-arrival";
+import { StudioBall } from "@/components/studio-ball";
 
 export default function HomePage() {
   return (
     <>
+      <StudioBall />
       <section className="home-hero" aria-labelledby="home-title">
         <div className="site-container">
+          <p className="home-studio-signature">Studio web indépendant · Bulle, Suisse romande</p>
           <div className="home-intro">
-            <h1 id="home-title">Sites et applications<br className="desktop-break" /> pensés pour votre activité.</h1>
+            <h1 id="home-title">Le web,<br />à votre mesure<span className="studio-period" data-ball-anchor="hero" aria-hidden="true" /><span className="visually-hidden">.</span></h1>
             <div className="home-intro-copy">
-              <p>À Bulle, un accompagnement direct, de l’idée à la mise en ligne.</p>
+              <p>Des sites et des applications sur mesure, pour votre activité.</p>
+              <p>Nous concevons et développons votre projet. De la première idée à la mise en ligne, vous échangez directement avec la personne qui le réalise.</p>
               <div className="hero-actions">
                 <Button size="lg" asChild><ContactLink section="hero">Parlons de votre projet</ContactLink></Button>
-                <a href="#realisations" className="text-link">Voir les réalisations</a>
+                <a href="#realisations" className="text-link">Découvrir les réalisations</a>
               </div>
             </div>
           </div>
+          <div className="home-footnote"><span>Conception & développement</span><a href="#approche">Indépendance</a></div>
         </div>
       </section>
 
       <ProjectShowcase />
 
       <div className="site-container clients-container">
+        <p className="section-kicker">Quelques collaborations</p>
         <div className="work-clients" aria-label="Quelques collaborations">
           {[
             ["/trust/pattus.svg", "Pattùs Hotel"], ["/trust/logo-potentille.png", "Potentille"],
@@ -35,26 +40,30 @@ export default function HomePage() {
         </div>
       </div>
 
-      <section id="approche" className="site-section approach-section" aria-labelledby="approach-title">
-        <div className="site-container">
-          <SectionArrival className="approach-grid">
-          <div className="approach-copy">
-            <h2 id="approach-title" className="section-heading">Du besoin au lancement.</h2>
-            <p>Nous créons votre solution autour de votre activité, avec un échange direct à chaque étape.</p>
-            <div className="founder-signature">
-              <span className="founder-avatar">
-                <Image src="/guillaume-avatar.jpeg" alt="Guillaume Perrottet" width={768} height={1024} sizes="264px" />
-              </span>
-              <div><p className="founder-name">Guillaume Perrottet</p><p>Webbing, à Bulle.</p></div>
-            </div>
-            <ProjectContactLink section="approche" />
+      <section id="approche" className="site-section studio-section" aria-labelledby="studio-title">
+        <div className="site-container studio-grid">
+          <figure className="studio-person">
+            <div className="studio-portrait-window"><Image src="/guillaume-avatar.jpeg" alt="Guillaume Perrottet" width={768} height={1024} sizes="594px" /><span className="studio-nose" data-ball-anchor="studio" aria-hidden="true" /></div>
+            <figcaption>Guillaume Perrottet <span>Webbing</span></figcaption>
+          </figure>
+          <div className="studio-copy">
+            <p className="section-kicker">Le studio</p>
+            <h2 id="studio-title" className="section-heading">Un échange direct.</h2>
+            <p>Webbing conçoit et développe des sites et des applications à Bulle, en Suisse romande. Chaque projet part de votre activité, de vos utilisateurs et de ce qui vous serait utile.</p>
+            <p>Nous définissons le besoin et les prochaines étapes ensemble. Selon le projet, nous collaborons avec des designers et d’autres créateurs.</p>
+            <ProjectContactLink section="studio" />
           </div>
-            <dl className="approach-values">
-              <div><dt>Votre besoin d’abord</dt><dd>Présenter votre activité, recevoir des réservations ou réunir vos outils : nous partons de ce qui vous serait utile.</dd></div>
-              <div><dt>Un échange direct</dt><dd>Nous précisons ensemble votre besoin et vous accompagnons à chaque étape du projet.</dd></div>
-              <div><dt>Jusqu’à la mise en ligne</dt><dd>Nous développons votre site ou votre application et vous accompagnons lors de son lancement.</dd></div>
-            </dl>
-          </SectionArrival>
+        </div>
+      </section>
+
+      <section id="methode" className="site-section method-section" aria-labelledby="method-title">
+        <div className="site-container">
+          <div className="section-intro"><div><p className="section-kicker"><span className="studio-ball-label">Notre approche<span className="studio-ball-stop" data-ball-anchor="method" aria-hidden="true" /></span></p><h2 id="method-title" className="section-heading">Votre métier donne le ton.</h2></div><p>Un projet à votre mesure,<br />des choix que l’on fait ensemble.</p></div>
+          <dl className="studio-method">
+            <div><dt>Comprendre</dt><dd>Votre activité, vos clients, vos habitudes. Nous définissons le besoin avant de choisir la solution.</dd></div>
+            <div><dt>Concevoir & réaliser</dt><dd>Les contenus, les parcours, les fonctions : nous construisons votre site ou votre application autour de votre usage.</dd></div>
+            <div><dt>Mettre en ligne</dt><dd>Nous préparons le lancement avec vous, pour que vous puissiez prendre en main votre site ou votre application.</dd></div>
+          </dl>
         </div>
       </section>
 

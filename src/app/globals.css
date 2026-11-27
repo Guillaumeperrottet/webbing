@@ -954,7 +954,7 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
 .demo-site-screen { position: absolute; inset: 0; overflow: clip; border: var(--rule-hair) solid var(--brand-rule); border-radius: var(--radius); background: var(--background); }
 .preview-demo .demo-site-screen > img { display: block; width: 100%; height: 100%; object-fit: contain; animation: none; }
 
-/* OpenWind: gusts clear the clouds, the windsock reacts, then sunlight settles in. */
+/* Openwind: gusts clear the clouds, the windsock reacts, then sunlight settles in. */
 .openwind-demo { --openwind-cloud: #f4f1ef; --openwind-cloud-edge: #b8c5cb; --openwind-sun: #c18b2b; --openwind-sun-fill: #f9df9a; }
 .openwind-scene { position: relative; }
 .preview-demo .openwind-scene .portfolio-screen-window > img { width: 100%; height: 100%; object-fit: contain; animation: none; }

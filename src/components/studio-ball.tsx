@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { chooseBallRoute, createBallEntrance, createBallFlight, createMethodBallFlight, METHOD_DOT_FALL_DURATION, restingPose, sampleBallFlight, sampleMethodDotFall, selectBallStop, type BallFlight, type BallPose, type BallRoute, type BallStop } from "@/lib/studio-ball";
+import { BALL_IDLE_DELAY, chooseBallRoute, createBallIdleHop, createBallEntrance, createBallFlight, createMethodBallFlight, METHOD_DOT_FALL_DURATION, restingPose, sampleBallFlight, sampleMethodDotFall, selectBallStop, type BallFlight, type BallPose, type BallRoute, type BallStop } from "@/lib/studio-ball";
 
 export function StudioBall() {
   const ref = useRef<HTMLSpanElement>(null);
@@ -33,6 +33,25 @@ export function StudioBall() {
       let lastPose: BallPose | null = null;
       let flight: { plan: BallFlight; start: number } | null = null;
       let previousRoute: BallRoute | null = null;
+      let idleTimer: ReturnType<typeof setTimeout> | null = null;
+      const clearIdleTimer = () => {
+        if (idleTimer !== null) clearTimeout(idleTimer);
+        idleTimer = null;
+      };
+      const canIdle = () => {
+        if (stopped || document.hidden || flight || dotFall || !destination) return false;
+        const y = destination.y - window.scrollY;
+        return y >= headerBottom + size && y <= window.innerHeight - size * 2;
+      };
+      const scheduleIdle = () => {
+        if (idleTimer !== null || !canIdle()) return;
+        idleTimer = setTimeout(() => {
+          idleTimer = null;
+          if (!canIdle() || !destination) return;
+          flight = { plan: createBallIdleHop(destination, document.documentElement.clientWidth), start: performance.now() };
+          requestPaint();
+        }, BALL_IDLE_DELAY);
+      };
       let dotState: "present" | "falling" | "replaced" = "present";
       let dotFall: { start: number; direction: number } | null = null;
       const restoreMethodDot = () => {
@@ -62,7 +81,7 @@ export function StudioBall() {
         ball.style.transform = `translate3d(${pose.x - size / 2}px, ${y - size / 2}px, 0) scale(${pose.scaleX}, ${pose.scaleY})`;
         ball.style.opacity = String(top * bottom);
         ball.dataset.stage = pose.stage;
-        ball.dataset.motion = flight ? (flight.plan.entry ? "entrance" : "flight") : "rest";
+        ball.dataset.motion = flight ? (flight.plan.idle ? "idle" : flight.plan.entry ? "entrance" : "flight") : "rest";
         ball.dataset.route = String(flight?.plan.route ?? previousRoute ?? 0);
         lastPose = pose;
       };
@@ -93,9 +112,11 @@ export function StudioBall() {
           }
         }
         if (flight || dotFall) frame = requestAnimationFrame(paint);
+        else scheduleIdle();
       };
       const requestPaint = () => { if (!frame) frame = requestAnimationFrame(paint); };
       const launch = (target: BallStop, categoryHop: boolean) => {
+        clearIdleTimer();
         const now = performance.now();
         let from = flight ? sampleBallFlight(flight.plan, now - flight.start) : lastPose;
         if (!from) { destination = target; draw(restingPose(target)); return; }
@@ -117,6 +138,7 @@ export function StudioBall() {
         const target = selectBallStop(stops, window.scrollY, window.innerHeight, destination?.id);
         if (!target) return;
         if (!destination || reset || !lastPose) {
+          clearIdleTimer();
           flight = null;
           destination = target;
           if (reset && target.id === "method" && methodDot) {
@@ -127,10 +149,12 @@ export function StudioBall() {
           }
           draw(restingPose(target));
         } else if (target.id !== destination.id) {
+          clearIdleTimer();
           const categoryHop = ["applications", "websites"].includes(destination.id) && ["applications", "websites"].includes(target.id);
           if (animate) launch(target, categoryHop);
           else { flight = null; destination = target; draw(restingPose(target)); }
         } else if (Math.hypot(target.x - destination.x, target.y - destination.y) > 1) {
+          clearIdleTimer();
           if (flight) launch(target, false);
           else { destination = target; draw(restingPose(target)); }
         } else requestPaint();
@@ -163,13 +187,31 @@ export function StudioBall() {
           }
         }
       };
-      const onScroll = () => { syncTarget(true); resetMethodDotIfHidden(); };
+      const onScroll = () => {
+        clearIdleTimer();
+        syncTarget(true);
+        if (flight?.plan.idle && destination) {
+          flight = null;
+          draw(restingPose(destination));
+        }
+        resetMethodDotIfHidden();
+        scheduleIdle();
+      };
+      const onVisibility = () => {
+        clearIdleTimer();
+        if (flight?.plan.idle && destination) {
+          flight = null;
+          draw(restingPose(destination));
+        }
+        if (!document.hidden) { requestPaint(); scheduleIdle(); }
+      };
       const onLayout = () => {
-        if (!measureFrame) measureFrame = requestAnimationFrame(() => { measureFrame = 0; measure(); });
+        if (!measureFrame) measureFrame = requestAnimationFrame(() => { measureFrame = 0; measure(); scheduleIdle(); });
       };
       const onResize = () => {
+        clearIdleTimer();
         if (measureFrame) cancelAnimationFrame(measureFrame);
-        measureFrame = requestAnimationFrame(() => { measureFrame = 0; measure(false, true); });
+        measureFrame = requestAnimationFrame(() => { measureFrame = 0; measure(false, true); scheduleIdle(); });
       };
       const resize = new ResizeObserver(onLayout);
       resize.observe(site.querySelector("main") ?? site);
@@ -178,16 +220,20 @@ export function StudioBall() {
       selection.observe(portfolio, { attributes: true, attributeFilter: ["data-project-kind", "data-enhanced"] });
       window.addEventListener("scroll", onScroll, { passive: true });
       window.addEventListener("resize", onResize, { passive: true });
+      document.addEventListener("visibilitychange", onVisibility);
       site.addEventListener("animationend", onLayout);
       measure();
-      void document.fonts.ready.then(() => { if (!stopped) measure(); });
+      scheduleIdle();
+      void document.fonts.ready.then(() => { if (!stopped) { measure(); scheduleIdle(); } });
 
       dispose = () => {
         stopped = true;
+        clearIdleTimer();
         cancelAnimationFrame(frame);
         cancelAnimationFrame(measureFrame);
         window.removeEventListener("scroll", onScroll);
         window.removeEventListener("resize", onResize);
+        document.removeEventListener("visibilitychange", onVisibility);
         site.removeEventListener("animationend", onLayout);
         resize.disconnect();
         selection.disconnect();

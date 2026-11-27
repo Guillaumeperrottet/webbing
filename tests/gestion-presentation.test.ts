@@ -34,4 +34,7 @@ test("the application attention filter includes missing required backups but acc
   assert.equal(applicationCard(app, now).backup, null);
   assert.equal(applicationCard({ ...app, backup_required: true }, now).needsAttention, true);
   assert.equal(applicationCard({ ...app, backup_required: true, ...backup }, now).needsAttention, false);
+  const historic = { ...app, environment: "staging", backup_reported_at: new Date(now - 72 * 3_600_000).toISOString() };
+  assert.equal(applicationCard(historic, now).needsAttention, false, "stopped staging backups remain history rather than active backup alerts");
+  assert.equal(applicationCard(historic, now).backup?.label, "Historique");
 });

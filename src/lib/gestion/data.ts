@@ -31,7 +31,10 @@ export async function applications() {
 export type Deployment = { deployment_id:string; name:string; environment:string; target:string; state:string; url:string|null; branch:string|null; commit_sha:string|null; created_at:string; observed_at:string; current:boolean };
 export async function deployments() {
   return (await query<Deployment>(`SELECT d.*,a.name,a.environment,(a.current_deployment_id=d.deployment_id) AS current
-    FROM ops_deployments d JOIN ops_applications a ON a.id=d.application_id ORDER BY d.created_at DESC LIMIT 100`)).rows;
+    FROM ops_deployments d JOIN ops_applications a ON a.id=d.application_id
+    WHERE a.archived_at IS NULL AND (a.current_deployment_id=d.deployment_id OR d.deployment_id IN
+      (SELECT deployment_id FROM ops_deployments ORDER BY created_at DESC LIMIT 100))
+    ORDER BY d.created_at DESC`)).rows;
 }
 export type SupabaseProject={ ref:string;name:string;region:string|null;status:string|null;services:{name:string;status:string}[];services_error:string|null;integration_id:string|null;checked_at:string|null;attempted_at:string;last_error:string|null;applications:string[] };
 export async function supabaseProjects() {

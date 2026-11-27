@@ -19,21 +19,23 @@ import { applicationCard, displayDate as date } from "@/lib/gestion/presentation
 import { dependencyTestState } from "@/lib/gestion/dependency-test-state";
 import { ownerPublicationRules } from "@/lib/gestion/owner-releases";
 import { OwnerPublicationStatus } from "@/components/gestion/owner-publications";
+import { MobileNavigation } from "@/components/gestion/navigation";
+import { navigationGroups } from "@/lib/gestion/navigation";
 export const maxDuration=180;
 
 const sections = [
   ["ensemble", "Vue d’ensemble", Activity], ["applications", "Applications", AppWindow], ["deploiements", "Déploiements", Cloud], ["bases", "Bases de données", Database], ["sauvegardes", "Sauvegardes", DatabaseBackup],
-  ["dependances", "Mises à jour", GitPullRequestArrow], ["maintenance", "Maintenance", Wrench], ["connexions", "Connexions", Cable], ["securite", "Sécurité", ShieldCheck], ["journal", "Journal", BookOpen],
+  ["dependances", "Mises à jour", GitPullRequestArrow], ["maintenance", "Inventaire technique", Wrench], ["connexions", "Connexions", Cable], ["securite", "Sécurité", ShieldCheck], ["journal", "Journal", BookOpen],
 ] as const;
 function Badge({ label, state }: { label: string; state: string }) { return <span className={`ops-badge ops-state-${state}`}>{label}</span>; }
 function Name({ app }: { app: Application }) { return <div className="ops-app-name"><span className="ops-app-initial" aria-hidden="true">{app.name[0].toUpperCase()}</span><div><strong>{app.name}</strong><span className="ops-muted">{app.environment === "staging" ? "Staging" : "Production"}{app.url ? ` · ${new URL(app.url).hostname}` : " · Domaine à renseigner"}</span></div></div>; }
-export default async function Gestion({ searchParams }: { searchParams: Promise<{ vue?: string; filtre?: string; page?: string }> }) {
+export default async function Gestion({ searchParams }: { searchParams: Promise<{ vue?: string; filtre?: string; page?: string; depot?: string; recherche?: string }> }) {
   const session = await requireAdmin();
   const params=await searchParams;
   const requested = params.vue || "ensemble";
   const view = sections.find((s) => s[0] === requested)?.[0] || "ensemble";
   const title = sections.find((s) => s[0] === view)![1];
-  const [{ apps, collectors, audit }, providerConnections, databaseProjects, deploymentHistory, dependencies, batches, publications, releases, personalRules] = await Promise.all([overview(),integrations(),supabaseProjects(),deployments(),dependencyData(),dependencyBatchData(session.user.email), ["deploiements", "connexions"].includes(view) ? releaseConnections() : Promise.resolve([]), view === "deploiements" ? releaseHistory(session.user.email) : Promise.resolve([]), ownerPublicationRules()]);
+  const [{ apps, collectors, audit }, providerConnections, databaseProjects, deploymentHistory, dependencies, batches, publications, releases, personalRules] = await Promise.all([overview(), view === "connexions" ? integrations() : Promise.resolve([]), ["bases", "connexions"].includes(view) ? supabaseProjects() : Promise.resolve([]), view === "deploiements" ? deployments() : Promise.resolve([]), dependencyData(), view === "dependances" ? dependencyBatchData(session.user.email) : Promise.resolve([]), ["deploiements", "connexions"].includes(view) ? releaseConnections() : Promise.resolve([]), view === "deploiements" ? releaseHistory(session.user.email) : Promise.resolve([]), ownerPublicationRules()]);
   const now = Date.now();
   const cards = apps.map(app => applicationCard(app, now));
   const navigationCounts: Record<string, number> = {
@@ -42,13 +44,16 @@ export default async function Gestion({ searchParams }: { searchParams: Promise<
   };
   return <div className="ops-shell">
     <aside className="ops-sidebar"><Link href="/gestion" className="ops-wordmark">webbing<span>gestion</span></Link><p className="ops-sidebar-caption">Ton centre de contrôle</p>
-      <nav aria-label="Gestion">{sections.map(([key, label, Icon]) => <Link key={key} href={key === "ensemble" ? "/gestion" : `/gestion?vue=${key}`} aria-current={view === key ? "page" : undefined}><Icon size={19} aria-hidden="true" /><span>{label}</span>{navigationCounts[key] > 0 && <span className="ops-nav-count" aria-label={`${navigationCounts[key]} à vérifier`}>{navigationCounts[key]}</span>}</Link>)}</nav>
+      <nav aria-label="Gestion">{navigationGroups.map(group => <div className="ops-nav-group" key={group.label}><p className="ops-nav-group-label">{group.label}</p>{group.items.map(([key, label]) => {
+        const Icon = sections.find(section => section[0] === key)![2];
+        return <Link key={key} href={key === "ensemble" ? "/gestion" : `/gestion?vue=${key}`} aria-current={view === key ? "page" : undefined}><Icon size={18} aria-hidden="true" /><span>{label}</span>{navigationCounts[key] > 0 && <span className="ops-nav-count" aria-label={`${navigationCounts[key]} à vérifier`}>{navigationCounts[key]}</span>}</Link>;
+      })}</div>)}</nav>
       <div className="ops-sidebar-bottom"><div><ShieldCheck size={17} aria-hidden="true" /><span>Session protégée par 2FA</span></div><Logout /><Link href="/">Ouvrir le site Webbing</Link></div>
     </aside>
-    <div className="ops-workspace"><header className="ops-topbar"><span>Espace privé</span><div className="ops-topbar-actions"><span className="ops-user">{session.user.email}<ShieldCheck size={17} aria-label="Double authentification validée" /></span><span className="ops-mobile-logout"><Logout /></span></div></header>
+    <div className="ops-workspace"><header className="ops-topbar"><MobileNavigation view={view} counts={navigationCounts} email={session.user.email} /><span className="ops-breadcrumb">Gestion<span aria-hidden="true">/</span><strong>{title}</strong></span><div className="ops-topbar-actions"><span className="ops-user">{session.user.email}<ShieldCheck size={17} aria-label="Double authentification validée" /></span></div></header>
       <div className="ops-content"><div className="ops-page-heading"><div><p className="ops-eyebrow">WEBBING GESTION</p><h1>{title}</h1><p className="ops-lead">{view === "ensemble" ? "L’essentiel de ta production, les priorités et tes accès utiles." : view === "sauvegardes" ? "Savoir ce qui est sauvegardé, et quand." : view === "dependances" ? "Les mises à jour proposées, leurs contrôles et tes validations." : view === "maintenance" ? "Les versions et les automatismes repérés dans tes projets." : view === "connexions" ? "Raccorder tes outils et suivre leurs rapports." : view === "securite" ? "Un accès réservé, vérifié à chaque session." : view === "journal" ? "Les dernières vérifications et opérations de gestion." : "Production et staging, avec leurs accès utiles."}</p></div>{["ensemble", "applications"].includes(view) && <Refresh />}</div>
       {view === "ensemble" && <Overview apps={apps} updates={dependencies.updates} personalPublishing={personalRules.some(rule => rule.enabled)} />}
-      {view === "dependances" && <DependencyView {...dependencies} batches={batches} filter={params.filtre} page={Number(params.page)}/>}
+      {view === "dependances" && <DependencyView {...dependencies} batches={batches} filter={params.filtre} page={Number(params.page)} repository={params.depot} search={params.recherche}/>}
       {view === "deploiements" && <><OwnerPublicationStatus rules={personalRules}/><PublicationPanel connections={publications} history={releases}/><DeploymentView items={deploymentHistory}/></>}
       {view === "bases" && <SupabaseView projects={databaseProjects}/>}
       {view === "applications" && <><ApplicationDirectory key={`applications:${params.filtre || "all"}`} apps={cards} initialAttention={params.filtre === "attention"} /><p className="ops-notice">« Répond » confirme une réponse HTTP correcte. Les services internes, paiements et tâches planifiées demandent leurs propres contrôles.</p></>}

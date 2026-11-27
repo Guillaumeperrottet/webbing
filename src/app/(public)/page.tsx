@@ -13,7 +13,7 @@ export default function HomePage() {
         <div className="site-container">
           <p className="home-studio-signature">Studio web indépendant · Bulle, Suisse romande</p>
           <div className="home-intro">
-            <h1 id="home-title">Le web,<br />à votre mesure<span className="studio-period" data-ball-anchor="hero" aria-hidden="true" /><span className="visually-hidden">.</span></h1>
+            <h1 id="home-title">Le web,<br />à votre <span className="hero-title-last">mesure<span className="studio-period" data-ball-anchor="hero" aria-hidden="true" /><span className="visually-hidden">.</span></span></h1>
             <div className="home-intro-copy">
               <p>Des sites et des applications sur mesure, pour votre activité.</p>
               <p>Nous concevons et développons votre projet. De la première idée à la mise en ligne, vous échangez directement avec la personne qui le réalise.</p>

@@ -2,8 +2,11 @@
 
 Depuis le 26 novembre 2026, la promotion automatique est désactivée sur les
 17 projets de production de `guillaumes-projects-faaa7c9a`. Les cinq projets de
-staging restent séparés. Une fusion GitHub ne suffit plus à remplacer le site
-en service. Les propositions de dépendances, leurs tests et leur validation
+staging restent séparés. Depuis le 27 novembre, les pushes personnels de
+Guillaume peuvent être publiés après les contrôles sans passer par Webbing ;
+voir [les règles de ce circuit](publications-personnelles.md). Le réglage Vercel
+reste désactivé : un automate distinct vérifie l’identité et l’historique avant
+de promouvoir le build. Les propositions de dépendances, leurs tests et leur validation
 dans Webbing restent manuels, par lot ; les versions majeures exigent toujours
 la validation de Guillaume.
 
@@ -14,8 +17,10 @@ la validation de Guillaume.
    pour vérifier les 17 projets en lecture seule. Un contrôle impossible ou une
    provenance inconnue bloque la publication. Ce contrôle ne publie rien et ne
    constitue pas une validation fonctionnelle.
-2. Le code à publier doit être enregistré **et poussé sur GitHub**, puis intégré
-   par PR. Ne jamais publier de production depuis un dossier de travail local,
+2. Le code à publier doit être enregistré **et poussé sur GitHub**. Le circuit
+   manuel demande une PR vérifiée ; le circuit personnel accepte aussi les
+   pushes directs ordinaires de Guillaume après contrôles réussis.
+   Ne jamais publier de production depuis un dossier de travail local,
    même si `git rev-parse HEAD` paraît correct : des fichiers non suivis ou
    modifiés peuvent avoir été embarqués par la CLI.
 3. La révision candidate doit conserver l’historique de la version en service.

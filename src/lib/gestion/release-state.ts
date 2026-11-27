@@ -2,6 +2,7 @@ export type ReleaseProof = {
   projectId: string; name: string; repository: string; branch: string;
   deploymentId: string; sha: string; previousId: string; previousSha: string;
   domains: string[]; url: string; runId: number; runUrl: string; pullUrl: string;
+  source?: "owner-push"; pushId?: string;
 };
 export type ReleasePreview = ReleaseProof & { id: string; expiresAt: string };
 export type ReleaseHistory = { id: string; status: string; proof: ReleaseProof; error: string | null; requestedAt: string };

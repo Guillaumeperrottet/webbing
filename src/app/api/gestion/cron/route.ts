@@ -4,6 +4,7 @@ import { syncSupabase } from "@/lib/gestion/providers";
 import { syncGitHub } from "@/lib/gestion/github";
 import { query } from "@/lib/gestion/db";
 import { recoverPublicationProtection } from "@/lib/gestion/releases";
+import { processOwnerPublications } from "@/lib/gestion/owner-releases";
 export const runtime = "nodejs";
 export const maxDuration = 120;
 export async function GET(request: Request) {
@@ -13,6 +14,6 @@ export async function GET(request: Request) {
     const lock=await query("INSERT INTO ops_jobs(name,last_run) VALUES('github-cron',now()) ON CONFLICT(name) DO UPDATE SET last_run=now() WHERE ops_jobs.last_run<now()-interval '1 hour' RETURNING name");
     return lock.rowCount?syncGitHub():0;
   };
-  const [health,providers,github,publications]=await Promise.allSettled([probeApplications(),syncSupabase(),refreshGitHub(),recoverPublicationProtection()]);
-  return Response.json({ checked:health.status==='fulfilled'?health.value:0,supabaseChecked:providers.status==='fulfilled'?providers.value:0,githubChecked:github.status==='fulfilled'?github.value:0,publicationsChecked:publications.status==='fulfilled'?publications.value:0,partial:[health,providers,github,publications].some(result=>result.status==='rejected') }, { status:health.status==='rejected'?503:200, headers: { "Cache-Control": "no-store" } });
+  const [health,providers,github,publications,personal]=await Promise.allSettled([probeApplications(),syncSupabase(),refreshGitHub(),recoverPublicationProtection(),processOwnerPublications()]);
+  return Response.json({ checked:health.status==='fulfilled'?health.value:0,supabaseChecked:providers.status==='fulfilled'?providers.value:0,githubChecked:github.status==='fulfilled'?github.value:0,publicationsChecked:publications.status==='fulfilled'?publications.value:0,personalChecked:personal.status==='fulfilled'?personal.value:0,partial:[health,providers,github,publications,personal].some(result=>result.status==='rejected') }, { status:health.status==='rejected'?503:200, headers: { "Cache-Control": "no-store" } });
 }

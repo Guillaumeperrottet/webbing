@@ -6,7 +6,7 @@ import { dependencyTestState } from "@/lib/gestion/dependency-test-state";
 import { applicationBackup, applicationCard, applicationHealth } from "@/lib/gestion/presentation";
 import { ApplicationDirectory } from "./application-directory";
 
-export function Overview({ apps, updates }: { apps: Application[]; updates: DependencyUpdate[] }) {
+export function Overview({ apps, updates, personalPublishing = false }: { apps: Application[]; updates: DependencyUpdate[]; personalPublishing?: boolean }) {
   const now = Date.now();
   const production = apps.filter(app => app.environment === "production");
   const responding = production.filter(app => applicationHealth(app, now).state === "disponible");
@@ -36,7 +36,7 @@ export function Overview({ apps, updates }: { apps: Application[]; updates: Depe
       <section className="ops-panel ops-priority-panel"><div className="ops-panel-heading"><h2>Ce qui demande ton attention</h2><span className="ops-section-count">{priorities.length}</span></div><div className="ops-priorities">
         {priorities.length ? priorities.map(({ icon: Icon, title, detail, href, action, tone }) => <div key={`${tone}:${href}`}><span className={`ops-priority-icon ops-state-${tone}`}><Icon size={18} aria-hidden="true" /></span><p><strong>{title}</strong><span>{detail}</span></p><Link href={href}>{action}<ArrowRight size={14} aria-hidden="true" /></Link></div>) : <div className="ops-priority-clear"><span className={`ops-priority-icon ops-state-${production.length ? "disponible" : "unknown"}`}><Check size={19} aria-hidden="true" /></span><p><strong>{production.length ? "Aucune alerte dans les derniers rapports." : "Aucune application de production inventoriée."}</strong><span>{production.length ? "Les contrôles HTTP et les sauvegardes requises sont à jour." : "Les applications apparaîtront après leur raccordement."}</span></p></div>}
       </div><p className="ops-monitoring-note">Le contrôle HTTP vérifie la réponse du site. Les paiements et les parcours clients nécessitent leurs propres tests.</p></section>
-      <section className="ops-workflow-card"><span className="ops-workflow-symbol"><ShieldCheck size={22} aria-hidden="true" /></span><h2>Tu gardes la main.</h2><p>Les tests se lancent par lot, à ta demande. La mise en ligne exige ta confirmation et un code 2FA.</p><div><Link href="/gestion?vue=dependances&filtre=major">{major.length} version{major.length > 1 ? "s" : ""} majeure{major.length > 1 ? "s" : ""} à examiner<ArrowRight size={15} aria-hidden="true" /></Link><Link href="/gestion?vue=deploiements">Préparer une publication<ArrowRight size={15} aria-hidden="true" /></Link></div></section>
+      <section className="ops-workflow-card"><span className="ops-workflow-symbol"><ShieldCheck size={22} aria-hidden="true" /></span><h2>Tu gardes la main.</h2><p>{personalPublishing ? "Tes changements partent après les contrôles. Les propositions de dépendances restent à valider ici, par lot." : "Les tests se lancent par lot, à ta demande. La mise en ligne exige ta confirmation et un code 2FA."}</p><div><Link href="/gestion?vue=dependances&filtre=major">{major.length} version{major.length > 1 ? "s" : ""} majeure{major.length > 1 ? "s" : ""} à examiner<ArrowRight size={15} aria-hidden="true" /></Link><Link href="/gestion?vue=deploiements">{personalPublishing ? "Voir les publications" : "Préparer une publication"}<ArrowRight size={15} aria-hidden="true" /></Link></div></section>
     </div>
     <ApplicationDirectory key="overview" apps={production.map(app => applicationCard(app, now))} overview />
   </>;

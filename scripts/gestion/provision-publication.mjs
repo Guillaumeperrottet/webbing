@@ -7,7 +7,7 @@ const require = createRequire(import.meta.url);
 require('@next/env').loadEnvConfig(process.cwd());
 const config = JSON.parse(readFileSync('scripts/releases/projects.json', 'utf8'));
 const name = process.argv[2];
-const project = config.projects.find(project => project.name === name && name !== 'pattushotel');
+const project = config.projects.find(project => project.name === name && (name !== 'pattushotel' || process.argv.includes('--owner-push')));
 if (!project) throw new Error('Indiquer un projet de production autorisé.');
 const module = await import('../../src/lib/gestion/releases.ts');
 const { storeIssuedProjectToken } = module.default || module;

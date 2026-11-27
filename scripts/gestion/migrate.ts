@@ -15,6 +15,7 @@ async function main() {
   }
   await plan.runMigrations();
   await database().query(readFileSync("scripts/gestion/schema.sql", "utf8"));
+  await database().query(readFileSync("scripts/gestion/migrations/004-owner-publications.sql", "utf8"));
   console.log("Schéma de gestion et authentification vérifiés.");
   await database().end();
 }

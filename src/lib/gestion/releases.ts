@@ -6,13 +6,14 @@ import { database, query } from "./db";
 import { seal, unseal } from "./vault";
 import { readDependencyApi } from "./github";
 import { demand, validateDeployment, validateHistory, validateProject, validateQuality, type VercelDeployment, type VercelProject } from "./release-policy";
+import { validateOwnerChanges, validateOwnerRun, type OwnerRule } from "./owner-release-policy";
 import { PublicationError, type ReleaseConnection, type ReleaseHistory, type ReleasePreview, type ReleaseProof } from "./release-state";
 
 export type ReleaseActor = { email: string; sessionId: string };
 export const publicationProjects = config.projects.filter(project => project.name !== "pattushotel");
 const uuid = z.string().uuid();
-function expectedProject(projectId: string) {
-  const project = publicationProjects.find(project => project.id === projectId);
+function expectedProject(projectId: string, personal = false) {
+  const project = (personal ? config.projects : publicationProjects).find(project => project.id === projectId);
   demand(project, "Ce projet de production n’est pas autorisé à publier depuis Webbing.");
   return project;
 }
@@ -25,8 +26,8 @@ async function vercel(token: string, path: string, method: "GET" | "POST" | "PAT
   if (!response.ok) throw new PublicationError(response.status === 401 || response.status === 403 ? "L’accès de publication Vercel a expiré ou ses droits sont insuffisants. Vérifie la connexion du projet." : "Vercel n’a pas confirmé la requête. Consulte le suivi avant toute nouvelle publication.");
   return response.status === 204 ? {} : response.json();
 }
-async function connection(projectId: string) {
-  expectedProject(projectId);
+export async function connection(projectId: string) {
+  expectedProject(projectId, true);
   const row = (await query<{ id: string; secret_cipher: string }>("SELECT id,secret_cipher FROM ops_release_connections WHERE project_id=$1 AND expires_at>now()+interval '1 minute'", [projectId])).rows[0];
   demand(row, "Raccorde l’accès de publication Vercel de ce projet dans Connexions.");
   const token = unseal(row.secret_cipher, `${row.id}:vercel-release:${projectId}`);
@@ -35,7 +36,7 @@ async function connection(projectId: string) {
 // Used by the owner-side provisioning command after Vercel issues a token for
 // this single project. Never accept a user/team-wide CLI credential here.
 export async function storeIssuedProjectToken(projectId: string, token: string, metadata: { id: string; expiresAt: number }, issuedForProject: string) {
-  const expected = expectedProject(projectId);
+  const expected = expectedProject(projectId, true);
   demand(issuedForProject === projectId && token.length >= 20 && metadata.id && metadata.expiresAt > Date.now() && metadata.expiresAt <= Date.now() + 91 * 86400_000, "Un jeton Vercel dédié au projet, avec expiration, est nécessaire.");
   const project = await vercel(token, `/v9/projects/${projectId}`);
   demand(project.id === projectId && project.accountId === config.teamId, "Projet ou équipe Vercel incorrects.");
@@ -49,7 +50,7 @@ export async function storeIssuedProjectToken(projectId: string, token: string, 
     ON CONFLICT(project_id) DO UPDATE SET id=excluded.id,name=excluded.name,secret_cipher=excluded.secret_cipher,token_id=excluded.token_id,expires_at=excluded.expires_at,created_at=now()`, [projectId, id, expected.name, seal(token, `${id}:vercel-release:${projectId}`), metadata.id, new Date(metadata.expiresAt)]);
 }
 export async function releaseConnections(): Promise<ReleaseConnection[]> {
-  const rows = (await query<ReleaseConnection>("SELECT project_id,name,expires_at FROM ops_release_connections ORDER BY name")).rows;
+  const rows = (await query<ReleaseConnection>("SELECT project_id,name,expires_at FROM ops_release_connections WHERE project_id=ANY($1::text[]) ORDER BY name", [publicationProjects.map(p => p.id)])).rows;
   return rows.map(row => ({ ...row, expires_at: new Date(row.expires_at).toISOString() }));
 }
 export async function removeReleaseConnection(projectId: string) {
@@ -66,8 +67,9 @@ export async function releaseHistory(email: string): Promise<ReleaseHistory[]> {
   return (await query<{ id: string; status: string; proof: ReleaseProof; error: string | null; requested_at: Date }>("SELECT id,status,proof,error,requested_at FROM ops_releases WHERE requested_by=$1 AND confirmed_at IS NOT NULL ORDER BY requested_at DESC LIMIT 12", [email])).rows.map(row => ({ id: row.id, status: row.status, proof: row.proof, error: row.error, requestedAt: new Date(row.requested_at).toISOString() }));
 }
 
-async function inspectRelease(projectId: string, selectedId?: string): Promise<ReleaseProof> {
-  const expected = expectedProject(projectId), api = await connection(projectId);
+export type OwnerReleaseContext = { rule: OwnerRule; head: string; pushId: string };
+export async function inspectRelease(projectId: string, selectedId?: string, owner?: OwnerReleaseContext): Promise<ReleaseProof> {
+  const expected = expectedProject(projectId, !!owner), api = await connection(projectId);
   const repository = `${config.owner}/${expected.repository}`, root = `/repos/${repository}`;
   const github = await readDependencyApi(repository);
   const [project, repo] = await Promise.all([api(`/v9/projects/${projectId}`) as Promise<VercelProject>, github(root)]);
@@ -81,6 +83,7 @@ async function inspectRelease(projectId: string, selectedId?: string): Promise<R
   ]);
   const previousSha = validateDeployment(previous, expected, config.owner), head = ref.object?.sha;
   demand(typeof head === "string" && /^[a-f0-9]{40}$/.test(head), "La révision GitHub est invalide.");
+  if (owner) demand(owner.head === head && owner.rule.repository === repository && owner.rule.branch === branch && owner.rule.enabled, "Ce push n’est plus la version personnelle actuelle à publier.");
   const deploymentId = selectedId || listed?.deployments?.find((d: { uid: string; state: string; meta?: Record<string, string> }) => d.uid !== previous.id && d.state === "READY" && d.meta?.githubCommitSha === head)?.uid;
   demand(deploymentId && /^dpl_[A-Za-z0-9]+$/.test(deploymentId) && deploymentId !== previous.id, "Aucun nouveau build de production prêt ne correspond à la révision principale actuelle.");
   const [candidate, comparison, runs, pulls, domainList] = await Promise.all([
@@ -95,14 +98,24 @@ async function inspectRelease(projectId: string, selectedId?: string): Promise<R
   const domains: string[] = domainList.domains?.filter((d: { gitBranch?: string; customEnvironmentId?: string; redirect?: string }) => !d.gitBranch && !d.customEnvironmentId && !d.redirect).map((d: { name: string }) => d.name).sort() || [];
   demand(domains.length > 0 && domains.length <= 20 && domains.every(domain => /^(?=.{1,253}$)[a-z0-9-]+(?:\.[a-z0-9-]+)+$/.test(domain)), "Les domaines de production ne peuvent pas être vérifiés.");
   const pull = Array.isArray(pulls) && pulls.find((pr: { merged_at?: string; merge_commit_sha?: string; base?: { ref: string; repo?: { full_name: string } } }) => pr.merged_at && pr.merge_commit_sha === head && pr.base?.ref === branch && pr.base.repo?.full_name === repository);
-  demand(pull && Number.isSafeInteger(pull.number), "Cette révision finale n’est pas issue d’une PR fusionnée vérifiable.");
+  if (!owner) demand(pull && Number.isSafeInteger(pull.number), "Cette révision finale n’est pas issue d’une PR fusionnée vérifiable.");
   const run = runs.workflow_runs?.find((r: { head_sha: string; event: string }) => r.head_sha === head && r.event === "push");
   demand(run && Number.isSafeInteger(run.id), "Les contrôles GitHub de la révision finale sont absents. Publication bloquée.");
   const jobs = await github(`${root}/actions/runs/${run.id}/jobs?per_page=100`);
   demand(jobs.total_count <= 100, "La liste des contrôles est incomplète. Publication bloquée.");
   validateQuality(runs.workflow_runs, jobs.jobs || [], head);
+  if (owner) {
+    const detail = await github(`${root}/actions/runs/${run.id}`);
+    validateOwnerRun(detail, owner.rule, head);
+    const commits = comparison.commits || [];
+    demand(comparison.total_commits > 0 && comparison.total_commits <= 50 && commits.length === comparison.total_commits, "L’historique personnel est incomplet ou trop étendu. Validation manuelle requise.");
+    const associated = [];
+    for (let i = 0; i < commits.length; i += 4) associated.push(...await Promise.all(commits.slice(i, i + 4).map((commit: { sha: string }) => github(`${root}/commits/${commit.sha}/pulls?per_page=100`))));
+    const tracked = await query("SELECT number FROM ops_dependency_updates WHERE repository=$1 AND (head_sha=ANY($2::text[]) OR merged_sha=ANY($2::text[])) LIMIT 1", [repository, commits.map((commit: { sha: string }) => commit.sha)]);
+    validateOwnerChanges(commits, comparison.total_commits, associated, !!tracked.rowCount, owner.rule.owner_login);
+  }
   await checkDomains(api, domains, previous.id);
-  return { projectId, name: expected.name, repository, branch, deploymentId, sha: head, previousId: previous.id, previousSha, domains, url: `https://${candidate.url}`, runId: run.id, runUrl: `https://github.com/${repository}/actions/runs/${run.id}`, pullUrl: `https://github.com/${repository}/pull/${pull.number}` };
+  return { projectId, name: expected.name, repository, branch, deploymentId, sha: head, previousId: previous.id, previousSha, domains, url: `https://${candidate.url}`, runId: run.id, runUrl: `https://github.com/${repository}/actions/runs/${run.id}`, pullUrl: pull ? `https://github.com/${repository}/pull/${pull.number}` : `https://github.com/${repository}/commit/${head}`, ...(owner ? { source: "owner-push" as const, pushId: owner.pushId } : {}) };
 }
 type Api = Awaited<ReturnType<typeof connection>>;
 async function checkDomains(api: Api, domains: string[], id: string) {
@@ -152,12 +165,21 @@ export async function confirmRelease(id: string, actor: ReleaseActor, code: stri
     await client.query("COMMIT");
   } catch (error) { await client.query("ROLLBACK"); throw error; } finally { client.release(); }
 
+  await dispatchReservedRelease(id, saved.proof, () => inspectRelease(saved.proof.projectId, saved.proof.deploymentId));
+}
+
+// Both entry points must first reserve a unique, durable release. This helper
+// never supplies an alternate way to confirm a manual, prepared publication.
+export async function dispatchReservedRelease(id: string, initial: ReleaseProof, reinspect: () => Promise<ReleaseProof>) {
+  const reserved = (await query<{ proof: ReleaseProof; status: string }>("SELECT proof,status FROM ops_releases WHERE id=$1", [id])).rows[0];
+  demand(reserved?.status === "checking" && fingerprint(reserved.proof) === fingerprint(initial), "Une publication vérifiée et réservée est nécessaire.");
   let dispatched = false, protectionRestored = false;
   try {
-    const proof = await inspectRelease(saved.proof.projectId, saved.proof.deploymentId);
-    demand(fingerprint(proof) === fingerprint(saved.proof), "La version, ses contrôles ou les domaines ont changé. Prépare une nouvelle publication.");
+    const proof = await reinspect();
+    demand(fingerprint(proof) === fingerprint(initial), "La version, ses contrôles ou les domaines ont changé. Prépare une nouvelle publication.");
     const api = await connection(proof.projectId);
-    await query("UPDATE ops_releases SET status='publishing' WHERE id=$1 AND status='checking'", [id]);
+    const claimed = await query("UPDATE ops_releases SET status='publishing' WHERE id=$1 AND status='checking' RETURNING id", [id]);
+    if (!claimed.rowCount) return;
     // The reservation is durable BEFORE the single promotion POST. A lost
     // response is reconciled with GETs; it is never an invitation to retry POST.
     dispatched = true;

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { chooseBallRoute, createBallEntrance, createBallFlight, restingPose, sampleBallFlight, selectBallStop, type BallRoute, type BallStop } from "../src/lib/studio-ball";
+import { chooseBallRoute, createBallEntrance, createBallFlight, createMethodBallFlight, METHOD_DOT_FALL_DURATION, restingPose, sampleBallFlight, sampleMethodDotFall, selectBallStop, type BallRoute, type BallStop } from "../src/lib/studio-ball";
 
 const stops: BallStop[] = [
   { id: "hero", x: 620, y: 430 },
@@ -187,4 +187,47 @@ test("every route stays on screen, joins its bounces smoothly and avoids a foote
     }
     assert.deepEqual(sampleBallFlight(flight, flight.duration), restingPose(target));
   }
+});
+
+
+test("the method collision hits the punctuation before recoiling and replacing it", () => {
+  for (const width of [320, 390, 1440]) {
+    const target = { id: "method", x: width * 0.75, y: 900 };
+    const flight = createMethodBallFlight({ x: width * 0.3, y: 300 }, target, width);
+    const c = flight.collision!;
+    const hit = sampleBallFlight(flight, c.impactAt);
+    assert.ok(Math.hypot(hit.x - target.x, hit.y - target.y) < 0.001);
+    const recoil = sampleBallFlight(flight, c.impactAt + c.reboundDuration / 2);
+    assert.ok(target.y - recoil.y >= 38);
+    assert.ok(recoil.x < target.x);
+    for (const at of [c.impactAt, c.impactAt + c.reboundDuration, flight.duration]) {
+      const a = sampleBallFlight(flight, at - 0.01), b = sampleBallFlight(flight, at + 0.01);
+      assert.ok(Math.hypot(a.x - b.x, a.y - b.y) < 0.01);
+      assert.ok(Math.hypot(a.velocityX - b.velocityX, a.velocityY - b.velocityY) < 0.01);
+    }
+    assert.deepEqual(sampleBallFlight(flight, flight.duration + 10000), restingPose(target));
+  }
+});
+
+test("the displaced period falls with gravity and finishes before the red ball settles", () => {
+  assert.deepEqual(sampleMethodDotFall(0), { x: 0, y: 0, opacity: 1 });
+  const quarter = sampleMethodDotFall(METHOD_DOT_FALL_DURATION / 4);
+  const half = sampleMethodDotFall(METHOD_DOT_FALL_DURATION / 2);
+  assert.ok(half.y > quarter.y && Math.abs(half.y / quarter.y - 4) < 0.001);
+  assert.equal(half.opacity, 1);
+  assert.equal(sampleMethodDotFall(METHOD_DOT_FALL_DURATION).opacity, 0);
+  assert.deepEqual(sampleMethodDotFall(60000), sampleMethodDotFall(METHOD_DOT_FALL_DURATION));
+  assert.ok(sampleMethodDotFall(400, -1).x < 0);
+  const flight = createMethodBallFlight({ x: 40, y: 100 }, { id: "method", x: 250, y: 700 }, 390);
+  assert.ok(flight.duration - flight.collision!.impactAt > METHOD_DOT_FALL_DURATION);
+});
+
+test("interrupting a method recoil hands its current position and velocity to the next journey", () => {
+  const flight = createMethodBallFlight({ x: 100, y: 300 }, { id: "method", x: 300, y: 900 }, 390);
+  const moving = sampleBallFlight(flight, flight.collision!.impactAt + 200);
+  const next = sampleBallFlight(createBallFlight(moving, { id: "contact", x: 24, y: 1500 }, 390), 0);
+  assert.equal(next.x, moving.x);
+  assert.equal(next.y, moving.y);
+  assert.ok(Math.abs(next.velocityX - moving.velocityX) < 0.001);
+  assert.ok(Math.abs(next.velocityY - moving.velocityY) < 0.001);
 });

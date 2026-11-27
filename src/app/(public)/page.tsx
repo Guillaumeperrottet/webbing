@@ -36,7 +36,10 @@ export default function HomePage() {
             ["/trust/pattus.svg", "Pattùs Hotel"], ["/trust/logo-potentille.png", "Potentille"],
             ["/trust/lodges.png", "Lodges"], ["/trust/alpha.png", "Alpha Hotel"],
             ["/trust/dipiaza.png", "Dipiaza"], ["/trust/logo-campus.png", "Campus"],
-          ].map(([src, name]) => <Image key={src} src={src} alt={name} width={112} height={64} />)}
+            ["/trust/graphomouv.png", "Graphomouv", "https://graphomouv.ch/"],
+          ].map(([src, name, href]) => href
+            ? <a key={src} href={href} target="_blank" rel="noopener noreferrer" aria-label={`${name} (nouvel onglet)`}><Image src={src} alt={name} width={112} height={64} /></a>
+            : <Image key={src} src={src} alt={name} width={112} height={64} />)}
         </div>
       </div>
 

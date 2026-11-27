@@ -747,7 +747,8 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
 .project-showcase[data-enhanced="true"] .project-tabs button { padding-inline: var(--tab-padding); }
 .folder-sheet, .project-showcase[data-enhanced="true"] .portfolio-cover { left: var(--binder-inset); right: var(--binder-inset); bottom: var(--binder-bottom); }
 .project-showcase[data-enhanced="true"] .binder-holes { bottom: clamp(8px, 0.8333vw, 12px); }
-.work-clients { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); justify-items: center; gap: var(--gap-columns); }
+.work-clients { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); justify-items: center; gap: var(--gap-columns); }
+.work-clients > a { display: flex; align-items: center; justify-content: center; }
 .work-clients img { width: clamp(64px, 7.2222vw, 104px); height: clamp(40px, 3.3333vw, 48px); }
 .project-showcase[data-enhanced="true"] .project-tabs { position: absolute; top: 0; left: var(--binder-inset); right: var(--binder-inset); display: grid; grid-template-columns: repeat(var(--folder-count), minmax(0, 1fr)); align-items: end; align-content: normal; height: var(--folder-headroom); margin: 0; padding: 0; gap: var(--folder-gap); overflow: visible; pointer-events: none; }
 .project-showcase[data-enhanced="true"] .folder-tab-slot { min-width: 0; height: var(--folder-tab-height); transform-origin: calc(50% + var(--folder-center-offset) * (100% + var(--folder-gap))) 100%; transform: translateY(calc(-1 * var(--folder-depth) * var(--folder-step))) scale(calc(1 - var(--folder-depth) * var(--folder-shrink))); pointer-events: auto; }
@@ -777,6 +778,7 @@ h1, h2, h3, .approach-values dt, .project-link { color: var(--foreground); }
 .folder-hook-tip { position: absolute; left: 0; bottom: -1px; width: 12px; height: 9px; }
 @media (max-width: 40rem) {
  .work-clients { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+ .work-clients > :last-child:nth-child(3n + 1) { grid-column: 2; }
 }
 
 /* Planifi annotation treatment: Caveat600, ink first, rose-red second, and a staged pen stroke. */

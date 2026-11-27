@@ -26,6 +26,7 @@ const projectGroups = [
 export function ProjectShowcase() {
   const [selected, setSelected] = useState(0);
   const [enhanced, setEnhanced] = useState(false);
+  const [swipeDirection, setSwipeDirection] = useState<"next" | "previous" | undefined>();
   const sectionRef = useRef<HTMLElement>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const hashUpdate = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -42,6 +43,7 @@ export function ProjectShowcase() {
       const projectIndex = showcaseProjects.findIndex((project) => project.id === (study?.projectId ?? id));
       const index = projectIndex >= 0 ? projectIndex : sectionAliases[id];
       if (index === undefined) return;
+      setSwipeDirection(undefined);
       setSelected(index);
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
@@ -78,7 +80,8 @@ export function ProjectShowcase() {
     }
   }, [selected]);
 
-  const selectProject = (index: number, focus = false) => {
+  const selectProject = (index: number, focus = false, swipe?: -1 | 1) => {
+    setSwipeDirection(swipe ? (swipe === 1 ? "next" : "previous") : undefined);
     setSelected(index);
     // Safari limits History calls. Keep selection immediate and coalesce rapid key repeats.
     if (hashUpdate.current) clearTimeout(hashUpdate.current);
@@ -107,6 +110,17 @@ export function ProjectShowcase() {
     selectProject(next, true);
   };
 
+  const swipeProject = (direction: -1 | 1) => {
+    const top = document.getElementById(`project-image-${current.id}`)?.getBoundingClientRect().top;
+    const next = (selected + direction + showcaseProjects.length) % showcaseProjects.length;
+    selectProject(next, false, direction);
+    requestAnimationFrame(() => {
+      // Different wordmarks have different heights: keep the image under the finger.
+      const nextTop = document.getElementById(`project-image-${showcaseProjects[next].id}`)?.getBoundingClientRect().top;
+      if (top !== undefined && nextTop !== undefined) window.scrollBy({ top: nextTop - top, behavior: "instant" });
+    });
+  };
+
   const stepProject = (direction: number) => {
     const next = (selected + direction + showcaseProjects.length) % showcaseProjects.length;
     selectProject(next);
@@ -117,7 +131,7 @@ export function ProjectShowcase() {
   };
 
   return (
-    <section ref={sectionRef} id="realisations" className="project-showcase project-index" aria-labelledby="showcase-title" data-enhanced={enhanced} data-project-kind={current.application ? "applications" : "websites"}>
+    <section ref={sectionRef} id="realisations" className="project-showcase project-index" aria-labelledby="showcase-title" data-enhanced={enhanced} data-swipe-direction={swipeDirection} data-project-kind={current.application ? "applications" : "websites"}>
       <div className="site-container">
         <div id="applications" className="anchor-target" />
         <div id="sites-web" className="anchor-target" />
@@ -189,7 +203,7 @@ export function ProjectShowcase() {
                       </ProjectLink>
                     </header>
                     <div className="project-panel-preview">
-                      <ProjectScreenshot key={selected === index ? "active" : "inactive"} projectId={project.id} projectName={project.name} priority={index === 0} />
+                      <ProjectScreenshot key={selected === index ? "active" : "inactive"} projectId={project.id} projectName={project.name} priority={index === 0} onNavigate={swipeProject} />
                     </div>
                     <div className="project-panel-summary">
                       <p>{projectPresentations[project.id].description}</p>

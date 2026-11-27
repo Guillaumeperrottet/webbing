@@ -66,6 +66,18 @@ export function ProjectShowcase() {
     };
   }, []);
 
+  useEffect(() => {
+    // Keep a selected mobile tab visible without scrolling the page vertically.
+    const tab = tabRefs.current[selected];
+    const rail = tab?.parentElement;
+    if (!tab || !rail || !rail.clientWidth || rail.scrollWidth <= rail.clientWidth) return;
+    const left = tab.offsetLeft - rail.offsetLeft;
+    const right = left + tab.offsetWidth;
+    if (left < rail.scrollLeft || right > rail.scrollLeft + rail.clientWidth) {
+      rail.scrollTo({ left: Math.max(0, left - 16), behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+    }
+  }, [selected]);
+
   const selectProject = (index: number, focus = false) => {
     setSelected(index);
     // Safari limits History calls. Keep selection immediate and coalesce rapid key repeats.
@@ -124,7 +136,7 @@ export function ProjectShowcase() {
         </div>
         <div className="project-index-tabs" role="tablist" aria-label="Choisir une réalisation" hidden={!enhanced}>
           {projectGroups.map((group) => (
-            <div key={group.id} className="project-index-group" role="presentation">
+            <div key={group.id} className="project-index-group" data-project-group={group.id} role="presentation">
               <div role="presentation">
                 {showcaseProjects.map((project, index) => project.application === group.application ? (
                   <button key={project.id} ref={(node) => { tabRefs.current[index] = node; }} id={`tab-${project.id}`} type="button" role="tab"

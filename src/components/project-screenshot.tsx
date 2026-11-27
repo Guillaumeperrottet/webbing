@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { Maximize2 } from "lucide-react";
 import { projectPresentations, type Presentation, type PresentedProjectId } from "@/data/project-presentations";
 
 export function ProjectScreenshot({ projectId, projectName, priority = false }: { projectId: PresentedProjectId; projectName: string; priority?: boolean }) {
@@ -9,7 +10,6 @@ export function ProjectScreenshot({ projectId, projectName, priority = false }: 
   const presentation: Presentation = projectPresentations[projectId];
   const screenshots = presentation.secondaryScreenshot ? [presentation.screenshot, presentation.secondaryScreenshot] : [presentation.screenshot];
   const screenshot = screenshots[selected];
-  const mobile = screenshot.mobile;
   const multiple = screenshots.length > 1;
   const imageId = `project-image-${projectId}`;
 
@@ -17,10 +17,12 @@ export function ProjectScreenshot({ projectId, projectName, priority = false }: 
     <div className={`project-gallery${multiple ? " project-gallery--multiple" : ""}`}>
       <figure id={imageId} className={`project-screenshot${projectId === "graphomouv" ? " project-screenshot--teaching" : ""}${screenshot.framing === "plan" ? " project-screenshot--plan" : ""}`}>
         <picture key={screenshot.src}>
-          {mobile && <source media="(max-width: 639px)" srcSet={mobile.src} width={mobile.width} height={mobile.height} />}
           <Image src={screenshot.src} alt={screenshot.alt} width={screenshot.width} height={screenshot.height}
-            sizes="(max-width: 640px) calc(100vw - 64px), (max-width: 960px) calc(100vw - 96px), 60vw" priority={priority && selected === 0} />
+            sizes="(max-width: 640px) 100vw, (max-width: 960px) calc(100vw - 96px), 60vw" priority={priority && selected === 0} />
         </picture>
+        <a className="project-capture-expand" href={screenshot.src} target="_blank" rel="noopener noreferrer" aria-label={`Voir la capture de ${projectName} en grand (nouvel onglet)`}>
+          <Maximize2 size={17} aria-hidden="true" />
+        </a>
       </figure>
       {multiple && <>
         <div className="project-gallery-nav" role="group" aria-label={`Captures de ${projectName}`}>

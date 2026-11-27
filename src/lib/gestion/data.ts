@@ -8,7 +8,7 @@ export type Application = {
   framework: string | null; react_version: string | null; node_version: string | null;
   dependency_bot: boolean; cron_count: number; test_count: number; inventory_at: string;
   health_state: string | null; health_code: number | null; health_ms: number | null; health_at: string | null;
-  backup_at: string | null; backup_bytes: string | null; backup_state: string | null; backup_max_hours: number | null; backup_reported_at: string | null;
+  backup_at: string | null; backup_bytes: string | null; backup_state: string | null; backup_max_hours: number | null; backup_reported_at: string | null; backup_restore_tested_at: string | null;
   current_deployment_id: string | null; current_deployment_at: string | null; rollback_pending: boolean;
   deployment_id: string | null; deployment_state: string | null; deployment_at: string | null; deployment_branch: string | null;
   database_provider: string | null; backup_required: boolean;
@@ -17,7 +17,7 @@ export type Application = {
 export async function applications() {
   return (await query<Application>(`SELECT a.*,
     h.state AS health_state,h.http_code AS health_code,h.duration_ms AS health_ms,h.checked_at AS health_at,
-    b.backup_at,b.bytes AS backup_bytes,b.state AS backup_state,b.max_age_hours AS backup_max_hours,b.reported_at AS backup_reported_at,
+    b.backup_at,b.bytes AS backup_bytes,b.state AS backup_state,b.max_age_hours AS backup_max_hours,b.reported_at AS backup_reported_at,b.restore_tested_at AS backup_restore_tested_at,
     d.deployment_id,d.state AS deployment_state,d.created_at AS deployment_at,d.branch AS deployment_branch,
     s.status AS supabase_state,s.checked_at AS supabase_checked_at,s.last_error AS supabase_error,s.integration_id AS supabase_integration_id
     FROM ops_applications a

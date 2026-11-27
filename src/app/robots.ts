@@ -1,4 +1,5 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
+import { siteUrl } from "@/data/site-meta";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/gestion", "/gestion/"],
     },
-    sitemap: "https://www.webbing.ch/sitemap.xml",
+    sitemap: `${siteUrl}sitemap.xml`,
   };
 }

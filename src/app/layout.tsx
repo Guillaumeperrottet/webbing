@@ -1,7 +1,7 @@
 // app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
-import { shareImageAlt, siteDescription, siteTitle } from "@/data/site-meta";
+import { shareImageAlt, siteDescription, siteTitle, siteUrl } from "@/data/site-meta";
 
 export const metadata: Metadata = {
   title: {
@@ -9,17 +9,17 @@ export const metadata: Metadata = {
     template: "%s | Webbing",
   },
   description: siteDescription,
-  authors: [{ name: "Guillaume Perrottet", url: "https://webbing.ch" }],
+  authors: [{ name: "Guillaume Perrottet", url: siteUrl }],
   creator: "Webbing",
   publisher: "Webbing",
-  metadataBase: new URL("https://www.webbing.ch"),
+  metadataBase: new URL(siteUrl),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: siteTitle,
     description: siteDescription,
-    url: "https://www.webbing.ch/",
+    url: siteUrl,
     siteName: "Webbing",
     locale: "fr_CH",
     type: "website",

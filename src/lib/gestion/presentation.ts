@@ -51,14 +51,15 @@ export type ApplicationCard = {
 
 export function applicationCard(app: Application, now = Date.now()): ApplicationCard {
   const health = applicationHealth(app, now);
-  const backup = app.backup_required || app.backup_reported_at ? applicationBackup(app, now) : null;
+  const historic = app.environment === "staging" && !app.backup_required;
+  const backup = app.backup_required || app.backup_reported_at ? historic ? { label: "Historique", state: "unknown" } : applicationBackup(app, now) : null;
   return {
     id: app.id, name: app.name, hostname: app.url ? new URL(app.url).hostname : "Domaine à renseigner",
     environment: app.environment, url: app.url, adminUrl: app.admin_url,
     vercelUrl: `https://vercel.com/guillaumes-projects-faaa7c9a/${encodeURIComponent(app.slug)}`,
     databaseUrl: app.supabase_ref ? `https://supabase.com/dashboard/project/${encodeURIComponent(app.supabase_ref)}` : null,
     health, backup,
-    needsAttention: !["disponible", "protege"].includes(health.state) || !!backup && backup.state !== "disponible",
+    needsAttention: !["disponible", "protege"].includes(health.state) || !historic && !!backup && backup.state !== "disponible",
     checkedAt: displayDate(app.health_at), deployedAt: app.current_deployment_at ? displayDate(app.current_deployment_at) : null,
   };
 }

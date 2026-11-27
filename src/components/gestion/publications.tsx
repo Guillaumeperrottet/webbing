@@ -17,6 +17,7 @@ export function PublicationPanel({ connections, history }: { connections: Releas
   useEffect(() => { if (preview) heading.current?.focus(); }, [preview]);
   const active = new Set(history.filter(row => ["checking", "publishing", "safety_error"].includes(row.status)).map(row => row.proof.projectId));
   return <>
+    <details className="ops-panel ops-disclosure ops-manual-publication" open={!!preview}><summary><div><strong>Publier une version manuellement</strong><span>Pour les dépendances et les autres publications à confirmer</span></div><span className="ops-badge ops-state-protege">Confirmation + 2FA</span></summary>
     <section className="ops-panel ops-panel-padded ops-batch-panel" aria-labelledby={`${id}-title`}>
       <h2 id={`${id}-title`}>Publier une version</h2>
       {!preview ? <>
@@ -55,8 +56,8 @@ export function PublicationPanel({ connections, history }: { connections: Releas
           </fieldset>
         </form>
       </>}
-      {feedback && <p role={feedback.ok ? "status" : "alert"} className={feedback.ok ? "ops-feedback" : "ops-error"}>{feedback.message}</p>}
-    </section>
+    </section></details>
+    {feedback && <p role={feedback.ok ? "status" : "alert"} className={feedback.ok ? "ops-feedback" : "ops-error"}>{feedback.message}</p>}
     {history.length > 0 && <section className="ops-panel ops-panel-padded"><div className="ops-panel-heading"><h2>Suivi des publications</h2><button className="ops-button ops-button-secondary" disabled={pending} onClick={() => start(async () => { try { await refreshPublications(); router.refresh(); } catch { setFeedback({ ok: false, message: "Le suivi n’a pas pu être actualisé. Aucun nouvel envoi de publication." }); } })}>Actualiser le suivi</button></div>
       <p className="ops-hint">Une demande en attente n’est jamais renvoyée automatiquement. « En ligne » confirme la version servie par les domaines au moment du contrôle.</p>
       <ul className="ops-batch-summary">{history.map(row => <li key={row.id}><strong>{row.proof.name} · {releaseLabels[row.status] || row.status}</strong><span>Révision <code>{row.proof.sha.slice(0, 7)}</code> · {new Date(row.requestedAt).toLocaleString("fr-CH", { timeZone: "Europe/Zurich" })}</span>{row.error && <span role="alert">{row.error}</span>}</li>)}</ul>

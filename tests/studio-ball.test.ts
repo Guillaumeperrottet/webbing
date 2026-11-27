@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { chooseBallRoute, createBallEntrance, createBallFlight, createMethodBallFlight, METHOD_DOT_FALL_DURATION, restingPose, sampleBallFlight, sampleMethodDotFall, selectBallStop, type BallRoute, type BallStop } from "../src/lib/studio-ball";
+import { BALL_IDLE_DELAY, chooseBallRoute, createBallIdleHop, createBallEntrance, createBallFlight, createMethodBallFlight, METHOD_DOT_FALL_DURATION, restingPose, sampleBallFlight, sampleMethodDotFall, selectBallStop, type BallRoute, type BallStop } from "../src/lib/studio-ball";
 
 const stops: BallStop[] = [
   { id: "hero", x: 620, y: 430 },
@@ -229,5 +229,33 @@ test("interrupting a method recoil hands its current position and velocity to th
   assert.equal(next.x, moving.x);
   assert.equal(next.y, moving.y);
   assert.ok(Math.abs(next.velocityX - moving.velocityX) < 0.001);
+  assert.ok(Math.abs(next.velocityY - moving.velocityY) < 0.001);
+});
+
+
+test("idle hops stay tiny, do not drift and land on the same punctuation", () => {
+  assert.equal(BALL_IDLE_DELAY, 5000);
+  for (const width of [320, 390, 1440]) {
+    const target = { id: "method", x: width * 0.6, y: 700 };
+    const hop = createBallIdleHop(target, width);
+    assert.ok(hop.idle);
+    assert.equal(hop.collision, undefined);
+    for (let time = 0; time <= hop.duration; time += 5) {
+      const pose = sampleBallFlight(hop, time);
+      assert.equal(pose.x, target.x);
+      assert.ok(pose.y <= target.y && pose.y >= target.y - 6);
+    }
+    const apex = sampleBallFlight(hop, hop.duration / 2);
+    assert.ok(Math.abs(target.y - apex.y - (width <= 640 ? 4 : 6)) < 0.001);
+    assert.deepEqual(sampleBallFlight(hop, hop.duration + 50000), restingPose(target));
+  }
+});
+
+test("leaving during an idle hop preserves the current pose and momentum", () => {
+  const hop = createBallIdleHop({ id: "hero", x: 250, y: 300 }, 390);
+  const moving = sampleBallFlight(hop, 160);
+  const next = sampleBallFlight(createBallFlight(moving, { id: "applications", x: 80, y: 1000 }, 390), 0);
+  assert.equal(next.x, moving.x);
+  assert.equal(next.y, moving.y);
   assert.ok(Math.abs(next.velocityY - moving.velocityY) < 0.001);
 });

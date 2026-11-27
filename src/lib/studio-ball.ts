@@ -2,7 +2,7 @@ export type BallPoint = { x: number; y: number };
 export type BallStop = BallPoint & { id: string };
 export type BallPose = BallPoint & { scaleX: number; scaleY: number; stage: string; velocityX: number; velocityY: number };
 export type BallRoute = 0 | 1 | 2 | 3 | 4;
-export type BallFlight = { from: BallPoint; duration: number; target: BallStop; height: number; sway: number; curl: number; waves: number; viaX: number | null; route: BallRoute; velocityX: number; velocityY: number; collision?: { approachDuration: number; impactAt: number; reboundDuration: number; settleDuration: number; height: number; side: number }; entry?: { fallDuration: number; bounces: readonly { height: number; duration: number }[] } };
+export type BallFlight = { from: BallPoint; duration: number; target: BallStop; height: number; sway: number; curl: number; waves: number; viaX: number | null; route: BallRoute; velocityX: number; velocityY: number; idle?: boolean; collision?: { approachDuration: number; impactAt: number; reboundDuration: number; settleDuration: number; height: number; side: number }; entry?: { fallDuration: number; bounces: readonly { height: number; duration: number }[] } };
 
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
 const mix = (from: number, to: number, progress: number) => from + (to - from) * progress;
@@ -61,6 +61,13 @@ export function createBallFlight(from: BallPoint & Partial<Pick<BallPose, "veloc
   };
 }
 
+export const BALL_IDLE_DELAY = 5000;
+
+/** One quiet hop, with no horizontal drift or new collision. */
+export function createBallIdleHop(target: BallStop, viewportWidth: number): BallFlight {
+  return { ...createBallFlight(target, target, viewportWidth), idle: true, duration: 620, height: viewportWidth <= 640 ? 4 : 6, sway: 0, curl: 0, viaX: null };
+}
+
 /** Strike the approach's punctuation, recoil, then settle into its exact position. */
 export function createMethodBallFlight(from: BallPoint & Partial<Pick<BallPose, "velocityX" | "velocityY">>, target: BallStop, viewportWidth: number, route: BallRoute = 0): BallFlight {
   const approach = createBallFlight(from, target, viewportWidth, false, route);
@@ -90,6 +97,7 @@ export function createBallEntrance(target: BallStop, viewportWidth: number): Bal
 /** Rounded contacts keep position and velocity continuous, including between bounces. */
 function positionAt(flight: BallFlight, progress: number): BallPoint {
   const t = clamp(progress);
+  if (flight.idle) return { x: flight.target.x, y: flight.target.y - flight.height * Math.sin(Math.PI * t) ** 2 };
   if (flight.collision) {
     const c = flight.collision, time = t * flight.duration;
     if (time < c.impactAt) return positionAt({ ...flight, collision: undefined, duration: c.approachDuration }, time / c.approachDuration);
@@ -139,6 +147,10 @@ export function sampleBallFlight(flight: BallFlight, elapsed: number): BallPose 
   const before = positionAt(flight, Math.max(0, t - step));
   const after = positionAt(flight, Math.min(1, t + step));
   const interval = (Math.min(1, t + step) - Math.max(0, t - step)) * flight.duration;
+  if (flight.idle) {
+    const lift = Math.sin(Math.PI * t) ** 2;
+    return { ...point, scaleX: 1 - lift * 0.015, scaleY: 1 + lift * 0.03, stage: flight.target.id, velocityX: (after.x - before.x) / interval, velocityY: (after.y - before.y) / interval };
+  }
   const firstImpact = flight.collision ? flight.collision.impactAt / flight.duration : flight.entry ? flight.entry.fallDuration / flight.duration : 0.72;
   const secondImpact = flight.collision ? (flight.collision.impactAt + flight.collision.reboundDuration) / flight.duration : flight.entry ? (flight.entry.fallDuration + flight.entry.bounces[0].duration) / flight.duration : 0.91;
   const impact = Math.exp(-(((t - firstImpact) / 0.025) ** 2)) * 0.12 + Math.exp(-(((t - secondImpact) / 0.018) ** 2)) * 0.045;

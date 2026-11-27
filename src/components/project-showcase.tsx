@@ -192,10 +192,15 @@ export function ProjectShowcase() {
                   <article className="project-panel-body" aria-labelledby={`title-${project.id}`}>
                     <header className="project-panel-heading">
                       <p className="project-category">{project.category}</p>
-                      <h3 id={`title-${project.id}`} className={project.application ? `project-wordmark project-wordmark--${project.id}` : undefined}>
+                      <h3 id={`title-${project.id}`} className={`project-wordmark project-wordmark--${project.id}`}>
                         {project.id === "selfcamp" ? <Image src="/brands/selfcamp.png" alt="Selfcamp" width={4500} height={4500} sizes="205px" />
                           : project.id === "openwind" ? <Image src="/brands/openwind.png" alt="Openwind" width={2000} height={300} sizes="240px" />
                           : project.id === "mypapers" ? <Image src="/brands/mypapers.svg" alt="Mypapers" width={558} height={160} />
+                          : project.id === "pattus-hotel" ? <Image src="/brands/pattus.svg" alt={project.name} width={115} height={30} />
+                          : project.id === "alpha-hotel" ? <Image src="/brands/alpha-hotel.png" alt={project.name} width={646} height={146} sizes="260px" />
+                          : project.id === "coachingbymarie" ? <Image src="/brands/coaching-by-marie.png" alt={project.name} width={2255} height={151} sizes="320px" />
+                          : project.id === "graphomouv" ? <Image src="/brands/graphomouv.png" alt={project.name} width={1200} height={497} sizes="210px" />
+                          : project.id === "dipiaza" ? <Image src="/brands/dipiaza.png" alt={project.name} width={2008} height={1063} sizes="160px" />
                           : project.name}
                       </h3>
                       <ProjectLink href={project.url} name={project.name} category={project.category} application={project.application} showArrow={false}>
